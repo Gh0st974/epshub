@@ -1,0 +1,269 @@
+/* 📄 Fichier : /css/components/chrono.css */
+/* 🎯 Rôle : Styles du chronomètre (simple et multi) */
+
+/* ─── Vue chrono ─────────────────────────────────────────────── */
+.vue-chrono {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  padding-bottom: 100px;
+}
+
+/* ─── En-tête avec retour ────────────────────────────────────── */
+.chrono-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.chrono-header__retour {
+  position: absolute;
+  left: 0;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.chrono-header__titre {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* ─── Onglets ────────────────────────────────────────────────── */
+.chrono-onglets {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background: #f0f0f0;
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.chrono-onglet {
+  flex: 1;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  color: #666;
+}
+
+.chrono-onglet.active {
+  background: #fff;
+  color: #2ecc71;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ─── Zone de contenu ────────────────────────────────────────── */
+#chrono-contenu {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── Affichage du temps ─────────────────────────────────────── */
+.chrono-affichage {
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  font-family: 'Courier New', monospace;
+  color: #1a1a2e;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+/* ─── Boutons génériques ─────────────────────────────────────── */
+.chrono-boutons {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+
+.chrono-btn {
+  padding: 0.9rem 1.6rem;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.chrono-btn:active { transform: scale(0.96); }
+
+.chrono-btn--principal {
+  background: #2ecc71;
+  color: #fff;
+  min-width: 160px;
+}
+
+.chrono-btn--pause {
+  background: #e67e22;
+}
+
+.chrono-btn--secondaire {
+  background: #ecf0f1;
+  color: #333;
+}
+
+.chrono-btn--split {
+  background: #3498db;
+  color: #fff;
+  width: 100%;
+  max-width: 340px;
+  margin-bottom: 1rem;
+}
+
+.chrono-btn--split:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Liste des splits ───────────────────────────────────────── */
+.chrono-splits {
+  width: 100%;
+  max-width: 340px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 0.8rem;
+}
+
+.chrono-split__item {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #eee;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.chrono-splits__vide {
+  color: #aaa;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+}
+
+/* ─── Mode Multi ─────────────────────────────────────────────── */
+.chrono-multi {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chrono-multi__globaux {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.chrono-btn--global {
+  background: #2c3e50;
+  color: #fff;
+  font-size: 0.85rem;
+  padding: 0.7rem 1rem;
+}
+
+.chrono-btn--ajouter {
+  background: #ecf0f1;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  border: 2px dashed #bdc3c7;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* ─── Grille des cartes ──────────────────────────────────────── */
+.chrono-multi__grille {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ─── Carte individuelle ─────────────────────────────────────── */
+.chrono-carte {
+  background: #fff;
+  border-radius: 16px;
+  padding: 0.8rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chrono-carte__nom {
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  border-bottom: 2px solid #eee;
+  background: transparent;
+  padding: 0.2rem;
+  color: #1a1a2e;
+}
+
+.chrono-carte__nom:focus {
+  outline: none;
+  border-bottom-color: #2ecc71;
+}
+
+.chrono-carte__temps {
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-family: 'Courier New', monospace;
+  color: #1a1a2e;
+  letter-spacing: 2px;
+}
+
+.chrono-carte__boutons {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.chrono-btn--sm {
+  padding: 0.5rem 0.7rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  background: #ecf0f1;
+  color: #333;
+  min-width: 40px;
+}
+
+.chrono-btn--danger {
+  background: #fadbd8;
+  color: #c0392b;
+}
+
+.chrono-carte__splits {
+  width: 100%;
+  max-height: 100px;
+  overflow-y: auto;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.4rem;
+}

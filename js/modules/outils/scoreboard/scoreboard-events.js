@@ -5,7 +5,8 @@
 // ═══════════════════════════════════════════
 //  INITIALISATION
 // ═══════════════════════════════════════════
-
+import { demarrerChrono, pauseChrono, resetChrono } from './scoreboard-timer.js';
+import { ajouterPoints, mettreAJourAffichage } from './scoreboard.js';
 /**
  * Initialise le scoreboard dans un conteneur donné
  * @param {HTMLElement} conteneur - Élément DOM cible

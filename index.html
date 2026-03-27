@@ -48,33 +48,9 @@
         <div class="hub-grille" id="grille-outils">
           <!-- Généré par ui.js -->
         </div>
-
-        
-    <!-- Vue Chronomètre -->
-    <div class="vue vue-chrono" id="vue-chrono">
-
-      <!-- En-tête -->
-      <div class="chrono-header">
-        <button class="chrono-header__retour" id="btn-retour-chrono">←</button>
-        <h1 class="chrono-header__titre">⏱️ Chronomètre</h1>
-      </div>
-
-      <!-- Onglets -->
-      <div class="chrono-onglets">
-        <button class="chrono-onglet active" data-mode="simple" id="onglet-simple">
-          ⏱️ Simple
-        </button>
-        <button class="chrono-onglet" data-mode="multi" id="onglet-multi">
-          👥 Multi
-        </button>
-      </div>
-
-    <!-- Zone de rendu dynamique -->
-    <div id="chrono-contenu"></div>
-
       </section>
 
-    </div><!-- fin vue-hub -->
+    </div><!-- fin vue-hub -->  ✅ hub se ferme ici, proprement
 
     <!-- VUE RECHERCHE -->
     <div id="vue-recherche" class="vue">
@@ -105,8 +81,29 @@
       <p class="vue-placeholder">⚙️ Paramètres — bientôt disponible</p>
     </div>
 
+    <!-- VUE CHRONO -->  ✅ vue indépendante, au même niveau que les autres
+    <div id="vue-chrono" class="vue">
 
-</div>
+      <!-- En-tête -->
+      <div class="chrono-header">
+        <button class="chrono-header__retour" id="btn-retour-chrono">←</button>
+        <h1 class="chrono-header__titre">⏱️ Chronomètre</h1>
+      </div>
+
+      <!-- Onglets -->
+      <div class="chrono-onglets">
+        <button class="chrono-onglet active" data-mode="simple" id="onglet-simple">
+          ⏱️ Simple
+        </button>
+        <button class="chrono-onglet" data-mode="multi" id="onglet-multi">
+          👥 Multi
+        </button>
+      </div>
+
+      <!-- Zone de rendu dynamique -->
+      <div id="chrono-contenu"></div>
+
+    </div><!-- fin vue-chrono -->
 
   </div><!-- fin app -->
 
@@ -136,19 +133,15 @@
     </button>
   </nav>
 
-
-
-  <!--==========================================================-->
-<!-- JS -->
-<script src="js/config.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/modules/outils/chrono/chrono.js"></script>
-<script src="js/modules/outils/chrono/chrono-ui.js"></script>
-<script src="js/modules/outils/chrono/chrono-events.js"></script>
-<script src="js/router.js"></script>
-<script src="js/app.js"></script>
-
+  <!-- JS -->
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/modules/outils/chrono/chrono.js"></script>
+  <script src="js/modules/outils/chrono/chrono-ui.js"></script>
+  <script src="js/modules/outils/chrono/chrono-events.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 </html>

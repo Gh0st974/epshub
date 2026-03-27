@@ -10,6 +10,29 @@
   padding-bottom: 100px;
 }
 
+/* ─── Mode Simple ────────────────────────────────────────────── */
+.chrono-simple {
+  width: 100%;
+  max-width: 600px;   /* ✅ limite la largeur */
+  margin: 0 auto;     /* ✅ centre le bloc */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* ─── Mode Multi ─────────────────────────────────────────────── */
+.chrono-multi {
+  width: 100%;
+  max-width: 600px;   /* ✅ limite la largeur */
+  margin: 0 auto;     /* ✅ centre le bloc */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+
 /* ─── En-tête avec retour ────────────────────────────────────── */
 .chrono-header {
   display: flex;

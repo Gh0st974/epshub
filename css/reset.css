@@ -1,0 +1,31 @@
+/* 📄 Fichier : /css/reset.css */
+/* 🎯 Rôle : Remise à zéro des styles navigateur */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background-color: #f0f0f0;
+  color: #1a1a1a;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+input {
+  font-family: inherit;
+}

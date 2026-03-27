@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2ecc71" />
+  <title>EPSHub</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components/hub.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- ===== APPLICATION ===== -->
+  <div id="app">
+
+    <!-- VUE HUB -->
+    <div id="vue-hub" class="vue active">
+
+      <!-- HEADER -->
+      <header class="hub-header">
+        <div class="hub-header__badge">
+          <span class="hub-header__titre">
+            <strong>EPS</strong> Hub
+          </span>
+          <span class="hub-header__message">Welcome back !</span>
+        </div>
+      </header>
+
+      <!-- SECTION CA -->
+      <section class="hub-section">
+        <h2 class="hub-section__titre">Champs d'apprentissage</h2>
+        <div class="hub-grille" id="grille-ca">
+          <!-- Généré par ui.js -->
+        </div>
+      </section>
+
+      <!-- SECTION OUTILS -->
+      <section class="hub-section">
+        <h2 class="hub-section__titre">Les outils indispensables</h2>
+        <div class="hub-grille" id="grille-outils">
+          <!-- Généré par ui.js -->
+        </div>
+      </section>
+
+    </div><!-- fin vue-hub -->
+
+    <!-- VUE RECHERCHE -->
+    <div id="vue-recherche" class="vue">
+      <div class="recherche-container">
+        <input 
+          type="search" 
+          id="input-recherche" 
+          class="recherche-input" 
+          placeholder="Rechercher un module..." 
+          autocomplete="off"
+        />
+        <div id="resultats-recherche" class="recherche-resultats"></div>
+      </div>
+    </div>
+
+    <!-- VUE GROUPES -->
+    <div id="vue-groupes" class="vue">
+      <p class="vue-placeholder">👥 Groupes — bientôt disponible</p>
+    </div>
+
+    <!-- VUE OUTILS -->
+    <div id="vue-outils" class="vue">
+      <p class="vue-placeholder">🛠️ Outils — bientôt disponible</p>
+    </div>
+
+    <!-- VUE PARAMETRES -->
+    <div id="vue-parametres" class="vue">
+      <p class="vue-placeholder">⚙️ Paramètres — bientôt disponible</p>
+    </div>
+
+  </div><!-- fin app -->
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <button class="navbar__btn active" data-vue="vue-hub">
+      <span class="navbar__icone">🏠</span>
+      <span class="navbar__label">Hub</span>
+    </button>
+    <button class="navbar__btn" data-vue="vue-groupes">
+      <span class="navbar__icone">👥</span>
+      <span class="navbar__label">Groupes</span>
+    </button>
+
+    <!-- Bouton central recherche -->
+    <button class="navbar__btn navbar__btn--central" data-vue="vue-recherche">
+      <span class="navbar__icone-central">🔍</span>
+    </button>
+
+    <button class="navbar__btn" data-vue="vue-outils">
+      <span class="navbar__icone">🛠️</span>
+      <span class="navbar__label">Outils</span>
+    </button>
+    <button class="navbar__btn" data-vue="vue-parametres">
+      <span class="navbar__icone">⚙️</span>
+      <span class="navbar__label">Paramètres</span>
+    </button>
+  </nav>
+
+  <!-- JS -->
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

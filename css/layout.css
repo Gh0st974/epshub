@@ -1,0 +1,104 @@
+/* 📄 Fichier : /css/layout.css */
+/* 🎯 Rôle : Structure générale de l'application */
+
+/* Conteneur principal */
+#app {
+  min-height: 100dvh;
+  padding-bottom: 80px; /* espace pour la navbar */
+  overflow-y: auto;
+}
+
+/* ---- Vues ---- */
+/* Toutes les vues sont cachées par défaut */
+.vue {
+  display: none;
+  padding: 20px 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+/* La vue active est visible */
+.vue.active {
+  display: block;
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Placeholder des vues non développées */
+.vue-placeholder {
+  text-align: center;
+  color: #999;
+  font-size: 1.1rem;
+  margin-top: 40px;
+}
+
+/* ---- Navbar ---- */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+}
+
+/* Bouton navbar standard */
+.navbar__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 12px;
+  color: #aaa;
+  transition: color 0.2s;
+  flex: 1;
+}
+
+.navbar__btn.active {
+  color: #2ecc71;
+}
+
+.navbar__icone {
+  font-size: 1.4rem;
+}
+
+.navbar__label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Bouton central surélevé */
+.navbar__btn--central {
+  position: relative;
+  top: -18px;
+  background: #2ecc71;
+  border-radius: 50%;
+  width: 58px;
+  height: 58px;
+  flex: none;
+  box-shadow: 0 4px 14px rgba(46, 204, 113, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.navbar__btn--central:active {
+  transform: scale(0.93);
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.4);
+}
+
+.navbar__icone-central {
+  font-size: 1.5rem;
+}

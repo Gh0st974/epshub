@@ -1,0 +1,22 @@
+{
+  "name": "EPSHub",
+  "short_name": "EPSHub",
+  "description": "La super app du prof d'EPS",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f0f0f0",
+  "theme_color": "#2ecc71",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

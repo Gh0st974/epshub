@@ -1,6 +1,9 @@
 // 📄 Fichier : /js/router.js
 // 🎯 Rôle : Navigation entre les vues de l'application
 
+// ── Imports des modules ─────────────────────────────────────────────────────
+import { initialiserScoreboard } from './modules/outils/scoreboard/scoreboard-events.js';
+
 /**
  * Active une vue et met à jour la navbar
  * @param {string} idVue - ID de la vue à afficher
@@ -47,6 +50,10 @@ function initRouter() {
   document.getElementById('btn-retour-chrono')
     ?.addEventListener('click', () => naviguerVers('vue-outils'));
 
+  // Retour depuis le scoreboard vers les outils     ← 🆕 AJOUT
+  document.getElementById('btn-retour-scoreboard')
+    ?.addEventListener('click', () => naviguerVers('vue-outils'));
+
   // Clics sur les cartes d'outils (hub)
   document.addEventListener('click', (e) => {
     const carte = e.target.closest('.hub-carte[data-id]');
@@ -58,6 +65,13 @@ function initRouter() {
     if (id === 'chrono') {
       naviguerVers('vue-chrono');
       initChrono();
+    }
+
+    // Carte Scoreboard                              ← 🆕 AJOUT
+    if (id === 'scoreboard') {
+      naviguerVers('vue-scoreboard');
+      const conteneur = document.getElementById('scoreboard-conteneur');
+      if (conteneur) initialiserScoreboard(conteneur);
     }
 
     // 📌 Autres outils à brancher ici au fur et à mesure

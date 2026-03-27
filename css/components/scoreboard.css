@@ -1,0 +1,308 @@
+/* 📄 Fichier : /css/components/scoreboard.css */
+/* 🎯 Rôle : Styles visuels du module Scoreboard */
+
+/* ═══════════════════════════════════════════
+   CONTENEUR PRINCIPAL
+═══════════════════════════════════════════ */
+.scoreboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════
+   BARRE DE CONFIGURATION (mode, sets, chrono)
+═══════════════════════════════════════════ */
+.scoreboard-config {
+  background: #1e1e2e;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config-groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.config-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+}
+
+.config-boutons {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-config {
+  padding: 8px 14px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background: transparent;
+  color: #ccc;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-config.actif {
+  background: #4a9eff;
+  border-color: #4a9eff;
+  color: #fff;
+}
+
+.btn-config:hover:not(.actif) {
+  border-color: #666;
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════
+   CHRONO INTÉGRÉ
+═══════════════════════════════════════════ */
+.scoreboard-chrono {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #12121f;
+  border-radius: 10px;
+  padding: 8px 14px;
+}
+
+.chrono-affichage {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  color: #fff;
+  min-width: 90px;
+  text-align: center;
+}
+
+.chrono-affichage.alerte {
+  color: #ff4444;
+  animation: clignoter 0.5s infinite;
+}
+
+@keyframes clignoter {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.chrono-input {
+  width: 60px;
+  padding: 6px;
+  border: 2px solid #444;
+  border-radius: 6px;
+  background: #1e1e2e;
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.btn-chrono {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.btn-chrono:active { transform: scale(0.9); }
+
+.btn-chrono.play  { background: #22c55e; color: #fff; }
+.btn-chrono.pause { background: #f59e0b; color: #fff; }
+.btn-chrono.reset { background: #ef4444; color: #fff; }
+
+/* ═══════════════════════════════════════════
+   GRILLE DES ÉQUIPES
+═══════════════════════════════════════════ */
+.scoreboard-grille {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, 1fr); /* défaut 2 équipes */
+}
+
+.scoreboard-grille.equipes-3 { grid-template-columns: repeat(3, 1fr); }
+.scoreboard-grille.equipes-4 { grid-template-columns: repeat(2, 1fr); }
+.scoreboard-grille.equipes-5,
+.scoreboard-grille.equipes-6 { grid-template-columns: repeat(3, 1fr); }
+
+/* ═══════════════════════════════════════════
+   CARTE ÉQUIPE
+═══════════════════════════════════════════ */
+.equipe-carte {
+  border-radius: 14px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border: 3px solid transparent;
+  transition: border-color 0.3s;
+}
+
+/* Couleurs des équipes */
+.equipe-carte.bleu   { background: #0a2a4a; border-color: #4a9eff; }
+.equipe-carte.rouge  { background: #3a0a0a; border-color: #ff4444; }
+.equipe-carte.vert   { background: #0a2a0a; border-color: #22c55e; }
+.equipe-carte.jaune  { background: #2a200a; border-color: #f59e0b; }
+.equipe-carte.violet { background: #1a0a3a; border-color: #a855f7; }
+.equipe-carte.orange { background: #2a150a; border-color: #f97316; }
+
+.equipe-nom {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.equipe-score {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════
+   BOUTONS D'ACTION PAR ÉQUIPE
+═══════════════════════════════════════════ */
+.equipe-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.actions-ligne {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.btn-point {
+  flex: 1;
+  max-width: 64px;
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.btn-point:active { transform: scale(0.92); }
+
+.btn-point.moins { background: #ef4444; color: #fff; }
+.btn-point.plus1 { background: #22c55e; color: #fff; }
+.btn-point.plus2 { background: #3b82f6; color: #fff; }
+.btn-point.plus3 { background: #a855f7; color: #fff; }
+
+/* ═══════════════════════════════════════════
+   SETS
+═══════════════════════════════════════════ */
+.equipe-sets {
+  font-size: 0.8rem;
+  color: #aaa;
+  letter-spacing: 1px;
+}
+
+.set-point {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #444;
+  margin: 0 2px;
+}
+
+.set-point.gagne { background: #22c55e; }
+
+/* ═══════════════════════════════════════════
+   BARRE DES SETS (résumé)
+═══════════════════════════════════════════ */
+.scoreboard-sets-barre {
+  background: #1e1e2e;
+  border-radius: 10px;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.set-info {
+  font-size: 0.85rem;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.set-badge {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════
+   BOUTONS RESET
+═══════════════════════════════════════════ */
+.scoreboard-reset {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-reset {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-reset:active { transform: scale(0.95); }
+.btn-reset.score { background: #f59e0b; color: #000; }
+.btn-reset.tout  { background: #ef4444; color: #fff; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .equipe-score { font-size: 3rem; }
+  .btn-point    { height: 40px; font-size: 0.9rem; }
+  .scoreboard-grille.equipes-5,
+  .scoreboard-grille.equipes-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

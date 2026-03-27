@@ -1,25 +1,6 @@
 // 📄 Fichier : /js/modules/outils/scoreboard/scoreboard-events.js
 // 🎯 Rôle : Gestion des interactions utilisateur du scoreboard
 
-import {
-  ajouterPoints,
-  resetScores,
-  resetComplet,
-  validerSet,
-  changerNbEquipes,
-  changerNbSets,
-} from './scoreboard.js';
-
-import {
-  rendreScoreboard,
-  mettreAJourAffichage,
-} from './scoreboard-ui.js';
-
-import {
-  demarrerChrono,
-  pauseChrono,
-  resetChrono,
-} from './scoreboard-timer.js';
 
 // ═══════════════════════════════════════════
 //  INITIALISATION

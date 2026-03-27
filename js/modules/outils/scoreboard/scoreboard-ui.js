@@ -1,7 +1,6 @@
 // 📄 Fichier : /js/modules/outils/scoreboard/scoreboard-ui.js
 // 🎯 Rôle : Génération et mise à jour du DOM du scoreboard
 
-import { getEtat } from './scoreboard.js';
 
 // ═══════════════════════════════════════════
 //  POINT D'ENTRÉE — RENDU COMPLET

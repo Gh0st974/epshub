@@ -90,11 +90,12 @@
 
 /* ─── Zone de contenu ────────────────────────────────────────── */
 #chrono-contenu {
-  width: 100%;
-  max-width: 600px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;        /* ✅ centre le contenu du chrono uniquement */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto; 
 }
 
 /* ─── Affichage du temps ─────────────────────────────────────── */

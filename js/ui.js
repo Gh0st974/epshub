@@ -66,4 +66,5 @@ function afficherResultatsRecherche(resultats) {
 function initHub() {
   remplirGrille('grille-ca', CHAMPS_APPRENTISSAGE);
   remplirGrille('grille-outils', OUTILS, 'hub-grille--outils');
+  remplirGrille('grille-outils-vue', OUTILS, 'hub-grille--outils'); 
 }

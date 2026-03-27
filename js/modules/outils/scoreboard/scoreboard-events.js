@@ -169,8 +169,3 @@ function afficherNotification(texte) {
   setTimeout(() => notif.remove(), 2500);
 }
 
-// ═══════════════════════════════════════════
-//  EXPORTS
-// ═══════════════════════════════════════════
-
-export { initialiserScoreboard };

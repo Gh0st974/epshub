@@ -477,15 +477,3 @@ function obtenirCouleurEquipe(classe) {
   return couleurs[classe] || '#888';
 }
 
-// ═══════════════════════════════════════════
-//  EXPORTS
-// ═══════════════════════════════════════════
-
-export {
-  rendreScoreboard,
-  mettreAJourAffichage,
-  mettreAJourScores,
-  mettreAJourSets,
-  mettreAJourSetsBarre,
-  mettreAJourEtatPartie,
-};

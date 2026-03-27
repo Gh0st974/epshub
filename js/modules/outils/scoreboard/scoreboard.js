@@ -171,17 +171,4 @@ function trouverEquipe(equipeId) {
   return etatScoreboard.equipes.find(eq => eq.id === equipeId) || null;
 }
 
-// ═══════════════════════════════════════════
-//  EXPORTS
-// ═══════════════════════════════════════════
 
-export {
-  getEtat,
-  getEquipesConfig,
-  ajouterPoints,
-  resetScores,
-  resetComplet,
-  validerSet,
-  changerNbEquipes,
-  changerNbSets,
-};

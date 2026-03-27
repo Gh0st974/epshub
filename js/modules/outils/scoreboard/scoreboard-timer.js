@@ -162,13 +162,3 @@ function mettreAJourBoutons(enCours) {
   if (btnPlay)  btnPlay.style.opacity  = enCours ? '0.4' : '1';
   if (btnPause) btnPause.style.opacity = enCours ? '1'   : '0.4';
 }
-
-// ═══════════════════════════════════════════
-//  EXPORTS
-// ═══════════════════════════════════════════
-
-export {
-  demarrerChrono,
-  pauseChrono,
-  resetChrono,
-};

@@ -1,30 +1,98 @@
 /* 📄 Fichier : /css/responsive.css */
-/* 🎯 Rôle : Adaptations tablette et desktop */
+/* 🎯 Rôle : Adaptations responsive — mobile, tablette, desktop */
 
-/* Tablette */
+/* ---- Base mobile (défaut) ---- */
+/* Tout est déjà pensé mobile-first dans layout.css et hub.css */
+
+/* ---- Tablette (600px → 1023px) ---- */
 @media (min-width: 600px) {
-  #app {
-    max-width: 480px;
-    margin: 0 auto;
+
+  /* Contenu principal plus aéré */
+  .hub-header__badge {
+    padding: 28px 32px;
   }
 
+  .hub-header__message {
+    font-size: 2rem;
+  }
+
+  /* Icônes CA plus grandes */
+  .hub-carte__icone {
+    width: 80px;
+    height: 80px;
+    font-size: 2.2rem;
+  }
+
+  .hub-carte__label {
+    font-size: 0.78rem;
+  }
+
+  /* Sections plus espacées */
+  .hub-section__titre {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+}
+
+/* ---- Desktop (1024px et +) ---- */
+@media (min-width: 1024px) {
+
+  /* Fond gris derrière pour effet app */
+  body {
+    background: #f0f0f0;
+  }
+
+  /* Contenu scrollable centré avec max-width généreux */
+  #app {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 48px 120px 48px;
+  }
+
+  /* Navbar centrée et limitée */
   .navbar {
-    max-width: 480px;
+    max-width: 900px;
     left: 50%;
     transform: translateX(-50%);
     border-radius: 20px 20px 0 0;
   }
 
-  .hub-carte__icone {
-    width: 66px;
-    height: 66px;
-    font-size: 1.8rem;
+  .hub-header__badge {
+    padding: 32px 40px;
+    border-radius: 24px;
   }
-}
 
-/* Desktop */
-@media (min-width: 1024px) {
-  body {
-    background: #ddd;
+  .hub-header__message {
+    font-size: 2.2rem;
+  }
+
+  /* Icônes encore plus grandes sur desktop */
+  .hub-carte__icone {
+    width: 96px;
+    height: 96px;
+    font-size: 2.6rem;
+  }
+
+  .hub-carte__label {
+    font-size: 0.85rem;
+  }
+
+  /* Espacement sections */
+  .hub-section {
+    margin-bottom: 40px;
+  }
+
+  .hub-section__titre {
+    font-size: 1.2rem;
+  }
+
+  /* Hover desktop uniquement */
+  .hub-carte:hover .hub-carte__icone {
+    background: #d4f5e2;
+    transform: translateY(-3px);
+  }
+
+  .hub-carte--actif:hover .hub-carte__icone {
+    background: #27ae60;
   }
 }

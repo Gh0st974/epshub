@@ -187,18 +187,21 @@ function creerSectionChrono() {
   btnPlay.id = 'chrono-btn-play';
   btnPlay.title = 'Démarrer';
   btnPlay.textContent = '▶';
+  btnPlay.dataset.action = 'chronoPlay'; // ✅ AJOUTER
 
   const btnPause = document.createElement('button');
   btnPause.className = 'btn-chrono pause';
   btnPause.id = 'chrono-btn-pause';
   btnPause.title = 'Pause';
   btnPause.textContent = '⏸';
+  btnPause.dataset.action = 'chronoPause'; // ✅ AJOUTER
 
   const btnReset = document.createElement('button');
   btnReset.className = 'btn-chrono reset';
   btnReset.id = 'chrono-btn-reset';
   btnReset.title = 'Reset';
   btnReset.textContent = '↺';
+  btnReset.dataset.action = 'chronoReset'; // ✅ AJOUTER
 
   section.appendChild(affichage);
   section.appendChild(input);

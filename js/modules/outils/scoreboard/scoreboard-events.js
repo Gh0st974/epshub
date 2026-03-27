@@ -19,18 +19,20 @@ function initialiserScoreboard(conteneur) {
 //  DÉLÉGATION D'ÉVÉNEMENTS
 // ═══════════════════════════════════════════
 
-/**
- * Attache un seul listener sur le conteneur (délégation)
- * @param {HTMLElement} conteneur
- */
 function attacherEvenements(conteneur) {
-  conteneur.addEventListener('click', e => {
+  if (conteneur._scoreboardHandler) {
+    conteneur.removeEventListener('click', conteneur._scoreboardHandler);
+  }
+  
+  conteneur._scoreboardHandler = e => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
 
     const action = btn.dataset.action;
     traiterAction(action, btn.dataset);
-  });
+  };
+
+  conteneur.addEventListener('click', conteneur._scoreboardHandler);
 }
 
 // ═══════════════════════════════════════════

@@ -9,33 +9,55 @@
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
 
-  <!-- CSS -->
+  <!-- ═══════════════════════════════════════
+       CSS — SOCLE
+  ═══════════════════════════════════════ -->
   <link rel="stylesheet" href="css/reset.css" />
   <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/components/hub.css" />
-  <link rel="stylesheet" href="css/components/chrono.css" />
-  <link rel="stylesheet" href="css/components/scoreboard.css">
   <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- ═══════════════════════════════════════
+       CSS — COMPOSANTS PRINCIPAUX
+  ═══════════════════════════════════════ -->
+  <link rel="stylesheet" href="css/components/hub.css" />
+
+  <!-- ═══════════════════════════════════════
+       CSS — MODULES OUTILS
+       👉 Ajouter ici le CSS de chaque outil
+  ═══════════════════════════════════════ -->
+  <link rel="stylesheet" href="css/components/chrono.css" />
+  <link rel="stylesheet" href="css/components/scoreboard.css" />
+  <!-- <link rel="stylesheet" href="css/components/minuteur.css" /> -->
+  <!-- <link rel="stylesheet" href="css/components/equipes.css" /> -->
+
+  <!-- ═══════════════════════════════════════
+       CSS — MODULES CA (Champs d'apprentissage)
+       👉 Ajouter ici le CSS de chaque CA
+  ═══════════════════════════════════════ -->
+  <!-- <link rel="stylesheet" href="css/components/natation.css" /> -->
+  <!-- <link rel="stylesheet" href="css/components/escalade.css" /> -->
+
 </head>
 <body>
 
-  <!-- ===== APPLICATION ===== -->
+  <!-- ╔═══════════════════════════════════════╗
+       ║           APPLICATION                 ║
+       ╚═══════════════════════════════════════╝ -->
   <div id="app">
 
-    <!-- VUE HUB -->
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         VUE — HUB (accueil principal)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div id="vue-hub" class="vue active">
 
-      <!-- HEADER -->
       <header class="hub-header">
         <div class="hub-header__badge">
-          <span class="hub-header__titre">
-            <strong>EPS</strong> Hub
-          </span>
+          <span class="hub-header__titre"><strong>EPS</strong> Hub</span>
           <span class="hub-header__message">Welcome back !</span>
         </div>
       </header>
 
-      <!-- SECTION CA -->
       <section class="hub-section">
         <h2 class="hub-section__titre">Champs d'apprentissage</h2>
         <div class="hub-grille" id="grille-ca">
@@ -43,7 +65,6 @@
         </div>
       </section>
 
-      <!-- SECTION OUTILS -->
       <section class="hub-section">
         <h2 class="hub-section__titre">Les outils indispensables</h2>
         <div class="hub-grille" id="grille-outils">
@@ -51,29 +72,37 @@
         </div>
       </section>
 
-    </div><!-- fin vue-hub ✅ hub se ferme ici, proprement-->  
+    </div><!-- ━━━ fin vue-hub ━━━ -->
 
-    <!-- VUE RECHERCHE -->
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         VUE — NAVBAR : RECHERCHE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div id="vue-recherche" class="vue">
       <div class="recherche-container">
-        <input 
-          type="search" 
-          id="input-recherche" 
-          class="recherche-input" 
-          placeholder="Rechercher un module..." 
+        <input
+          type="search"
+          id="input-recherche"
+          class="recherche-input"
+          placeholder="Rechercher un module..."
           autocomplete="off"
         />
         <div id="resultats-recherche" class="recherche-resultats"></div>
       </div>
-    </div>
+    </div><!-- ━━━ fin vue-recherche ━━━ -->
 
-    <!-- VUE GROUPES -->
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         VUE — NAVBAR : GROUPES
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div id="vue-groupes" class="vue">
       <p class="vue-placeholder">👥 Groupes — bientôt disponible</p>
-    </div>
+    </div><!-- ━━━ fin vue-groupes ━━━ -->
 
 
-    <!-- VUE OUTILS -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         VUE — NAVBAR : OUTILS (liste des outils)
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div id="vue-outils" class="vue">
 
       <header class="hub-header">
@@ -89,41 +118,98 @@
         </div>
       </section>
 
-    </div>
+    </div><!-- ━━━ fin vue-outils ━━━ -->
 
 
-    <!-- VUE PARAMETRES -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         VUE — NAVBAR : PARAMÈTRES
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div id="vue-parametres" class="vue">
       <p class="vue-placeholder">⚙️ Paramètres — bientôt disponible</p>
-    </div>
+    </div><!-- ━━━ fin vue-parametres ━━━ -->
 
-    <!-- VUE CHRONO ✅ vue indépendante, au même niveau que les autres-->  
+
+    <!-- ════════════════════════════════════════
+         MODULES — OUTILS
+         👉 Ajouter chaque outil ici
+    ════════════════════════════════════════ -->
+
+    <!-- ┌─────────────────────────────────────┐
+         │  OUTIL : CHRONOMÈTRE               │
+         └─────────────────────────────────────┘ -->
     <div id="vue-chrono" class="vue">
 
-      <!-- En-tête -->
       <div class="chrono-header">
         <button class="chrono-header__retour" id="btn-retour-chrono">←</button>
         <h1 class="chrono-header__titre">⏱️ Chronomètre</h1>
       </div>
 
-      <!-- Onglets -->
       <div class="chrono-onglets">
-        <button class="chrono-onglet active" data-mode="simple" id="onglet-simple">
-          ⏱️ Simple
-        </button>
-        <button class="chrono-onglet" data-mode="multi" id="onglet-multi">
-          👥 Multi
-        </button>
+        <button class="chrono-onglet active" data-mode="simple" id="onglet-simple">⏱️ Simple</button>
+        <button class="chrono-onglet" data-mode="multi" id="onglet-multi">👥 Multi</button>
       </div>
 
-      <!-- Zone de rendu dynamique -->
       <div id="chrono-contenu"></div>
 
-    </div><!-- fin vue-chrono -->
+    </div><!-- ━━━ fin vue-chrono ━━━ -->
 
-  </div><!-- fin app -->
 
-  <!-- NAVBAR -->
+    <!-- ┌─────────────────────────────────────┐
+         │  OUTIL : SCOREBOARD                │
+         └─────────────────────────────────────┘ -->
+    <div id="vue-scoreboard" class="vue">
+
+      <div class="chrono-header">
+        <button class="chrono-header__retour" id="btn-retour-scoreboard">←</button>
+        <h1 class="chrono-header__titre">🏆 Scoreboard</h1>
+      </div>
+
+      <div id="scoreboard-conteneur"></div>
+
+    </div><!-- ━━━ fin vue-scoreboard ━━━ -->
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  OUTIL : MINUTEUR (à venir)        │
+         └─────────────────────────────────────┘ -->
+    <!--
+    <div id="vue-minuteur" class="vue">
+      <div id="minuteur-conteneur"></div>
+    </div>
+    -->
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  OUTIL : ÉQUIPES (à venir)         │
+         └─────────────────────────────────────┘ -->
+    <!--
+    <div id="vue-equipes" class="vue">
+      <div id="equipes-conteneur"></div>
+    </div>
+    -->
+
+
+    <!-- ════════════════════════════════════════
+         MODULES — CHAMPS D'APPRENTISSAGE (CA)
+         👉 Ajouter chaque CA ici
+    ════════════════════════════════════════ -->
+
+    <!-- ┌─────────────────────────────────────┐
+         │  CA1 : NATATION (à venir)          │
+         └─────────────────────────────────────┘ -->
+    <!--
+    <div id="vue-natation" class="vue">
+      <div id="natation-conteneur"></div>
+    </div>
+    -->
+
+
+  </div><!-- ╚═══ fin app ═══╝ -->
+
+
+  <!-- ╔═══════════════════════════════════════╗
+       ║              NAVBAR                   ║
+       ╚═══════════════════════════════════════╝ -->
   <nav class="navbar" id="navbar">
     <button class="navbar__btn active" data-vue="vue-hub">
       <span class="navbar__icone">🏠</span>
@@ -133,12 +219,9 @@
       <span class="navbar__icone">👥</span>
       <span class="navbar__label">Groupes</span>
     </button>
-
-    <!-- Bouton central recherche -->
     <button class="navbar__btn navbar__btn--central" data-vue="vue-recherche">
       <span class="navbar__icone-central">🔍</span>
     </button>
-
     <button class="navbar__btn" data-vue="vue-outils">
       <span class="navbar__icone">🛠️</span>
       <span class="navbar__label">Outils</span>
@@ -149,22 +232,41 @@
     </button>
   </nav>
 
-  <!-- JS -->
+
+  <!-- ╔═══════════════════════════════════════╗
+       ║           SCRIPTS JS                  ║
+       ╚═══════════════════════════════════════╝ -->
+
+  <!-- Socle -->
   <script src="js/config.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/storage.js"></script>
 
-<script src="js/modules/outils/chrono/chrono.js"></script>
-<script src="js/modules/outils/chrono/chrono-ui.js"></script>
-<script src="js/modules/outils/chrono/chrono-events.js"></script>
+  <!-- ═══════════════════════════════════════
+       MODULES — OUTILS
+       👉 Ajouter les scripts de chaque outil ici
+  ═══════════════════════════════════════ -->
+  <script src="js/modules/outils/chrono/chrono.js"></script>
+  <script src="js/modules/outils/chrono/chrono-ui.js"></script>
+  <script src="js/modules/outils/chrono/chrono-events.js"></script>
 
-<script src="js/modules/outils/scoreboard/scoreboard.js"></script>        
-<script src="js/modules/outils/scoreboard/scoreboard-ui.js"></script>     
-<script src="js/modules/outils/scoreboard/scoreboard-timer.js"></script>  
-<script src="js/modules/outils/scoreboard/scoreboard-events.js"></script> 
+  <script src="js/modules/outils/scoreboard/scoreboard.js"></script>
+  <script src="js/modules/outils/scoreboard/scoreboard-ui.js"></script>
+  <script src="js/modules/outils/scoreboard/scoreboard-timer.js"></script>
+  <script src="js/modules/outils/scoreboard/scoreboard-events.js"></script>
 
-<script src="js/router.js"></script>
-<script src="js/app.js"></script>
+  <!-- <script src="js/modules/outils/minuteur/minuteur.js"></script> -->
+  <!-- <script src="js/modules/outils/equipes/equipes.js"></script> -->
+
+  <!-- ═══════════════════════════════════════
+       MODULES — CHAMPS D'APPRENTISSAGE
+       👉 Ajouter les scripts de chaque CA ici
+  ═══════════════════════════════════════ -->
+  <!-- <script src="js/modules/ca1-natation/natation-events.js"></script> -->
+
+  <!-- Routeur & init (toujours en dernier) -->
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 </html>

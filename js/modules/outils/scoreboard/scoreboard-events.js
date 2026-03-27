@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════
 //  INITIALISATION
 // ═══════════════════════════════════════════
-
+import { demarrerChrono, pauseChrono, resetChrono } from './scoreboard-timer.js';
 /**
  * Initialise le scoreboard dans un conteneur donné
  * @param {HTMLElement} conteneur - Élément DOM cible
@@ -23,7 +23,7 @@ function attacherEvenements(conteneur) {
   if (conteneur._scoreboardHandler) {
     conteneur.removeEventListener('click', conteneur._scoreboardHandler);
   }
-  
+
   conteneur._scoreboardHandler = e => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;

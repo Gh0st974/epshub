@@ -21,7 +21,7 @@ let etatChrono = {
  * Démarre le compte à rebours
  * @param {number} minutes - Durée en minutes
  */
-function demarrerChrono(minutes) {
+export function demarrerChrono(minutes) {
   if (etatChrono.enCours) return;
 
   // Si le chrono est à 0, on recharge depuis l'input
@@ -37,7 +37,7 @@ function demarrerChrono(minutes) {
 }
 
 /** Met le chrono en pause */
-function pauseChrono() {
+export function pauseChrono() {
   if (!etatChrono.enCours) return;
   clearInterval(etatChrono.intervalle);
   etatChrono.enCours = false;
@@ -48,7 +48,7 @@ function pauseChrono() {
  * Remet le chrono à zéro
  * @param {number} minutes - Nouvelle durée en minutes
  */
-function resetChrono(minutes) {
+export function resetChrono(minutes) {
   clearInterval(etatChrono.intervalle);
   etatChrono.enCours = false;
 

@@ -5,17 +5,20 @@ const CACHE_NOM = 'epshub-v1';
 
 // Fichiers à mettre en cache dès l'installation
 const FICHIERS_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/css/reset.css',
-  '/css/layout.css',
-  '/css/components/hub.css',
-  '/css/responsive.css',
-  '/js/config.js',
-  '/js/ui.js',
-  '/js/router.js',
-  '/js/app.js'
+  './',
+  './index.html',
+  './manifest.json',
+  './css/reset.css',
+  './css/layout.css',
+  './css/components/hub.css',
+  './css/responsive.css',
+  './js/config.js',
+  './js/ui.js',
+  './js/router.js',
+  './js/app.js',
+  './js/modules/outils/chrono/chrono.js',
+  './js/modules/outils/chrono/chrono-ui.js',
+  './js/modules/outils/chrono/chrono-events.js'
 ];
 
 // Installation : on met tout en cache

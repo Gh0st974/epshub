@@ -4,7 +4,7 @@
 const CONFIG = {
   nom: 'EPSHub',
   version: '1.0.0',
-  couleurPrincipale: '#2ecc71',
+  couleurPrincipale: '#1cb040ff',
 };
 
 // Définition des Champs d'Apprentissage

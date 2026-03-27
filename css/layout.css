@@ -64,7 +64,7 @@
 }
 
 .navbar__btn.active {
-  color: #2ecc71;
+  color: #1cb040ff;
 }
 
 .navbar__icone {
@@ -82,7 +82,7 @@
 .navbar__btn--central {
   position: relative;
   top: -18px;
-  background: #2ecc71;
+  background: #1cb040ff;
   border-radius: 50%;
   width: 58px;
   height: 58px;

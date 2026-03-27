@@ -19,7 +19,7 @@ const CHAMPS_APPRENTISSAGE = [
 // Définition des outils indispensables
 const OUTILS = [
   { id: 'chrono', label: 'Chrono', icone: '⏱️', vue: 'vue-chrono' },
-  { id: 'score',        label: 'Score',        icone: '🏆' },
+  { id: 'score', label: 'Score', icone: '🏆', vue: 'vue-scoreboard' },
   { id: 'calculatrice', label: 'Calculatrice', icone: '🧮' },
   { id: 'minuteur',     label: 'Minuteur',     icone: '🔔' },
 ];

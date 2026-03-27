@@ -58,7 +58,11 @@ function initRouter() {
     if (id === 'scoreboard') {
       naviguerVers('vue-scoreboard');
       const conteneur = document.getElementById('scoreboard-conteneur');
-      if (conteneur) initialiserScoreboard(conteneur);
+      // ✅ On vérifie que le scoreboard n'est pas déjà initialisé
+      if (conteneur && !conteneur.dataset.init) {
+        conteneur.dataset.init = 'true'; // 🔒 Verrou anti-double init
+        initialiserScoreboard(conteneur);
+      }
     }
   });
 }

@@ -9,7 +9,7 @@ const CONFIG = {
 
 // Définition des Champs d'Apprentissage
 const CHAMPS_APPRENTISSAGE = [
-  { id: 'ca1', label: 'CA1', icone: '⏱️', couleur: '#97c342ff', actif: true  },
+  { id: 'ca1', label: 'CA1', icone: '⏱️', couleur: '#97c342ff', actif: false },
   { id: 'ca2', label: 'CA2', icone: '🧭', couleur: '#dd8502ff', actif: false },
   { id: 'ca3', label: 'CA3', icone: '🤸', couleur: '#0090cdff', actif: false },
   { id: 'ca4', label: 'CA4', icone: '🏀', couleur: '#b074b0ff', actif: false },

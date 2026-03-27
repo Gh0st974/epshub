@@ -81,6 +81,30 @@
       <p class="vue-placeholder">⚙️ Paramètres — bientôt disponible</p>
     </div>
 
+    <!-- Vue Chronomètre -->
+    <div class="vue vue-chrono" id="vue-chrono">
+
+      <!-- En-tête -->
+      <div class="chrono-header">
+        <button class="chrono-header__retour" id="btn-retour-chrono">←</button>
+        <h1 class="chrono-header__titre">⏱️ Chronomètre</h1>
+      </div>
+
+      <!-- Onglets -->
+      <div class="chrono-onglets">
+        <button class="chrono-onglet active" data-mode="simple" id="onglet-simple">
+          ⏱️ Simple
+        </button>
+        <button class="chrono-onglet" data-mode="multi" id="onglet-multi">
+          👥 Multi
+        </button>
+      </div>
+
+  <!-- Zone de rendu dynamique -->
+  <div id="chrono-contenu"></div>
+
+</div>
+
   </div><!-- fin app -->
 
   <!-- NAVBAR -->
@@ -110,30 +134,6 @@
   </nav>
 
 
-  <!--==========================================================-->
-<!-- Vue Chronomètre -->
-<div class="vue vue-chrono" id="vue-chrono">
-
-  <!-- En-tête -->
-  <div class="chrono-header">
-    <button class="chrono-header__retour" id="btn-retour-chrono">←</button>
-    <h1 class="chrono-header__titre">⏱️ Chronomètre</h1>
-  </div>
-
-  <!-- Onglets -->
-  <div class="chrono-onglets">
-    <button class="chrono-onglet active" data-mode="simple" id="onglet-simple">
-      ⏱️ Simple
-    </button>
-    <button class="chrono-onglet" data-mode="multi" id="onglet-multi">
-      👥 Multi
-    </button>
-  </div>
-
-  <!-- Zone de rendu dynamique -->
-  <div id="chrono-contenu"></div>
-
-</div>
 
   <!--==========================================================-->
 <!-- JS -->

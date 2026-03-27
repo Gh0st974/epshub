@@ -18,7 +18,10 @@
 
 /* La vue active est visible */
 .vue.active {
-  display: block;
+  display: flex;               /* ✅ remplace block */
+  flex-direction: column;      /* ✅ empile verticalement */
+  align-items: center;         /* ✅ centre horizontalement */
+  animation: fadeIn 0.2s ease;
 }
 
 /* Animation d'apparition */

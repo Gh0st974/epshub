@@ -13,28 +13,23 @@ window.SBevents = (function () {
 
   // ═══ TIMER ═══
   function ecouterTimer() {
-    // Affichage cliquable → ouvre la modal
     document.getElementById('sb-timer-affichage')
       .addEventListener('click', () => {
-        // Pré-remplir les inputs avec la durée actuelle
         const duree = window.SB.config.timerDuree;
         document.getElementById('sb-input-min').value = Math.floor(duree / 60);
         document.getElementById('sb-input-sec').value = duree % 60;
         document.getElementById('sb-modal-timer').removeAttribute('hidden');
       });
 
-    // Play/Pause
     document.getElementById('sb-timer-play')
       .addEventListener('click', () => SBtimer.togglePlay());
 
-    // Reset
     document.getElementById('sb-timer-reset')
       .addEventListener('click', () => SBtimer.reset());
   }
 
   // ═══ SETS / PASTILLES ═══
   function ecouterSets() {
-    // Bouton suivante
     document.getElementById('sb-btn-suivante')
       .addEventListener('click', () => window.SB.setSuivant());
   }
@@ -53,18 +48,26 @@ window.SBevents = (function () {
 
   // ═══ CONFIGURATION ═══
   function ecouterConfig() {
-    // Ouvrir/fermer le panneau
-    document.getElementById('sb-btn-configurer')
+
+    // ── Accordéon : ouvrir / fermer ──
+    document.getElementById('sb-config-header')
       .addEventListener('click', () => {
-        const panel = document.getElementById('sb-config-panel');
-        if (panel.hasAttribute('hidden')) {
-          panel.removeAttribute('hidden');
+        const header = document.getElementById('sb-config-header');
+        const corps  = document.getElementById('sb-config-corps');
+        const estOuvert = corps.classList.contains('ouvert');
+
+        if (estOuvert) {
+          corps.classList.remove('ouvert');
+          header.classList.remove('ouvert');
+          header.setAttribute('aria-expanded', 'false');
         } else {
-          panel.setAttribute('hidden', '');
+          corps.classList.add('ouvert');
+          header.classList.add('ouvert');
+          header.setAttribute('aria-expanded', 'true');
         }
       });
 
-    // Reset global
+    // ── Reset global ──
     document.getElementById('sb-btn-reset-global')
       .addEventListener('click', () => {
         if (confirm('Réinitialiser tous les scores ?')) {
@@ -72,7 +75,7 @@ window.SBevents = (function () {
         }
       });
 
-    // Stepper équipes
+    // ── Stepper équipes ──
     document.getElementById('sb-equipes-moins')
       .addEventListener('click', () => {
         if (window.SB.config.nbEquipes > 2) {
@@ -91,7 +94,7 @@ window.SBevents = (function () {
         }
       });
 
-    // Stepper sets
+    // ── Stepper sets ──
     document.getElementById('sb-sets-moins')
       .addEventListener('click', () => {
         if (window.SB.config.nbSets > 1) {
@@ -108,7 +111,7 @@ window.SBevents = (function () {
         }
       });
 
-    // Ajouter un bouton bonus
+    // ── Bouton bonus : ajouter ──
     document.getElementById('sb-btn-ajouter-bonus')
       .addEventListener('click', () => {
         if (window.SB.config.boutonsBonus.length >= 4) return;
@@ -116,7 +119,7 @@ window.SBevents = (function () {
         SBui.rendreConfigBonus();
       });
 
-    // Délégation sur la liste bonus (modifier label/valeur + supprimer)
+    // ── Boutons bonus : modifier label / valeur ──
     document.getElementById('sb-bonus-liste')
       .addEventListener('input', (e) => {
         const input = e.target.closest('[data-index-bonus]');
@@ -130,6 +133,7 @@ window.SBevents = (function () {
         }
       });
 
+    // ── Boutons bonus : supprimer ──
     document.getElementById('sb-bonus-liste')
       .addEventListener('click', (e) => {
         const btn = e.target.closest('.sb-bonus-suppr');
@@ -139,19 +143,23 @@ window.SBevents = (function () {
         SBui.rendreConfigBonus();
       });
 
-    // Valider config → réinitialise le match
+    // ── Valider config → ferme l'accordéon ──
     document.getElementById('sb-btn-valider-config')
       .addEventListener('click', () => {
         // Lire les noms depuis les inputs
         const { nbEquipes } = window.SB.config;
-        for (let e = 0; e < nbEquipes; e++) {
-          const input = document.getElementById(`sb-nom-equipe-${e}`);
+        for (let i = 0; i < nbEquipes; i++) {
+          const input = document.getElementById(`sb-nom-equipe-${i}`);
           if (input) {
-            window.SB.config.nomsEquipes[e] = input.value || `Équipe ${e + 1}`;
+            window.SB.config.nomsEquipes[i] = input.value || `Équipe ${i + 1}`;
           }
         }
         window.SB.appliquerConfig();
-        document.getElementById('sb-config-panel').setAttribute('hidden', '');
+
+        // Fermer l'accordéon
+        document.getElementById('sb-config-corps').classList.remove('ouvert');
+        document.getElementById('sb-config-header').classList.remove('ouvert');
+        document.getElementById('sb-config-header').setAttribute('aria-expanded', 'false');
       });
   }
 
@@ -190,7 +198,7 @@ window.SBevents = (function () {
         document.getElementById('sb-modal-confirm').setAttribute('hidden', '');
       });
 
-    // Fermer les modals en cliquant sur l'overlay
+    // Fermer en cliquant sur l'overlay
     document.querySelectorAll('.sb-modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {

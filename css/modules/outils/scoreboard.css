@@ -1,518 +1,79 @@
 /* 📄 Fichier : css/modules/outils/scoreboard.css */
 /* 🎯 Rôle : Styles du module scoreboard */
 
-/* ═══ CONTENEUR PRINCIPAL ═══ */
-.sb-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 12px;
-  max-width: 900px;
-  margin: 0 auto;
-}
+/* ═══ ACCORDÉON CONFIG ═══ */
 
-/* ═══ BARRE TOP ═══ */
-.sb-barre-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--couleur-fond-carte);
-  border-radius: var(--rayon-carte);
-  padding: 10px 14px;
-  box-shadow: var(--ombre-carte);
-  flex-wrap: wrap;
-}
-
-/* ═══ PASTILLES SETS ═══ */
-.sb-pastilles {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex: 1;
-}
-
-.sb-pastille {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid var(--couleur-principale);
-  background: transparent;
-  color: var(--couleur-principale);
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-/* Pastille active */
-.sb-pastille.active {
-  background: var(--couleur-principale);
-  color: #fff;
-  transform: scale(1.15);
-}
-
-/* Pastille passée */
-.sb-pastille.passee {
-  border-color: #ccc;
-  color: #999;
-  background: #f0f0f0;
-}
-
-/* Pastille future */
-.sb-pastille.future {
-  border-color: #ddd;
-  color: #ccc;
-  cursor: default;
-}
-
-/* ═══ TIMER ═══ */
-.sb-timer-bloc {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sb-timer-affichage {
-  background: var(--couleur-texte);
-  color: #fff;
-  font-size: 1.6rem;
-  font-weight: 700;
-  font-family: monospace;
-  padding: 6px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  min-width: 90px;
-  text-align: center;
-  transition: background 0.2s;
-}
-
-/* Effet clignotement à 0 */
-.sb-timer-affichage.fini {
-  animation: sb-clignote 0.6s step-end infinite;
-  background: #e74c3c;
-}
-
-@keyframes sb-clignote {
-  0%, 100% { background: #e74c3c; }
-  50%       { background: #c0392b; opacity: 0.5; }
-}
-
-.sb-timer-controles {
-  display: flex;
-  gap: 6px;
-}
-
-.sb-timer-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  border: none;
-  background: var(--couleur-fond);
-  color: var(--couleur-texte);
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.sb-timer-btn:active {
-  background: var(--couleur-principale);
-  color: #fff;
-}
-
-/* ═══ BOUTON SUIVANTE ═══ */
-.sb-btn-suivante {
-  padding: 10px 16px;
-  background: var(--couleur-principale);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  min-height: 48px;
-}
-
-.sb-btn-suivante:active {
-  background: var(--couleur-principale-fonce);
-}
-
-/* ═══ GRILLE ÉQUIPES ═══ */
-.sb-grille {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 600px) {
-  .sb-grille {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (min-width: 1024px) {
-  .sb-grille {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* ═══ CARTE ÉQUIPE ═══ */
-.sb-carte-equipe {
-  background: var(--couleur-fond-carte);
+/* Wrapper qui englobe le bouton header + le panneau */
+.sb-config-wrapper {
   border-radius: var(--rayon-carte);
   box-shadow: var(--ombre-carte);
-  padding: 16px;
+  overflow: hidden;           /* clip la transition */
+  background: var(--couleur-fond-carte);
+}
+
+/* En-tête cliquable (remplace le bouton ⚙️ Configurer) */
+.sb-config-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  border-top: 5px solid var(--couleur-principale);
+  justify-content: space-between;
+  padding: 14px 20px;
+  cursor: pointer;
+  background: var(--couleur-fond-carte);
+  border: none;
+  width: 100%;
+  text-align: left;
+  min-height: 52px;
+  border-bottom: 2px solid transparent;
   transition: border-color 0.2s;
 }
 
-.sb-equipe-nom {
+.sb-config-header:hover {
+  background: var(--couleur-fond);
+}
+
+.sb-config-header.ouvert {
+  border-bottom-color: var(--couleur-principale);
+}
+
+.sb-config-header-texte {
   font-size: 1rem;
   font-weight: 700;
   color: var(--couleur-texte);
-  text-align: center;
-}
-
-.sb-equipe-score {
-  font-size: 3.5rem;
-  font-weight: 900;
-  color: var(--couleur-texte);
-  line-height: 1;
-}
-
-/* Boutons score */
-.sb-score-btns {
   display: flex;
+  align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
-.sb-btn-score {
-  min-height: 48px;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 10px;
+/* Flèche rotative */
+.sb-config-chevron {
   font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  background: var(--couleur-principale);
-  color: #fff;
-  transition: background 0.15s, transform 0.1s;
-}
-
-.sb-btn-score:active {
-  transform: scale(0.95);
-  background: var(--couleur-principale-fonce);
-}
-
-/* Bouton -1 discret */
-.sb-btn-moins {
-  background: transparent;
-  border: 2px solid #e74c3c;
-  color: #e74c3c;
-  font-size: 0.85rem;
-  padding: 4px 10px;
-  min-height: 36px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.sb-btn-moins:active {
-  background: #e74c3c;
-  color: #fff;
-}
-
-/* Historique mini sets */
-.sb-historique {
-  display: flex;
-  gap: 4px;
-  font-size: 0.75rem;
   color: var(--couleur-texte-leger);
+  transition: transform 0.3s ease;
+  display: inline-block;
 }
 
-.sb-historique-set {
-  background: var(--couleur-fond);
-  border-radius: 4px;
-  padding: 2px 5px;
+.sb-config-header.ouvert .sb-config-chevron {
+  transform: rotate(180deg);
 }
 
-/* ═══ ACTIONS GLOBALES ═══ */
-.sb-actions-globales {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+/* Corps accordéon — transition max-height */
+.sb-config-corps {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
 }
 
-.sb-btn-configurer,
-.sb-btn-reset {
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  min-height: 48px;
+.sb-config-corps.ouvert {
+  max-height: 800px;          /* valeur suffisamment grande */
 }
 
-.sb-btn-configurer {
-  background: var(--couleur-fond);
-  color: var(--couleur-texte);
-  border: 2px solid #ddd;
-}
-
-.sb-btn-reset {
-  background: #fdecea;
-  color: #e74c3c;
-  border: 2px solid #e74c3c;
-}
-
-/* ═══ PANNEAU CONFIG ═══ */
+/* Contenu intérieur (l'ancien sb-config-panel) */
 .sb-config-panel {
-  background: var(--couleur-fond-carte);
-  border-radius: var(--rayon-carte);
-  box-shadow: var(--ombre-carte);
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-}
-
-.sb-config-titre {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--couleur-texte);
-  margin: 0;
-}
-
-.sb-config-groupe {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.sb-config-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--couleur-texte-leger);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Stepper */
-.sb-stepper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sb-stepper-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  border: 2px solid var(--couleur-principale);
-  background: transparent;
-  color: var(--couleur-principale);
-  font-size: 1.3rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.sb-stepper-val {
-  font-size: 1.4rem;
-  font-weight: 700;
-  min-width: 30px;
-  text-align: center;
-  color: var(--couleur-texte);
-}
-
-/* Inputs noms équipes */
-.sb-input-nom {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 2px solid #ddd;
-  font-size: 1rem;
-  color: var(--couleur-texte);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.sb-input-nom:focus {
-  outline: none;
-  border-color: var(--couleur-principale);
-}
-
-/* Bonus */
-.sb-bonus-liste {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.sb-bonus-item {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.sb-bonus-input-label {
-  flex: 2;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 2px solid #ddd;
-  font-size: 0.95rem;
-}
-
-.sb-bonus-input-val {
-  flex: 1;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 2px solid #ddd;
-  font-size: 0.95rem;
-  text-align: center;
-}
-
-.sb-bonus-suppr {
-  background: transparent;
-  border: none;
-  color: #e74c3c;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 4px 8px;
-}
-
-.sb-btn-ajouter-bonus {
-  align-self: flex-start;
-  padding: 8px 14px;
-  background: var(--couleur-fond);
-  border: 2px dashed var(--couleur-principale);
-  border-radius: 8px;
-  color: var(--couleur-principale);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.sb-btn-valider-config {
-  padding: 12px;
-  background: var(--couleur-principale);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 48px;
-}
-
-/* ═══ MODALS ═══ */
-.sb-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-.sb-modal-overlay[hidden] {
-  display: none;
-}
-
-.sb-modal-boite {
-  background: var(--couleur-fond-carte);
-  border-radius: var(--rayon-carte);
-  padding: 24px;
-  width: 100%;
-  max-width: 340px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-}
-
-.sb-modal-titre {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--couleur-texte);
-}
-
-.sb-modal-texte {
-  margin: 0;
-  color: var(--couleur-texte-leger);
-  font-size: 0.95rem;
-}
-
-.sb-modal-champs {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  justify-content: center;
-}
-
-.sb-modal-label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--couleur-texte-leger);
-}
-
-.sb-modal-input {
-  width: 70px;
-  padding: 10px;
-  font-size: 1.4rem;
-  text-align: center;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  font-weight: 700;
-}
-
-.sb-modal-input:focus {
-  outline: none;
-  border-color: var(--couleur-principale);
-}
-
-.sb-modal-separateur {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--couleur-texte);
-  padding-bottom: 8px;
-}
-
-.sb-modal-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.sb-modal-btn-annuler,
-.sb-modal-btn-valider {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 48px;
-}
-
-.sb-modal-btn-annuler {
-  background: var(--couleur-fond);
-  color: var(--couleur-texte);
-}
-
-.sb-modal-btn-valider {
-  background: var(--couleur-principale);
-  color: #fff;
+  /* Supprimer box-shadow et border-radius (gérés par le wrapper) */
+  box-shadow: none;
+  border-radius: 0;
 }

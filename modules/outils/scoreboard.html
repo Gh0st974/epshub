@@ -1,85 +1,118 @@
-<!-- 📄 Fichier : modules/scoreboard.html -->
-<!-- 🎯 Rôle : Structure du scoreboard — jeu + modale config -->
+<!-- 📄 Fichier : modules/outils/scoreboard.html -->
+<!-- 🎯 Rôle : Structure HTML du module scoreboard -->
 
-<div id="scoreboard-root">
+<div class="sb-container">
 
-  <!-- ── Barre de période ── -->
-  <div id="scoreboard-periode-bar" hidden>
-    <span id="scoreboard-periode-label"></span>
-    <button id="scoreboard-btn-periode-suivante" class="scoreboard-btn-action">
-      Période suivante →
-    </button>
-  </div>
+  <!-- ═══ BARRE SETS + TIMER ═══ -->
+  <div class="sb-barre-top">
 
-  <!-- ── Barre d'actions ── -->
-  <div id="scoreboard-actions-bar">
-    <button id="scoreboard-btn-config" class="scoreboard-btn-action">
-      ⚙️ Configurer
-    </button>
-    <button id="scoreboard-btn-reset" class="scoreboard-btn-action scoreboard-btn-danger">
-      🔄 Reset
-    </button>
-  </div>
+    <!-- Pastilles des sets -->
+    <div class="sb-pastilles" id="sb-pastilles">
+      <!-- Généré dynamiquement -->
+    </div>
 
-  <!-- ── Zone des équipes ── -->
-  <div id="scoreboard-equipes"></div>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- MODALE CONFIGURATION                       -->
-  <!-- ══════════════════════════════════════════ -->
-  <div id="scoreboard-config-overlay" hidden>
-    <div id="scoreboard-config-modale">
-
-      <!-- En-tête -->
-      <div class="scoreboard-config-header">
-        <h2>⚙️ Configuration</h2>
-        <button id="scoreboard-btn-fermer-config" aria-label="Fermer">✕</button>
+    <!-- Timer global -->
+    <div class="sb-timer-bloc">
+      <div class="sb-timer-affichage" id="sb-timer-affichage" title="Configurer le timer">
+        <span id="sb-timer-texte">05:00</span>
       </div>
+      <div class="sb-timer-controles">
+        <button class="sb-timer-btn" id="sb-timer-play">▶</button>
+        <button class="sb-timer-btn" id="sb-timer-reset">↺</button>
+      </div>
+    </div>
 
-      <!-- Section équipes -->
-      <section class="scoreboard-config-section">
-        <h3>Équipes</h3>
-        <div id="scoreboard-config-equipes-liste"></div>
-        <button id="scoreboard-btn-ajouter-equipe" class="scoreboard-btn-ajouter">
-          + Ajouter une équipe
-        </button>
-      </section>
+    <!-- Bouton période suivante -->
+    <button class="sb-btn-suivante" id="sb-btn-suivante">Suivante ▶</button>
 
-      <!-- Section bonus -->
-      <section class="scoreboard-config-section">
-        <h3>Points bonus</h3>
-        <div id="scoreboard-config-bonus-liste"></div>
-        <button id="scoreboard-btn-ajouter-bonus" class="scoreboard-btn-ajouter">
-          + Ajouter un bonus
-        </button>
-      </section>
+  </div>
 
-      <!-- Section périodes -->
-      <section class="scoreboard-config-section">
-        <h3>Périodes</h3>
-        <label class="scoreboard-config-toggle">
-          <input type="checkbox" id="scoreboard-config-periodes-actives">
-          Activer les périodes
+  <!-- ═══ GRILLE ÉQUIPES ═══ -->
+  <div class="sb-grille" id="sb-grille">
+    <!-- Généré dynamiquement -->
+  </div>
+
+  <!-- ═══ ACTIONS GLOBALES ═══ -->
+  <div class="sb-actions-globales">
+    <button class="sb-btn-configurer" id="sb-btn-configurer">⚙️ Configurer</button>
+    <button class="sb-btn-reset" id="sb-btn-reset-global">↺ Tout reset</button>
+  </div>
+
+  <!-- ═══ PANNEAU CONFIG ═══ -->
+  <div class="sb-config-panel" id="sb-config-panel" hidden>
+
+    <h3 class="sb-config-titre">⚙️ Configuration</h3>
+
+    <!-- Nb équipes -->
+    <div class="sb-config-groupe">
+      <label class="sb-config-label">Nombre d'équipes</label>
+      <div class="sb-stepper">
+        <button class="sb-stepper-btn" id="sb-equipes-moins">−</button>
+        <span class="sb-stepper-val" id="sb-equipes-val">2</span>
+        <button class="sb-stepper-btn" id="sb-equipes-plus">+</button>
+      </div>
+    </div>
+
+    <!-- Noms équipes -->
+    <div class="sb-config-groupe" id="sb-noms-equipes">
+      <!-- Généré dynamiquement -->
+    </div>
+
+    <!-- Nb sets -->
+    <div class="sb-config-groupe">
+      <label class="sb-config-label">Nombre de sets</label>
+      <div class="sb-stepper">
+        <button class="sb-stepper-btn" id="sb-sets-moins">−</button>
+        <span class="sb-stepper-val" id="sb-sets-val">3</span>
+        <button class="sb-stepper-btn" id="sb-sets-plus">+</button>
+      </div>
+    </div>
+
+    <!-- Boutons bonus -->
+    <div class="sb-config-groupe">
+      <label class="sb-config-label">Boutons de score rapide</label>
+      <div class="sb-bonus-liste" id="sb-bonus-liste">
+        <!-- Généré dynamiquement -->
+      </div>
+      <button class="sb-btn-ajouter-bonus" id="sb-btn-ajouter-bonus">+ Ajouter</button>
+    </div>
+
+    <!-- Valider config -->
+    <button class="sb-btn-valider-config" id="sb-btn-valider-config">✅ Appliquer</button>
+
+  </div>
+
+  <!-- ═══ MODAL TIMER ═══ -->
+  <div class="sb-modal-overlay" id="sb-modal-timer" hidden>
+    <div class="sb-modal-boite">
+      <h3 class="sb-modal-titre">⏱ Configurer le timer</h3>
+      <div class="sb-modal-champs">
+        <label class="sb-modal-label">
+          Minutes
+          <input type="number" id="sb-input-min" class="sb-modal-input" min="0" max="99" value="5">
         </label>
-        <div id="scoreboard-config-periodes-detail" hidden>
-          <label>
-            Nombre de périodes
-            <input type="number" id="scoreboard-config-nb-periodes"
-                   min="2" max="10" value="2">
-          </label>
-          <label>
-            Nom des périodes
-            <input type="text" id="scoreboard-config-nom-periode"
-                   placeholder="Ex : Mi-temps, Quart..." maxlength="20">
-          </label>
-        </div>
-      </section>
+        <span class="sb-modal-separateur">:</span>
+        <label class="sb-modal-label">
+          Secondes
+          <input type="number" id="sb-input-sec" class="sb-modal-input" min="0" max="59" value="0">
+        </label>
+      </div>
+      <div class="sb-modal-actions">
+        <button class="sb-modal-btn-annuler" id="sb-timer-annuler">Annuler</button>
+        <button class="sb-modal-btn-valider" id="sb-timer-valider">Valider</button>
+      </div>
+    </div>
+  </div>
 
-      <!-- Bouton valider -->
-      <button id="scoreboard-btn-valider-config" class="scoreboard-btn-valider">
-        ✅ Valider
-      </button>
-
+  <!-- ═══ MODAL CONFIRMATION SET ═══ -->
+  <div class="sb-modal-overlay" id="sb-modal-confirm" hidden>
+    <div class="sb-modal-boite">
+      <h3 class="sb-modal-titre">⚠️ Changer de set ?</h3>
+      <p class="sb-modal-texte" id="sb-confirm-texte">Revenir au set 1 ?</p>
+      <div class="sb-modal-actions">
+        <button class="sb-modal-btn-annuler" id="sb-confirm-non">Annuler</button>
+        <button class="sb-modal-btn-valider" id="sb-confirm-oui">Confirmer</button>
+      </div>
     </div>
   </div>
 

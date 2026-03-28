@@ -1,138 +1,124 @@
-// 📄 Fichier : js/modules/scoreboard/scoreboard.js
-// 🎯 Rôle : Point d'entrée du module — état global et initialisation
+// 📄 Fichier : js/modules/outils/scoreboard/scoreboard.js
+// 🎯 Rôle : Point d'entrée + état global du module scoreboard
 
 (function () {
 
-  // ══════════════════════════════════════
-  // ÉTAT GLOBAL
-  // ══════════════════════════════════════
+  // ═══ ÉTAT GLOBAL ═══
+  // Partagé entre tous les fichiers du module via window.SB
+  window.SB = {
 
-  const etat = {
-    equipes: [],
-    bonus: [],
-    periodes: {
-      actives: false,
-      total: 2,
-      courante: 1,
-      nom: 'Période',
+    // Configuration
+    config: {
+      nbEquipes: 2,
+      nbSets: 3,
+      nomsEquipes: ['Équipe A', 'Équipe B', 'Équipe C', 'Équipe D'],
+      boutonsBonus: [
+        { label: '+2', valeur: 2 },
+        { label: '+3', valeur: 3 }
+      ],
+      couleurs: ['#e74c3c', '#3498db', '#f39c12', '#9b59b6'],
+      timerDuree: 5 * 60 // secondes
     },
+
+    // État du match
+    etat: {
+      setActif: 0, // index 0-based
+      // scores[setIndex][equipeIndex] = score
+      scores: [],
+      timerSecondes: 5 * 60,
+      timerEnCours: false,
+      timerInterval: null
+    },
+
+    // Callback confirmé pour changer de set (stocké en attente)
+    setEnAttente: null
   };
 
-  // ══════════════════════════════════════
-  // ÉQUIPES
-  // ══════════════════════════════════════
-
-  function creerEquipe(id, nom, couleur) {
-    return { id, nom, couleur, scoreTotal: 0, scoresPeriodes: [] };
-  }
-
-  function initialiserEquipesDefaut() {
-    etat.equipes = [
-      creerEquipe(1, 'Équipe A', '#2ecc71'),
-      creerEquipe(2, 'Équipe B', '#3498db'),
-    ];
-  }
-
-  // ══════════════════════════════════════
-  // ACTIONS SCORES
-  // ══════════════════════════════════════
-
-  function ajouterPoints(idEquipe, points) {
-    const equipe = etat.equipes.find(e => e.id === idEquipe);
-    if (!equipe) return;
-    equipe.scoreTotal += points;
-    if (etat.periodes.actives) {
-      const idx = etat.periodes.courante - 1;
-      if (!equipe.scoresPeriodes[idx]) equipe.scoresPeriodes[idx] = 0;
-      equipe.scoresPeriodes[idx] += points;
+  // ═══ INITIALISATION DES SCORES ═══
+  function initialiserScores() {
+    const { nbEquipes, nbSets } = window.SB.config;
+    window.SB.etat.scores = [];
+    for (let s = 0; s < nbSets; s++) {
+      const ligne = [];
+      for (let e = 0; e < nbEquipes; e++) {
+        ligne.push(0);
+      }
+      window.SB.etat.scores.push(ligne);
     }
   }
 
-  function reinitialiserScores() {
-    etat.equipes.forEach(eq => {
-      eq.scoreTotal = 0;
-      eq.scoresPeriodes = [];
-    });
-    if (etat.periodes.actives) etat.periodes.courante = 1;
-  }
+  // ═══ APPLIQUER LA CONFIGURATION ═══
+  // Appelé depuis scoreboard-events.js quand l'utilisateur valide
+  window.SB.appliquerConfig = function () {
+    // Sauvegarder les scores existants avant recréation
+    initialiserScores();
+    window.SB.etat.setActif = 0;
+    window.SB.etat.timerSecondes = window.SB.config.timerDuree;
+    window.SB.etat.timerEnCours = false;
+    clearInterval(window.SB.etat.timerInterval);
+    SBui.rendreTout();
+  };
 
-  // ══════════════════════════════════════
-  // PÉRIODES
-  // ══════════════════════════════════════
+  // ═══ MODIFIER UN SCORE ═══
+  window.SB.modifierScore = function (indexEquipe, delta) {
+    const set = window.SB.etat.setActif;
+    let nouveau = window.SB.etat.scores[set][indexEquipe] + delta;
+    // Bloquer à 0 minimum
+    if (nouveau < 0) nouveau = 0;
+    window.SB.etat.scores[set][indexEquipe] = nouveau;
+    SBui.mettreAJourScore(indexEquipe);
+  };
 
-  function periodeSuivante() {
-    if (etat.periodes.courante < etat.periodes.total) {
-      etat.periodes.courante++;
-      return true;
+  // ═══ CHANGER DE SET ═══
+  window.SB.allerAuSet = function (indexSet) {
+    if (indexSet < 0 || indexSet >= window.SB.config.nbSets) return;
+    window.SB.etat.setActif = indexSet;
+    SBui.rendrePastilles();
+    SBui.rendreScores();
+  };
+
+  // ═══ SET SUIVANT ═══
+  window.SB.setSuivant = function () {
+    const suivant = window.SB.etat.setActif + 1;
+    if (suivant < window.SB.config.nbSets) {
+      window.SB.allerAuSet(suivant);
     }
-    return false;
-  }
+  };
 
-  // ══════════════════════════════════════
-  // CONFIGURATION
-  // ══════════════════════════════════════
+  // ═══ RESET GLOBAL ═══
+  window.SB.resetGlobal = function () {
+    clearInterval(window.SB.etat.timerInterval);
+    window.SB.etat.timerEnCours = false;
+    window.SB.etat.timerSecondes = window.SB.config.timerDuree;
+    initialiserScores();
+    window.SB.etat.setActif = 0;
+    SBui.rendreTout();
+  };
 
-  function appliquerConfiguration(config) {
-    etat.equipes = config.equipes.map((e, i) => creerEquipe(i + 1, e.nom, e.couleur));
-    etat.bonus   = config.bonus.filter(b => b.valeur > 0 && b.libelle.trim() !== '');
-    etat.periodes.actives  = config.periodes.actives;
-    etat.periodes.total    = config.periodes.total;
-    etat.periodes.courante = 1;
-    etat.periodes.nom      = config.periodes.nom || 'Période';
-  }
+  // ═══ LANCEMENT ═══
+  initialiserScores();
 
-  // ══════════════════════════════════════
-  // GETTERS
-  // ══════════════════════════════════════
+  // Charger les fichiers dépendants puis initialiser
+  const base = 'js/modules/outils/scoreboard/';
+  const fichiers = [
+    base + 'scoreboard-ui.js',
+    base + 'scoreboard-timer.js',
+    base + 'scoreboard-events.js'
+  ];
 
-  function getEtat()     { return etat; }
-  function getEquipes()  { return etat.equipes; }
-  function getBonus()    { return etat.bonus; }
-  function getPeriodes() { return etat.periodes; }
-
-  // ══════════════════════════════════════
-  // CHARGEMENT EN CASCADE
-  // ══════════════════════════════════════
-
-  function chargerScript(chemin, callback) {
-    // Supprime l'ancienne version pour forcer le rechargement
-    const ancien = document.querySelector(`script[src="${chemin}"]`);
-    if (ancien) ancien.remove();
-
+  let chargés = 0;
+  fichiers.forEach((src, i) => {
     const script = document.createElement('script');
-    script.src = chemin;
-    script.onload = callback;
-    script.onerror = () => console.error(`❌ Erreur chargement : ${chemin}`);
+    script.src = src;
+    script.onload = function () {
+      chargés++;
+      // Initialiser uniquement quand tous les scripts sont chargés
+      if (chargés === fichiers.length) {
+        SBui.rendreTout();
+        SBevents.init();
+      }
+    };
     document.body.appendChild(script);
-  }
-
-  // ══════════════════════════════════════
-  // EXPOSITION GLOBALE
-  // ══════════════════════════════════════
-
-  window.ScoreboardApp = {
-    getEtat, getEquipes, getBonus, getPeriodes,
-    ajouterPoints, reinitialiserScores, periodeSuivante,
-    appliquerConfiguration, creerEquipe,
-  };
-
-  // ══════════════════════════════════════
-  // INITIALISATION
-  // ══════════════════════════════════════
-
-  initialiserEquipesDefaut();
-
-  // Reset du flag events si module rechargé par le router
-  if (window.ScoreboardEvents) window.ScoreboardEvents.reset();
-
-  // ✅ CORRIGÉ : chemins relatifs corrects (même dossier)
-  chargerScript('js/modules/outils/scoreboard/scoreboard-config.js', () => {
-    chargerScript('js/modules/outils/scoreboard/scoreboard-ui.js', () => {
-      chargerScript('js/modules/outils/scoreboard/scoreboard-events.js', () => {
-        ScoreboardUI.rendrePage();
-        ScoreboardEvents.init();
-      });
-    });
   });
 
 })();

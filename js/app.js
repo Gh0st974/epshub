@@ -1,82 +1,46 @@
 // 📄 Fichier : /js/app.js
-// 🎯 Rôle : Point d'entrée principal — initialise tous les modules
-
-// ============================================================
-// RECHERCHE
-// ============================================================
+// 🎯 Rôle : Point d'entrée de l'application, init et enregistrement PWA
 
 /**
- * Initialise la recherche de modules
+ * Initialise l'application EPSHub
  */
-function initRecherche() {
-  const input = document.getElementById('input-recherche');
-  if (!input) return;
+function initialiserApp() {
+  // Enregistrement du Service Worker pour la PWA
+  enregistrerServiceWorker();
 
-  input.addEventListener('input', () => {
-    const terme = input.value.toLowerCase().trim();
+  // Chargement du module de démarrage : le Hub
+  chargerModule('hub');
 
-    if (terme === '') {
-      afficherResultatsRecherche([]);
-      return;
-    }
-
-    const resultats = MODULES_RECHERCHE.filter(module =>
-      module.label.toLowerCase().includes(terme)
-    );
-
-    afficherResultatsRecherche(resultats);
-  });
+  // Écoute des clics sur la barre de navigation
+  ecouterNavigation();
 }
 
-// ============================================================
-// SERVICE WORKER — PWA
-// ============================================================
-
 /**
- * Enregistrement du Service Worker pour le mode hors-ligne
+ * Enregistre le service worker pour le mode offline
  */
-function initServiceWorker() {
+function enregistrerServiceWorker() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register('/epshub/service-worker.js')
       .then(() => console.log('✅ Service Worker enregistré'))
-      .catch(err => console.warn('⚠️ SW échoué :', err));
+      .catch((err) => console.error('❌ Erreur SW :', err));
   }
 }
 
-// ============================================================
-// INITIALISATION DES MODULES — Ajouter ici chaque nouveau module
-// ============================================================
-// 📌 Appeler la fonction init du module ici
-// 📌 Le module doit être chargé dans index.html avant app.js
-// ============================================================
-
 /**
- * Initialise tous les modules actifs
+ * Écoute les clics sur les boutons de navigation du bas
  */
-function initModules() {
-  // --- Outils ---
-  if (typeof initChrono === 'function') initChrono();
+function ecouterNavigation() {
+  const boutonsNav = document.querySelectorAll('.nav-btn');
 
-  // --- Champs d'apprentissage (à compléter) ---
-  // if (typeof initCA1 === 'function') initCA1();
+  boutonsNav.forEach((bouton) => {
+    bouton.addEventListener('click', () => {
+      const nomModule = bouton.dataset.module;
+      chargerModule(nomModule);
+      mettreAJourNav(nomModule);
+    });
+  });
 }
 
-// ============================================================
-// DÉMARRAGE
-// ============================================================
-
-/**
- * Point d'entrée principal — lancé au chargement du DOM
- */
-function demarrerApp() {
-  initHub();          // Remplit les grilles CA et outils
-  initRouter();       // Active la navigation
-  initRecherche();    // Active la recherche
-  initModules();      // Initialise les modules actifs
-  initServiceWorker();
-
-  console.log(`🚀 ${CONFIG.nom} v${CONFIG.version} démarré`);
-}
-
-document.addEventListener('DOMContentLoaded', demarrerApp);
+// Lancement de l'app quand le DOM est prêt
+document.addEventListener('DOMContentLoaded', initialiserApp);

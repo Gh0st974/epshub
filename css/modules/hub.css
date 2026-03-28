@@ -1,0 +1,82 @@
+/* 📄 Fichier : /css/modules/hub.css */
+/* 🎯 Rôle : Styles de la page Hub — grilles, cartes CA et outils */
+
+/* ===== SECTION ===== */
+.hub-section {
+  margin-bottom: 32px;
+}
+
+.hub-titre {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--couleur-texte);
+  margin-bottom: 16px;
+}
+
+/* ===== GRILLE DE CARTES ===== */
+.hub-grille {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* ===== CARTE ===== */
+.hub-carte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--couleur-fond-carte);
+  border: none;
+  border-radius: var(--rayon-carte);
+  padding: 16px 8px;
+  cursor: pointer;
+  box-shadow: var(--ombre-carte);
+  transition: transform 0.15s, box-shadow 0.15s;
+  /* Grands boutons pour usage terrain */
+  min-height: 80px;
+}
+
+.hub-carte:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+.hub-carte__icone {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.hub-carte__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--couleur-texte-leger);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== RESPONSIVE TABLETTE / PC ===== */
+@media (min-width: 600px) {
+  .hub-grille {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .hub-carte {
+    min-height: 100px;
+  }
+
+  .hub-carte__icone {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Sur PC : on centre le contenu et on limite la largeur */
+  .app-main {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

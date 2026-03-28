@@ -1,84 +1,83 @@
 // 📄 Fichier : /js/router.js
-// 🎯 Rôle : Navigation entre les vues de l'application
-
-// ============================================================
-// MOTEUR DE NAVIGATION
-// ============================================================
+// 🎯 Rôle : Charge et injecte les modules HTML dans la zone <main>
 
 /**
- * Active une vue et met à jour la navbar
- * @param {string} idVue - ID de la vue à afficher
+ * Charge un module HTML et l'injecte dans #app-main
+ * @param {string} nomModule - Nom du module (ex: "hub", "chrono")
  */
-function naviguerVers(idVue) {
-  // Masquer toutes les vues
-  document.querySelectorAll('.vue').forEach(vue => {
-    vue.classList.remove('active');
-  });
+async function chargerModule(nomModule) {
+  const zoneContenu = document.getElementById('app-main');
 
-  // Afficher la vue cible
-  const vueCible = document.getElementById(idVue);
-  if (vueCible) vueCible.classList.add('active');
+  try {
+    // Récupération du fichier HTML du module
+    const reponse = await fetch(`modules/${nomModule}.html`);
 
-  // Mettre à jour la navbar
-  document.querySelectorAll('.navbar__btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.dataset.vue === idVue) btn.classList.add('active');
-  });
+    // Si le fichier n'existe pas encore
+    if (!reponse.ok) {
+      zoneContenu.innerHTML = `
+        <div class="module-vide">
+          <p>🚧 Module "<strong>${nomModule}</strong>" bientôt disponible</p>
+        </div>`;
+      return;
+    }
 
-  // Focus sur l'input si vue recherche
-  if (idVue === 'vue-recherche') {
-    setTimeout(() => {
-      const input = document.getElementById('input-recherche');
-      if (input) input.focus();
-    }, 100);
+    const contenuHTML = await reponse.text();
+    zoneContenu.innerHTML = contenuHTML;
+
+    // Charge le CSS spécifique au module si disponible
+    chargerCSSModule(nomModule);
+
+    // Charge le JS spécifique au module si disponible
+    chargerJSModule(nomModule);
+
+  } catch (erreur) {
+    console.error(`Erreur chargement module ${nomModule} :`, erreur);
+    zoneContenu.innerHTML = `
+      <div class="module-vide">
+        <p>❌ Erreur lors du chargement du module.</p>
+      </div>`;
   }
 }
 
-// ============================================================
-// ROUTES DES MODULES — Ajouter ici chaque nouveau module
-// ============================================================
-// 📌 FORMAT : 'id-carte-hub' → 'id-vue-dans-le-DOM'
-// 📌 L'id doit correspondre à celui déclaré dans config.js
-// 📌 La vue doit exister dans index.html
-// ============================================================
+/**
+ * Charge dynamiquement le CSS d'un module (évite les doublons)
+ * @param {string} nomModule
+ */
+function chargerCSSModule(nomModule) {
+  const idCSS = `css-module-${nomModule}`;
+  if (document.getElementById(idCSS)) return; // Déjà chargé
 
-const ROUTES_MODULES = {
-  // --- Outils ---
-  'chrono': 'vue-chrono',
-
-  // --- Champs d'apprentissage (à compléter) ---
-  // 'ca1': 'vue-ca1',
-};
-
-// ============================================================
-// INITIALISATION DU ROUTER
-// ============================================================
+  const lien = document.createElement('link');
+  lien.id = idCSS;
+  lien.rel = 'stylesheet';
+  lien.href = `css/modules/${nomModule}.css`;
+  document.head.appendChild(lien);
+}
 
 /**
- * Initialise les événements de navigation :
- * - Boutons navbar
- * - Cartes des modules (hub + recherche)
+ * Charge dynamiquement le JS d'un module (évite les doublons)
+ * @param {string} nomModule
  */
-function initRouter() {
+function chargerJSModule(nomModule) {
+  const idJS = `js-module-${nomModule}`;
+  if (document.getElementById(idJS)) return; // Déjà chargé
 
-  // Clics sur les boutons navbar
-  document.querySelectorAll('.navbar__btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idVue = btn.dataset.vue;
-      if (idVue) naviguerVers(idVue);
-    });
-  });
+  const script = document.createElement('script');
+  script.id = idJS;
+  script.src = `js/modules/${nomModule}.js`;
+  script.onerror = () => {}; // Silencieux si pas de JS pour ce module
+  document.body.appendChild(script);
+}
 
-  // Clics sur les cartes du hub et des résultats de recherche
-  document.addEventListener('click', (e) => {
-    const carte = e.target.closest('.hub-carte');
-    if (!carte) return;
-
-    const idModule = carte.dataset.id;
-    const idVue = ROUTES_MODULES[idModule];
-
-    if (idVue) {
-      naviguerVers(idVue);
+/**
+ * Met à jour l'état actif des boutons de navigation
+ * @param {string} nomModule
+ */
+function mettreAJourNav(nomModule) {
+  document.querySelectorAll('.nav-btn').forEach((btn) => {
+    btn.classList.remove('active');
+    if (btn.dataset.module === nomModule) {
+      btn.classList.add('active');
     }
   });
 }

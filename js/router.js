@@ -3,10 +3,11 @@
 // 🔧 Structure supportée :
 //    - Modules principaux : modules/[nomModule].html
 //    - Outils (ex: Chrono) : modules/outils/[nomOutil].html
+//    - Scoreboard : modules/scoreboard.html
 
 /**
  * Charge un module HTML et l'injecte dans #app-main
- * @param {string} nomModule - Nom du module (ex: "hub", "chrono")
+ * @param {string} nomModule - Nom du module (ex: "hub", "chrono", "scoreboard")
  */
 async function chargerModule(nomModule) {
   const zoneContenu = document.getElementById('app-main');
@@ -27,9 +28,16 @@ async function chargerModule(nomModule) {
     if (nomModule === 'chrono' || nomModule.startsWith('outil-')) {
       cheminsModules.html = `modules/outils/${nomModule}.html`;
       cheminsModules.css  = `css/modules/outils/${nomModule}.css`;
-      // ✅ Point d'entrée dans le sous-dossier /chrono/chrono.js
       cheminsModules.js   = `js/modules/outils/${nomModule}/${nomModule}.js`;
     }
+
+    // 3️⃣ Scoreboard — structure avec sous-dossier JS
+    if (nomModule === 'scoreboard') {
+      cheminsModules.html = `modules/scoreboard.html`;
+      cheminsModules.css  = `css/modules/scoreboard.css`;
+      cheminsModules.js   = `js/modules/scoreboard/scoreboard.js`;
+    }
+
     // =============================================
 
     // Récupération du HTML du module
@@ -70,7 +78,7 @@ async function chargerModule(nomModule) {
  */
 function chargerCSSModule(nomModule, cheminCSS) {
   const idCSS = `css-module-${nomModule}`;
-  if (document.getElementById(idCSS)) return; // CSS statique = pas besoin de recharger
+  if (document.getElementById(idCSS)) return;
 
   fetch(cheminCSS)
     .then(reponse => {

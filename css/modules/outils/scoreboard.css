@@ -1,60 +1,61 @@
 /* 📄 Fichier : css/modules/outils/scoreboard.css */
-/* 🎯 Rôle : Styles modernes du module scoreboard */
+/* 🎯 Rôle : Styles du module scoreboard — refonte UI moderne */
 
 /* ════════════════════════════════
-   CONTENEUR PRINCIPAL
+   BASE & CONTENEUR
 ════════════════════════════════ */
 .sb-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 14px;
+  gap: 14px;
+  padding: 16px;
   width: 100%;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   box-sizing: border-box;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #f0f0f0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   min-height: 100%;
 }
 
 /* ════════════════════════════════
-   BARRE TOP : SETS + TIMER
+   BARRE TOP — UNE SEULE LIGNE
 ════════════════════════════════ */
 .sb-barre-top {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   background: #fff;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 10px 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-  flex-wrap: nowrap;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  flex-wrap: nowrap;       /* ← force une seule ligne */
+  overflow: hidden;
   box-sizing: border-box;
+  width: 100%;
 }
 
 /* ── Pastilles sets ── */
 .sb-pastilles {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
   flex-shrink: 0;
 }
 
 .sb-pastille {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 2px solid #ddd;
+  border: 2px solid #e8e8e8;
   background: #fff;
-  color: #bbb;
+  color: #ccc;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
   user-select: none;
 }
@@ -63,81 +64,77 @@
   background: var(--couleur-principale);
   border-color: var(--couleur-principale);
   color: #fff;
-  box-shadow: 0 3px 10px rgba(46,204,113,0.4);
-  transform: scale(1.12);
+  box-shadow: 0 4px 14px rgba(46,204,113,0.45);
+  transform: scale(1.15);
 }
 
 .sb-pastille.passee {
-  border-color: #ccc;
-  color: #999;
-  background: #f7f7f7;
+  border-color: #e0e0e0;
+  color: #bbb;
+  background: #fafafa;
 }
 
 .sb-pastille.future {
-  border-color: #eee;
-  color: #ddd;
+  border-color: #f0f0f0;
+  color: #e0e0e0;
   cursor: default;
   pointer-events: none;
 }
 
-/* ── Timer ── */
+/* ── Timer bloc — poussé vers la droite ── */
 .sb-timer-bloc {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-left: auto;
+  gap: 6px;
+  margin-left: auto;   /* ← pousse à droite */
   flex-shrink: 0;
 }
 
 .sb-timer-affichage {
-  background: #1e2d3d;
+  background: #1a2332;
   color: #fff;
-  font-size: 1.55rem;
+  font-size: 1.4rem;
   font-weight: 800;
-  font-family: 'Courier New', monospace;
-  padding: 8px 18px;
-  border-radius: 12px;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  padding: 7px 16px;
+  border-radius: 14px;
   cursor: pointer;
   min-width: 105px;
   text-align: center;
   letter-spacing: 3px;
-  transition: background 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   user-select: none;
+  flex-shrink: 0;
 }
 
-.sb-timer-affichage:hover { background: #2c3e50; }
+.sb-timer-affichage:hover  { background: #243447; }
 
 .sb-timer-affichage.actif {
   background: var(--couleur-principale);
-  box-shadow: 0 4px 14px rgba(46,204,113,0.4);
+  box-shadow: 0 4px 18px rgba(46,204,113,0.5);
 }
 
 .sb-timer-affichage.termine {
   background: #e74c3c;
+  box-shadow: 0 4px 18px rgba(231,76,60,0.5);
   animation: sb-pulse 0.8s infinite alternate;
 }
 
 @keyframes sb-pulse {
-  from { opacity: 1; }
-  to   { opacity: 0.6; }
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0.75; transform: scale(0.98); }
 }
 
-/* ── Boutons timer ── */
-.sb-timer-controles {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
+/* Boutons timer ▶ ⏸ ↺ */
 .sb-timer-btn {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: none;
-  background: #f0f0f0;
-  color: #444;
-  font-size: 1rem;
+  border: 2px solid #e8e8e8;
+  background: #fff;
+  color: #555;
+  font-size: 0.9rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -147,28 +144,27 @@
 }
 
 .sb-timer-btn:hover {
-  background: #e0e0e0;
-  transform: scale(1.08);
+  border-color: var(--couleur-principale);
+  color: var(--couleur-principale);
+  transform: scale(1.1);
 }
 
-.sb-timer-btn:active { transform: scale(0.95); }
-
-/* ── Bouton suivante ── */
+/* ── Bouton set suivant ── */
 .sb-btn-suivante {
   background: var(--couleur-principale);
   color: #fff;
   border: none;
-  border-radius: 24px;
-  padding: 10px 18px;
-  font-size: 0.88rem;
+  border-radius: 14px;
+  padding: 9px 16px;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
+  min-height: 40px;
   white-space: nowrap;
   flex-shrink: 0;
-  min-height: 42px;
   letter-spacing: 0.03em;
-  box-shadow: 0 3px 10px rgba(46,204,113,0.35);
-  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
+  transition: all 0.2s ease;
 }
 
 .sb-btn-suivante:hover {
@@ -179,154 +175,202 @@
 /* ════════════════════════════════
    GRILLE ÉQUIPES
 ════════════════════════════════ */
-/* Grille équipes — s'adapte au nombre d'équipes */
 .sb-grille {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* défaut : 2 ou 3 équipes */
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  padding: 12px;
-}
-
-/* 2 équipes → 2 colonnes */
-.sb-grille[data-nb-equipes="2"] {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-/* 4 équipes → 2×2 */
-.sb-grille[data-nb-equipes="4"] {
-  grid-template-columns: repeat(2, 1fr);
 }
 
 /* ── Carte équipe ── */
-.sb-carte-equipe {
+.sb-carte {
   background: #fff;
-  border-radius: 18px;
+  border-radius: 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
   display: flex;
   flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
 }
 
-/* Barre couleur en haut de la carte */
-.sb-carte-barre {
-  height: 8px;
+/* Bande colorée en haut */
+.sb-carte-bandeau {
+  height: 5px;
   width: 100%;
-  background: #e74c3c; /* remplacé dynamiquement via style inline */
   flex-shrink: 0;
 }
 
-/* Corps de la carte */
 .sb-carte-corps {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 12px 20px;
-  gap: 8px;
+  padding: 14px 12px 18px;
+  gap: 6px;
+  flex: 1;
 }
 
-/* Nom de l'équipe */
+/* Nom équipe */
 .sb-equipe-nom {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--couleur-texte);
-  text-align: center;
-  letter-spacing: 0.02em;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--couleur-texte-leger);
 }
 
-/* Ligne score : − SCORE + */
-.sb-equipe-ligne-score {
+/* ── SCORE — grand, centré, impactant ── */
+.sb-equipe-score {
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--couleur-texte);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+  padding: 8px 0;
+}
+
+.sb-equipe-score.bump {
+  transform: scale(1.18);
+}
+
+/* ── Ligne +/score/- sur une ligne ── */
+.sb-score-ligne {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 4px 0;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
 }
 
-/* Boutons − et + */
-.sb-equipe-btn-moins,
-.sb-equipe-btn-plus {
+/* Boutons + et - circulaires flanquant le score */
+.sb-btn-plus,
+.sb-btn-moins-rond {
   width: 44px;
   height: 44px;
   border-radius: 50%;
   border: none;
-  font-size: 1.6rem;
-  font-weight: 300;
+  font-size: 1.4rem;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
   flex-shrink: 0;
-  line-height: 1;
-  /* couleur définie dynamiquement selon l'équipe */
+  min-height: 44px;
 }
 
-.sb-equipe-btn-moins {
-  background: transparent;
-  color: #e74c3c; /* remplacé dynamiquement */
+.sb-btn-plus {
+  background: var(--couleur-principale);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(46,204,113,0.4);
 }
 
-.sb-equipe-btn-plus {
-  background: transparent;
-  color: #e74c3c; /* remplacé dynamiquement */
+.sb-btn-plus:hover {
+  background: var(--couleur-principale-fonce);
+  transform: scale(1.1);
 }
 
-.sb-equipe-btn-moins:hover,
-.sb-equipe-btn-plus:hover {
-  background: rgba(0,0,0,0.05);
-  transform: scale(1.12);
+.sb-btn-moins-rond {
+  background: #fff0f0;
+  color: #e74c3c;
+  border: 2px solid #fdd;
 }
 
-.sb-equipe-btn-moins:active,
-.sb-equipe-btn-plus:active { transform: scale(0.92); }
-
-/* Score principal */
-.sb-equipe-score {
-  font-size: 4.5rem;
-  font-weight: 900;
-  line-height: 1;
-  color: #e74c3c; /* remplacé dynamiquement */
-  min-width: 80px;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
+.sb-btn-moins-rond:hover {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: #fff;
+  transform: scale(1.1);
 }
 
-/* Label "Score bonus" */
-.sb-equipe-label-bonus {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #bbb;
+/* ── Séparateur label bonus ── */
+.sb-bonus-label-section {
+  font-size: 0.62rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
+  color: #ccc;
   margin-top: 4px;
 }
 
-/* Boutons bonus */
-.sb-equipe-bonus-liste {
+/* ── Boutons bonus — rangée compacte ── */
+.sb-carte-boutons {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 8px;
   justify-content: center;
+  gap: 6px;
+  width: 100%;
 }
 
-.sb-bonus-btn {
-  border: none;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: #fff;
+.sb-btn-point {
+  padding: 8px 14px;
+  border: 2px solid #e8f5ee;
+  border-radius: 10px;
+  background: #f0faf5;
+  color: var(--couleur-principale-fonce);
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 36px;
   transition: all 0.15s ease;
-  /* background défini dynamiquement selon l'équipe */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
-.sb-bonus-btn:hover  { transform: scale(1.1); }
-.sb-bonus-btn:active { transform: scale(0.93); }
+.sb-btn-point:hover {
+  background: var(--couleur-principale);
+  border-color: var(--couleur-principale);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(46,204,113,0.3);
+}
+
+.sb-btn-point:active {
+  transform: scale(0.95);
+}
+
+/* ── Historique sets ── */
+.sb-equipe-histo {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #f2f2f2;
+  width: 100%;
+}
+
+.sb-histo-set {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 5px 10px;
+  min-width: 36px;
+}
+
+.sb-histo-set-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.sb-histo-set-val {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--couleur-texte);
+}
+
+.sb-histo-set.gagne { background: #eafaf1; }
+.sb-histo-set.gagne .sb-histo-set-val { color: var(--couleur-principale-fonce); }
 
 /* ════════════════════════════════
    ACTIONS GLOBALES
@@ -337,35 +381,36 @@
 }
 
 .sb-btn-reset {
-  background: #fff;
+  background: transparent;
   color: #e74c3c;
-  border: 2px solid #e74c3c;
-  border-radius: 24px;
+  border: 2px solid #fdd;
+  border-radius: 14px;
   padding: 10px 20px;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 42px;
-  transition: all 0.2s;
+  min-height: 44px;
+  transition: all 0.2s ease;
   letter-spacing: 0.03em;
 }
 
 .sb-btn-reset:hover {
   background: #e74c3c;
+  border-color: #e74c3c;
   color: #fff;
+  box-shadow: 0 4px 14px rgba(231,76,60,0.3);
 }
 
 /* ════════════════════════════════
-   ACCORDÉON CONFIGURATION
+   ACCORDÉON CONFIG
 ════════════════════════════════ */
 .sb-config-wrapper {
   background: #fff;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
 }
 
-/* Header cliquable */
 .sb-config-header {
   width: 100%;
   display: flex;
@@ -375,19 +420,20 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  color: var(--couleur-texte);
+  color: var(--couleur-texte-leger);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   transition: background 0.15s;
+  box-sizing: border-box;
 }
 
 .sb-config-header:hover { background: #fafafa; }
 
 .sb-config-chevron {
-  font-size: 0.75rem;
-  color: #aaa;
+  font-size: 0.7rem;
+  color: #ccc;
   transition: transform 0.25s ease;
 }
 
@@ -395,7 +441,6 @@
   transform: rotate(180deg);
 }
 
-/* Corps dépliable */
 .sb-config-corps {
   max-height: 0;
   overflow: hidden;
@@ -403,30 +448,32 @@
 }
 
 .sb-config-corps.ouvert {
-  max-height: 900px;
+  max-height: 1000px;
 }
 
 .sb-config-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 8px 24px 24px;
+  gap: 24px;
+  padding: 8px 24px 28px;
+  align-items: center;   /* ← centre tout horizontalement */
 }
 
-/* ── Groupes config ── */
 .sb-config-groupe {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  width: 100%;
+  max-width: 360px;      /* ← largeur max cohérente */
 }
 
 .sb-config-label {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  color: #aaa;
+  color: #bbb;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-align: center;
 }
 
@@ -434,17 +481,17 @@
 .sb-stepper {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .sb-stepper-btn {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 2px solid #e0e0e0;
+  border: 2px solid #e8e8e8;
   background: #fff;
-  color: #555;
-  font-size: 1.3rem;
+  color: #666;
+  font-size: 1.4rem;
   font-weight: 300;
   cursor: pointer;
   display: flex;
@@ -456,365 +503,66 @@
 .sb-stepper-btn:hover {
   border-color: var(--couleur-principale);
   color: var(--couleur-principale);
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
 .sb-stepper-val {
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 1.6rem;
+  font-weight: 900;
   color: var(--couleur-texte);
-  min-width: 30px;
+  min-width: 32px;
   text-align: center;
 }
 
-/* ── Noms équipes ── */
+/* ── Inputs noms équipes — centrés ── */
+#sb-noms-equipes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
 .sb-nom-ligne {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  max-width: 300px;
-}
-
-.sb-nom-input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 2px solid #e8e8e8;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  color: var(--couleur-texte);
-  background: #fafafa;
-  transition: border-color 0.2s;
-}
-
-.sb-nom-input:focus {
-  outline: none;
-  border-color: var(--couleur-principale);
-  background: #fff;
 }
 
 .sb-nom-pastille {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   flex-shrink: 0;
-  display: inline-block;
 }
 
-/* ── Boutons bonus config ── */
-.sb-bonus-liste {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  max-width: 360px;
-}
-
-.sb-bonus-ligne {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sb-bonus-nom {
-  flex: 2;
-  padding: 9px 12px;
-  border: 2px solid #e8e8e8;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  color: var(--couleur-texte);
-  background: #fafafa;
-  transition: border-color 0.2s;
-}
-
-.sb-bonus-val {
-  flex: 1;
-  padding: 9px 10px;
-  border: 2px solid #e8e8e8;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  text-align: center;
-  color: var(--couleur-texte);
-  background: #fafafa;
-  transition: border-color 0.2s;
-}
-
-.sb-bonus-nom:focus,
-.sb-bonus-val:focus {
-  outline: none;
-  border-color: var(--couleur-principale);
-  background: #fff;
-}
-
-.sb-bonus-suppr {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: #fee;
-  color: #e74c3c;
-  font-size: 0.85rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.15s;
-}
-
-.sb-bonus-suppr:hover {
-  background: #e74c3c;
-  color: #fff;
-}
-
-/* Bouton ajouter bonus */
-.sb-btn-ajouter-bonus {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: none;
-  background: var(--couleur-principale);
-  color: #fff;
-  font-size: 1.4rem;
-  font-weight: 300;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 4px;
-  box-shadow: 0 3px 10px rgba(46,204,113,0.35);
-  transition: all 0.2s;
-}
-
-.sb-btn-ajouter-bonus:hover {
-  background: var(--couleur-principale-fonce);
-  transform: scale(1.1) rotate(90deg);
-}
-
-/* ── Bouton Appliquer ── */
-.sb-btn-valider-config {
-  width: 100%;
-  padding: 16px;
-  background: var(--couleur-principale);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 52px;
-  letter-spacing: 0.04em;
-  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
-  transition: all 0.2s;
-  margin-top: 4px;
-}
-
-.sb-btn-valider-config:hover {
-  background: var(--couleur-principale-fonce);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(39,174,96,0.4);
-}
-
-/* ════════════════════════════════
-   MODALS
-════════════════════════════════ */
-.sb-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(3px);
-}
-
-.sb-modal-overlay[hidden] { display: none; }
-
-.sb-modal-boite {
-  background: #fff;
-  border-radius: 24px;
-  padding: 28px 24px;
-  width: 90%;
-  max-width: 340px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.sb-modal-titre {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--couleur-texte);
-  text-align: center;
-  margin: 0;
-}
-
-.sb-modal-texte {
-  text-align: center;
-  color: #666;
-  font-size: 0.95rem;
-  margin: 0;
-}
-
-.sb-modal-champs {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 10px;
-}
-
-.sb-modal-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #aaa;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.sb-modal-input {
-  width: 80px;
-  padding: 12px;
-  text-align: center;
-  border: 2px solid #e8e8e8;
-  border-radius: 14px;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--couleur-texte);
-  background: #fafafa;
-  box-sizing: border-box;
-  transition: border-color 0.2s;
-}
-
-.sb-modal-input:focus {
-  outline: none;
-  border-color: var(--couleur-principale);
-  background: #fff;
-}
-
-.sb-modal-separateur {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #ccc;
-  padding-bottom: 16px;
-}
-
-.sb-modal-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.sb-modal-btn-annuler,
-.sb-modal-btn-valider {
-  flex: 1;
-  padding: 13px;
-  border-radius: 12px;
-  border: none;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 48px;
-  transition: all 0.2s;
-}
-
-.sb-modal-btn-annuler {
-  background: #f0f0f0;
-  color: #555;
-}
-
-.sb-modal-btn-annuler:hover { background: #e4e4e4; }
-
-.sb-modal-btn-valider {
-  background: var(--couleur-principale);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(46,204,113,0.3);
-}
-
-.sb-modal-btn-valider:hover {
-  background: var(--couleur-principale-fonce);
-}
-
-/* ════════════════════════════════
-   RESPONSIVE
-════════════════════════════════ */
-@media (max-width: 600px) {
-
-  .sb-container  { padding: 10px; gap: 10px; }
-  .sb-grille     { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .sb-equipe-score { font-size: 3rem; }
-
-  .sb-timer-affichage {
-    font-size: 1.3rem;
-    min-width: 85px;
-    padding: 7px 12px;
-  }
-
-  .sb-barre-top {
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 14px;
-  }
-
-  .sb-btn-suivante {
-    font-size: 0.8rem;
-    padding: 8px 12px;
-  }
-
-  .sb-carte-corps { padding: 12px 8px 16px; }
-  .sb-modal-boite { padding: 20px; border-radius: 18px; }
-}
-
-@media (min-width: 1024px) {
-  .sb-grille {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-
-  .sb-equipe-score { font-size: 5rem; }
-}
-
-/* ════════════════════════════════
-   CONFIG : INPUTS NOMS ÉQUIPES
-════════════════════════════════ */
-
-/* Conteneur des inputs noms */
-#sb-noms-equipes {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
+.sb-nom-input,
 .sb-input-nom {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e8e8e8;
-  border-radius: 12px;
-  font-size: 1rem;
+  flex: 1;
+  padding: 11px 16px;
+  border: 2px solid #eee;
+  border-radius: 14px;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--couleur-texte);
-  background: var(--couleur-fond);
-  box-sizing: border-box;
-  transition: border-color 0.2s;
+  background: #fafafa;
+  transition: border-color 0.2s, background 0.2s;
   outline: none;
+  box-sizing: border-box;
 }
 
+.sb-nom-input:focus,
 .sb-input-nom:focus {
   border-color: var(--couleur-principale);
   background: #fff;
 }
 
-/* ════════════════════════════════
-   CONFIG : BOUTONS BONUS
-════════════════════════════════ */
-
+/* ── Bonus ── */
 .sb-bonus-liste {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
   margin-bottom: 10px;
 }
 
@@ -826,160 +574,145 @@
 }
 
 .sb-bonus-input-label,
-.sb-bonus-input-val {
+.sb-bonus-input-val,
+.sb-bonus-nom,
+.sb-bonus-val {
   padding: 10px 14px;
-  border: 2px solid #e8e8e8;
+  border: 2px solid #eee;
   border-radius: 12px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--couleur-texte);
-  background: var(--couleur-fond);
+  background: #fafafa;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
   box-sizing: border-box;
   width: 100%;
 }
 
+.sb-bonus-input-val,
+.sb-bonus-val { text-align: center; }
+
 .sb-bonus-input-label:focus,
-.sb-bonus-input-val:focus {
+.sb-bonus-input-val:focus,
+.sb-bonus-nom:focus,
+.sb-bonus-val:focus {
   border-color: var(--couleur-principale);
   background: #fff;
-}
-
-.sb-bonus-input-val {
-  text-align: center;
 }
 
 .sb-bonus-suppr {
   width: 40px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 2px solid #fde8e8;
-  background: #fff0f0;
+  background: #fff5f5;
   color: #e74c3c;
   font-size: 1rem;
-  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
 .sb-bonus-suppr:hover {
-  background: #fde8e8;
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: #fff;
 }
 
-/* Bouton ajouter bonus */
 .sb-btn-ajouter-bonus {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  border: none;
   background: var(--couleur-principale);
   color: #fff;
   font-size: 1.5rem;
-  font-weight: 700;
-  border: none;
+  font-weight: 300;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 4px auto 0;
-  box-shadow: 0 4px 12px rgba(46,204,113,0.3);
-  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .sb-btn-ajouter-bonus:hover {
   background: var(--couleur-principale-fonce);
-  transform: scale(1.08);
+  transform: scale(1.12) rotate(90deg);
 }
 
-/* ════════════════════════════════
-   HISTORIQUE SETS (résultats)
-════════════════════════════════ */
-
-.sb-equipe-histo {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #f0f0f0;
-}
-
-.sb-histo-set {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--couleur-fond);
-  border-radius: 10px;
-  padding: 6px 10px;
-  min-width: 40px;
-}
-
-.sb-histo-set-label {
-  font-size: 0.65rem;
+/* ── Bouton valider config ── */
+.sb-btn-valider-config {
+  width: 100%;
+  padding: 16px;
+  background: var(--couleur-principale);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--couleur-texte-leger);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 2px;
+  cursor: pointer;
+  min-height: 54px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 20px rgba(46,204,113,0.35);
+  transition: all 0.2s ease;
+  margin-top: 4px;
 }
 
-.sb-histo-set-val {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--couleur-texte);
-}
-
-/* Set gagné → mis en valeur */
-.sb-histo-set.gagne {
-  background: #eafaf1;
-}
-
-.sb-histo-set.gagne .sb-histo-set-val {
-  color: var(--couleur-principale-fonce);
+.sb-btn-valider-config:hover {
+  background: var(--couleur-principale-fonce);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(39,174,96,0.4);
 }
 
 /* ════════════════════════════════
-   MODAL TIMER & CONFIRM — refonte
+   MODALS
 ════════════════════════════════ */
-
 .sb-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
   box-sizing: border-box;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-.sb-modal-overlay[hidden] {
-  display: none;
-}
+.sb-modal-overlay[hidden] { display: none; }
 
 .sb-modal-boite {
   background: #fff;
-  border-radius: 24px;
-  padding: 28px 24px;
+  border-radius: 28px;
+  padding: 32px 28px;
   width: 100%;
   max-width: 340px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  animation: sb-modal-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes sb-modal-in {
+  from { opacity: 0; transform: scale(0.88) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .sb-modal-titre {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--couleur-texte);
-  margin: 0;
   text-align: center;
+  margin: 0;
 }
 
 .sb-modal-texte {
@@ -987,10 +720,9 @@
   color: var(--couleur-texte-leger);
   text-align: center;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-/* Champs min:sec */
 .sb-modal-champs {
   display: flex;
   align-items: center;
@@ -1003,25 +735,25 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--couleur-texte-leger);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #bbb;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 .sb-modal-input {
-  width: 80px;
+  width: 84px;
   padding: 14px 10px;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   font-weight: 800;
   color: var(--couleur-texte);
-  border: 2px solid #e8e8e8;
-  border-radius: 14px;
-  background: var(--couleur-fond);
+  border: 2px solid #eee;
+  border-radius: 16px;
+  background: #fafafa;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
   box-sizing: border-box;
 }
 
@@ -1031,13 +763,12 @@
 }
 
 .sb-modal-separateur {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--couleur-texte-leger);
-  padding-bottom: 18px;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #ddd;
+  padding-bottom: 20px;
 }
 
-/* Boutons modal */
 .sb-modal-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1049,28 +780,57 @@
   padding: 14px;
   border-radius: 14px;
   border: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   min-height: 50px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .sb-modal-btn-annuler {
-  background: var(--couleur-fond);
-  color: var(--couleur-texte-leger);
+  background: #f4f4f4;
+  color: #888;
 }
 
 .sb-modal-btn-annuler:hover {
-  background: #e4e4e4;
+  background: #eaeaea;
+  color: #555;
 }
 
 .sb-modal-btn-valider {
   background: var(--couleur-principale);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(46,204,113,0.3);
+  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
 }
 
 .sb-modal-btn-valider:hover {
   background: var(--couleur-principale-fonce);
+  transform: translateY(-1px);
+}
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media (max-width: 600px) {
+  .sb-container { padding: 10px; gap: 10px; }
+  .sb-grille { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sb-equipe-score { font-size: 3.5rem; }
+
+  .sb-timer-affichage {
+    font-size: 1.15rem;
+    min-width: 88px;
+    padding: 6px 10px;
+    letter-spacing: 2px;
+  }
+
+  .sb-barre-top { gap: 6px; padding: 8px 10px; border-radius: 16px; }
+  .sb-btn-suivante { font-size: 0.78rem; padding: 8px 11px; }
+  .sb-carte-corps { padding: 10px 8px 14px; }
+  .sb-modal-boite { padding: 24px 20px; border-radius: 22px; }
+  .sb-equipe-score { font-size: 3.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .sb-grille { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .sb-equipe-score { font-size: 6rem; }
 }

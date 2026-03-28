@@ -56,74 +56,109 @@ window.SBui = (function () {
   }
 
   // ═══ GRILLE ÉQUIPES ═══
-  function rendreGrille() {
-    const grille = document.getElementById('sb-grille');
-    if (!grille) return;
-    grille.innerHTML = '';
+  // ═══ GRILLE ÉQUIPES ═══
+function rendreGrille() {
+  const grille = document.getElementById('sb-grille');
+  if (!grille) return;
+  grille.innerHTML = '';
 
-    const { nbEquipes, nomsEquipes, couleurs, boutonsBonus } = window.SB.config;
+  const { nbEquipes, nomsEquipes, couleurs, boutonsBonus } = window.SB.config;
 
-    for (let e = 0; e < nbEquipes; e++) {
-      const carte = document.createElement('div');
-      carte.className = 'sb-carte-equipe';
-      carte.dataset.indexEquipe = e;
-      carte.style.borderTopColor = couleurs[e] || 'var(--couleur-principale)';
+  for (let e = 0; e < nbEquipes; e++) {
+    const couleur = couleurs[e] || 'var(--couleur-principale)';
 
-      // Nom
-      const nom = document.createElement('div');
-      nom.className = 'sb-equipe-nom';
-      nom.textContent = nomsEquipes[e] || `Équipe ${e + 1}`;
+    // ── Carte ──
+    const carte = document.createElement('div');
+    carte.className = 'sb-carte-equipe';
+    carte.dataset.indexEquipe = e;
 
-      // Score
-      const score = document.createElement('div');
-      score.className = 'sb-equipe-score';
-      score.id = `sb-score-${e}`;
-      score.textContent = window.SB.etat.scores[window.SB.etat.setActif][e] || 0;
+    // ── Barre colorée en haut ──
+    const barre = document.createElement('div');
+    barre.className = 'sb-carte-barre';
+    barre.style.background = couleur;
 
-      // Boutons score
-      const btns = document.createElement('div');
-      btns.className = 'sb-score-btns';
+    // ── Corps ──
+    const corps = document.createElement('div');
+    corps.className = 'sb-carte-corps';
 
-      // Bouton +1 toujours présent
-      const btnPlus = creerBtnScore('+1', 1, e, couleurs[e]);
-      btns.appendChild(btnPlus);
+    // Nom
+    const nom = document.createElement('div');
+    nom.className = 'sb-equipe-nom';
+    nom.textContent = nomsEquipes[e] || `Équipe ${e + 1}`;
 
-      // Boutons bonus configurés
-      boutonsBonus.forEach(b => {
-        const btn = creerBtnScore(b.label, b.valeur, e, couleurs[e]);
-        btns.appendChild(btn);
-      });
+    // Ligne : − SCORE +
+    const ligneScore = document.createElement('div');
+    ligneScore.className = 'sb-equipe-ligne-score';
 
-      // Bouton -1 discret
-      const btnMoins = document.createElement('button');
-      btnMoins.className = 'sb-btn-moins';
-      btnMoins.textContent = '−1';
-      btnMoins.dataset.indexEquipe = e;
-      btnMoins.dataset.delta = -1;
-      btns.appendChild(btnMoins);
+    const btnMoins = document.createElement('button');
+    btnMoins.className = 'sb-equipe-btn-moins';
+    btnMoins.textContent = '−';
+    btnMoins.dataset.indexEquipe = e;
+    btnMoins.dataset.delta = -1;
+    btnMoins.style.color = couleur;
 
-      // Historique mini
-      const histo = creerHistorique(e);
+    const scoreEl = document.createElement('div');
+    scoreEl.className = 'sb-equipe-score';
+    scoreEl.id = `sb-score-${e}`;
+    scoreEl.textContent = window.SB.etat.scores[window.SB.etat.setActif][e] || 0;
+    scoreEl.style.color = couleur;
 
-      carte.appendChild(nom);
-      carte.appendChild(score);
-      carte.appendChild(btns);
-      carte.appendChild(histo);
+    const btnPlus = document.createElement('button');
+    btnPlus.className = 'sb-equipe-btn-plus';
+    btnPlus.textContent = '+';
+    btnPlus.dataset.indexEquipe = e;
+    btnPlus.dataset.delta = 1;
+    btnPlus.style.color = couleur;
 
-      grille.appendChild(carte);
-    }
+    ligneScore.appendChild(btnMoins);
+    ligneScore.appendChild(scoreEl);
+    ligneScore.appendChild(btnPlus);
+
+    // Label bonus
+    const labelBonus = document.createElement('div');
+    labelBonus.className = 'sb-equipe-label-bonus';
+    labelBonus.textContent = 'Score bonus';
+
+    // Boutons bonus
+    const bonusListe = document.createElement('div');
+    bonusListe.className = 'sb-equipe-bonus-liste';
+
+    boutonsBonus.forEach(b => {
+      const btn = creerBtnScore(b.label, b.valeur, e, couleur);
+      bonusListe.appendChild(btn);
+    });
+
+    // Historique sets passés
+    const histo = creerHistorique(e);
+
+    // Assemblage corps
+    corps.appendChild(nom);
+    corps.appendChild(ligneScore);
+    corps.appendChild(labelBonus);
+    corps.appendChild(bonusListe);
+    corps.appendChild(histo);
+
+    // Assemblage carte
+    carte.appendChild(barre);
+    carte.appendChild(corps);
+
+    grille.appendChild(carte);
   }
+}
 
-  // ═══ CRÉER UN BOUTON DE SCORE ═══
-  function creerBtnScore(label, valeur, indexEquipe, couleur) {
-    const btn = document.createElement('button');
-    btn.className = 'sb-btn-score';
-    btn.textContent = label;
-    btn.dataset.indexEquipe = indexEquipe;
-    btn.dataset.delta = valeur;
-    btn.style.background = couleur || 'var(--couleur-principale)';
-    return btn;
-  }
+// ═══ CRÉER UN BOUTON BONUS ═══
+function creerBtnScore(label, valeur, indexEquipe, couleur) {
+  const btn = document.createElement('button');
+  btn.className = 'sb-bonus-btn';
+  btn.textContent = `+${valeur}`;
+  btn.title = label;
+  btn.dataset.indexEquipe = indexEquipe;
+  btn.dataset.delta = valeur;
+  btn.style.background = couleur || 'var(--couleur-principale)';
+  return btn;
+}
+
+
 
   // ═══ HISTORIQUE SETS ═══
   function creerHistorique(indexEquipe) {

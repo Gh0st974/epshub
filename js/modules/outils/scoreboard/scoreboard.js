@@ -126,9 +126,9 @@
   if (window.ScoreboardEvents) window.ScoreboardEvents.reset();
 
   // ✅ CORRIGÉ : chemins relatifs corrects (même dossier)
-  chargerScript('js/modules/scoreboard/scoreboard-config.js', () => {
-    chargerScript('js/modules/scoreboard/scoreboard-ui.js', () => {
-      chargerScript('js/modules/scoreboard/scoreboard-events.js', () => {
+  chargerScript('js/modules/outils/scoreboard/scoreboard-config.js', () => {
+    chargerScript('js/modules/outils/scoreboard/scoreboard-ui.js', () => {
+      chargerScript('js/modules/outils/scoreboard/scoreboard-events.js', () => {
         ScoreboardUI.rendrePage();
         ScoreboardEvents.init();
       });

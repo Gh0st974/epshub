@@ -49,22 +49,15 @@ window.SBevents = (function () {
   // ═══ CONFIGURATION ═══
   function ecouterConfig() {
 
-    // ── Accordéon : ouvrir / fermer ──
+    // ── Accordéon ──
     document.getElementById('sb-config-header')
       .addEventListener('click', () => {
         const header = document.getElementById('sb-config-header');
         const corps  = document.getElementById('sb-config-corps');
         const estOuvert = corps.classList.contains('ouvert');
-
-        if (estOuvert) {
-          corps.classList.remove('ouvert');
-          header.classList.remove('ouvert');
-          header.setAttribute('aria-expanded', 'false');
-        } else {
-          corps.classList.add('ouvert');
-          header.classList.add('ouvert');
-          header.setAttribute('aria-expanded', 'true');
-        }
+        corps.classList.toggle('ouvert', !estOuvert);
+        header.classList.toggle('ouvert', !estOuvert);
+        header.setAttribute('aria-expanded', String(!estOuvert));
       });
 
     // ── Reset global ──
@@ -115,7 +108,7 @@ window.SBevents = (function () {
     document.getElementById('sb-btn-ajouter-bonus')
       .addEventListener('click', () => {
         if (window.SB.config.boutonsBonus.length >= 4) return;
-        window.SB.config.boutonsBonus.push({ label: '+2', valeur: 2 });
+        window.SB.config.boutonsBonus.push({ label: '+1', valeur: 1 });
         SBui.rendreConfigBonus();
       });
 
@@ -143,22 +136,24 @@ window.SBevents = (function () {
         SBui.rendreConfigBonus();
       });
 
-    // ── Valider config → ferme l'accordéon ──
+    // ── Valider config ──
     document.getElementById('sb-btn-valider-config')
       .addEventListener('click', () => {
         const { nbEquipes } = window.SB.config;
+
         for (let i = 0; i < nbEquipes; i++) {
           // Lire le nom
           const inputNom = document.getElementById(`sb-nom-equipe-${i}`);
           if (inputNom) {
             window.SB.config.nomsEquipes[i] = inputNom.value || `Équipe ${i + 1}`;
           }
-          // ← AJOUT : lire la couleur
+          // Lire la couleur
           const inputCouleur = document.getElementById(`sb-couleur-equipe-${i}`);
           if (inputCouleur) {
             window.SB.config.couleurs[i] = inputCouleur.value;
           }
         }
+
         window.SB.appliquerConfig();
 
         // Fermer l'accordéon
@@ -166,19 +161,16 @@ window.SBevents = (function () {
         document.getElementById('sb-config-header').classList.remove('ouvert');
         document.getElementById('sb-config-header').setAttribute('aria-expanded', 'false');
       });
-
   }
 
   // ═══ MODALS ═══
   function ecouterModals() {
 
-    // Modal timer : annuler
     document.getElementById('sb-timer-annuler')
       .addEventListener('click', () => {
         document.getElementById('sb-modal-timer').setAttribute('hidden', '');
       });
 
-    // Modal timer : valider
     document.getElementById('sb-timer-valider')
       .addEventListener('click', () => {
         const min = document.getElementById('sb-input-min').value;
@@ -187,14 +179,12 @@ window.SBevents = (function () {
         document.getElementById('sb-modal-timer').setAttribute('hidden', '');
       });
 
-    // Modal confirm set : non
     document.getElementById('sb-confirm-non')
       .addEventListener('click', () => {
         window.SB.setEnAttente = null;
         document.getElementById('sb-modal-confirm').setAttribute('hidden', '');
       });
 
-    // Modal confirm set : oui
     document.getElementById('sb-confirm-oui')
       .addEventListener('click', () => {
         if (window.SB.setEnAttente !== null) {

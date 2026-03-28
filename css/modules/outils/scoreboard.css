@@ -764,3 +764,301 @@
 
   .sb-equipe-score { font-size: 5rem; }
 }
+
+/* ════════════════════════════════
+   CONFIG : INPUTS NOMS ÉQUIPES
+════════════════════════════════ */
+
+/* Conteneur des inputs noms */
+#sb-noms-equipes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sb-input-nom {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--couleur-texte);
+  background: var(--couleur-fond);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.sb-input-nom:focus {
+  border-color: var(--couleur-principale);
+  background: #fff;
+}
+
+/* ════════════════════════════════
+   CONFIG : BOUTONS BONUS
+════════════════════════════════ */
+
+.sb-bonus-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sb-bonus-item {
+  display: grid;
+  grid-template-columns: 1fr 64px 40px;
+  gap: 8px;
+  align-items: center;
+}
+
+.sb-bonus-input-label,
+.sb-bonus-input-val {
+  padding: 10px 14px;
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--couleur-texte);
+  background: var(--couleur-fond);
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.sb-bonus-input-label:focus,
+.sb-bonus-input-val:focus {
+  border-color: var(--couleur-principale);
+  background: #fff;
+}
+
+.sb-bonus-input-val {
+  text-align: center;
+}
+
+.sb-bonus-suppr {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 2px solid #fde8e8;
+  background: #fff0f0;
+  color: #e74c3c;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.sb-bonus-suppr:hover {
+  background: #fde8e8;
+}
+
+/* Bouton ajouter bonus */
+.sb-btn-ajouter-bonus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--couleur-principale);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  margin: 4px auto 0;
+  box-shadow: 0 4px 12px rgba(46,204,113,0.3);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.sb-btn-ajouter-bonus:hover {
+  background: var(--couleur-principale-fonce);
+  transform: scale(1.08);
+}
+
+/* ════════════════════════════════
+   HISTORIQUE SETS (résultats)
+════════════════════════════════ */
+
+.sb-equipe-histo {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.sb-histo-set {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--couleur-fond);
+  border-radius: 10px;
+  padding: 6px 10px;
+  min-width: 40px;
+}
+
+.sb-histo-set-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--couleur-texte-leger);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.sb-histo-set-val {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--couleur-texte);
+}
+
+/* Set gagné → mis en valeur */
+.sb-histo-set.gagne {
+  background: #eafaf1;
+}
+
+.sb-histo-set.gagne .sb-histo-set-val {
+  color: var(--couleur-principale-fonce);
+}
+
+/* ════════════════════════════════
+   MODAL TIMER & CONFIRM — refonte
+════════════════════════════════ */
+
+.sb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.sb-modal-overlay[hidden] {
+  display: none;
+}
+
+.sb-modal-boite {
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sb-modal-titre {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--couleur-texte);
+  margin: 0;
+  text-align: center;
+}
+
+.sb-modal-texte {
+  font-size: 0.95rem;
+  color: var(--couleur-texte-leger);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Champs min:sec */
+.sb-modal-champs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sb-modal-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--couleur-texte-leger);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sb-modal-input {
+  width: 80px;
+  padding: 14px 10px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--couleur-texte);
+  border: 2px solid #e8e8e8;
+  border-radius: 14px;
+  background: var(--couleur-fond);
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.sb-modal-input:focus {
+  border-color: var(--couleur-principale);
+  background: #fff;
+}
+
+.sb-modal-separateur {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--couleur-texte-leger);
+  padding-bottom: 18px;
+}
+
+/* Boutons modal */
+.sb-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sb-modal-btn-annuler,
+.sb-modal-btn-valider {
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 50px;
+  transition: all 0.2s;
+}
+
+.sb-modal-btn-annuler {
+  background: var(--couleur-fond);
+  color: var(--couleur-texte-leger);
+}
+
+.sb-modal-btn-annuler:hover {
+  background: #e4e4e4;
+}
+
+.sb-modal-btn-valider {
+  background: var(--couleur-principale);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(46,204,113,0.3);
+}
+
+.sb-modal-btn-valider:hover {
+  background: var(--couleur-principale-fonce);
+}

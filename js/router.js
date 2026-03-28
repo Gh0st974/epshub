@@ -33,9 +33,9 @@ async function chargerModule(nomModule) {
 
     // 3️⃣ Scoreboard — structure avec sous-dossier JS
     if (nomModule === 'scoreboard') {
-      cheminsModules.html = `modules/scoreboard.html`;
-      cheminsModules.css  = `css/modules/scoreboard.css`;
-      cheminsModules.js   = `js/modules/scoreboard/scoreboard.js`;
+      cheminsModules.html = `modules/outils/scoreboard.html`;
+      cheminsModules.css  = `css/modules/outils/scoreboard.css`;
+      cheminsModules.js   = `js/modules/outils/scoreboard/scoreboard.js`;
     }
 
     // =============================================

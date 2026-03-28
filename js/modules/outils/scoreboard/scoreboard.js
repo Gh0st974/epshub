@@ -141,9 +141,10 @@
 
   // ✅ CORRIGÉ : reset du flag events si le module est rechargé
   if (window.ScoreboardEvents) ScoreboardEvents.reset();
-  chargerScript('js/modules/outils/scoreboard/scoreboard-ui.js', () => {
-    chargerScript('js/modules/outils/scoreboard/scoreboard-config.js', () => {
-      chargerScript('js/modules/outils/scoreboard/scoreboard-events.js', () => {
+
+  chargerScript('js/modules/scoreboard/scoreboard-config.js', () => {
+    chargerScript('js/modules/scoreboard/scoreboard-ui.js', () => {
+      chargerScript('js/modules/scoreboard/scoreboard-events.js', () => {
         ScoreboardUI.rendrePage();
         ScoreboardEvents.init();
       });

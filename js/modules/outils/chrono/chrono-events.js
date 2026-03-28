@@ -1,89 +1,122 @@
 // 📄 Fichier : /js/modules/outils/chrono/chrono-events.js
-// 🎯 Rôle : Écoute des interactions utilisateur et orchestration des actions
-
-import {
-  getModeActif, setModeActif,
-  demarrerChrono, pauserChrono, resetChrono, ajouterLap,
-  demarrerTous, pauserTous, resetTous,
-  ajouterChrono, supprimerChrono,
-  getChronoById, reinitialiserTout
-} from './chrono.js';
-
-import {
-  rendreZoneChronos,
-  mettreAJourBoutonEtat,
-  ajouterLapUI, viderLapsUI,
-  ajouterCarteChronoUI, supprimerCarteChronoUI,
-  mettreAJourAffichages
-} from './chrono-ui.js';
-
-import {
-  demarrerTimer, arreterTimer,
-  timerEstActif, verifierEtArreterSiInactif
-} from './chrono-timer.js';
+// 🎯 Rôle : Écoute des interactions et orchestration des actions
 
 // ============================================================
-// INITIALISATION DES ÉVÉNEMENTS
+// INITIALISATION PRINCIPALE
 // ============================================================
 
 /**
- * Point d'entrée — attache tous les écouteurs d'événements
- * Utilise la délégation d'événements sur le conteneur principal
+ * Point d'entrée du module — appelé par app.js via initChrono()
+ * Construit la vue et branche tous les événements
  */
-export function initialiserEvenements() {
-  const conteneur = document.getElementById('chrono-app');
-  if (!conteneur) return;
+function initChrono() {
+  construireVueChrono();
+  reinitialiserTout();
+  rafraichirListeChronos();
+  mettreAJourModeUI(getModeActif());
 
-  // Délégation globale sur le conteneur
-  conteneur.addEventListener('click', gererClic);
+  ecouterRetour();
+  ecouterSwitcherMode();
+  ecouterAjoutChrono();
+  ecouterActionsChrono();
+
+  console.log('⏱️ Module Chrono initialisé');
 }
 
 // ============================================================
-// GESTIONNAIRE DE CLICS CENTRALISÉ
+// NAVIGATION
 // ============================================================
 
 /**
- * Redirige chaque clic vers le bon gestionnaire
- * @param {Event} e
+ * Bouton "← Retour" — retourne au hub
  */
-function gererClic(e) {
-  const cible = e.target;
+function ecouterRetour() {
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'chrono-btn-retour') {
+      arreterBoucle();
+      naviguerVers('vue-hub');
+    }
+  });
+}
 
-  // --- Sélecteur de mode ---
-  if (cible.matches('.chrono-mode-btn')) {
-    gererChangementMode(cible.dataset.mode);
-    return;
-  }
+// ============================================================
+// SWITCHER DE MODE
+// ============================================================
 
-  // --- Bouton démarrer/pause individuel ---
-  if (cible.matches('.btn-demarrer')) {
-    gererDemarrerPauser(Number(cible.dataset.id));
-    return;
-  }
+/**
+ * Bascule entre mode simple et multi
+ */
+function ecouterSwitcherMode() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.chrono-mode-btn');
+    if (!btn) return;
 
-  // --- Bouton lap individuel ---
-  if (cible.matches('.btn-lap')) {
-    gererLap(Number(cible.dataset.id));
-    return;
-  }
+    const mode = btn.dataset.mode;
+    if (mode === getModeActif()) return;
 
-  // --- Bouton reset individuel ---
-  if (cible.matches('.btn-reset')) {
-    gererReset(Number(cible.dataset.id));
-    return;
-  }
+    // Arrêter la boucle avant le reset
+    arreterBoucle();
 
-  // --- Bouton supprimer (mode multi) ---
-  if (cible.matches('.btn-supprimer')) {
-    gererSuppression(Number(cible.dataset.id));
-    return;
-  }
+    // Changer le mode (reset inclus dans setModeActif)
+    setModeActif(mode);
 
-  // --- Contrôles globaux ---
-  if (cible.matches('#btn-demarrer-tous')) { gererDemarrerTous(); return; }
-  if (cible.matches('#btn-pauser-tous'))   { gererPauserTous();   return; }
-  if (cible.matches('#btn-reset-tous'))    { gererResetTous();    return; }
-  if (cible.matches('#btn-ajouter-chrono')){ gererAjoutChrono();  return; }
+    // Rafraîchir l'affichage
+    rafraichirListeChronos();
+    mettreAJourModeUI(mode);
+  });
+}
+
+// ============================================================
+// AJOUT DE CHRONO (mode multi)
+// ============================================================
+
+/**
+ * Ajoute un nouveau chrono en mode multi
+ */
+function ecouterAjoutChrono() {
+  document.addEventListener('click', (e) => {
+    if (e.target.id !== 'chrono-btn-ajouter') return;
+
+    const nouveau = ajouterChrono();
+    const liste   = document.getElementById('chrono-liste');
+    if (!liste) return;
+
+    const carte = creerCarteChronoUI(nouveau);
+    liste.appendChild(carte);
+    mettreAJourModeUI(getModeActif());
+  });
+}
+
+// ============================================================
+// ACTIONS SUR LES CHRONOS (toggle / reset / lap / suppression)
+// ============================================================
+
+/**
+ * Délégation d'événements sur les boutons des cartes chrono
+ */
+function ecouterActionsChrono() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+
+    const action = btn.dataset.action;
+    const id     = Number(btn.dataset.id);
+
+    switch (action) {
+      case 'toggle':
+        gererToggle(id);
+        break;
+      case 'reset':
+        gererReset(id);
+        break;
+      case 'lap':
+        gererLap(id);
+        break;
+      case 'supprimer':
+        gererSuppression(id);
+        break;
+    }
+  });
 }
 
 // ============================================================
@@ -91,136 +124,50 @@ function gererClic(e) {
 // ============================================================
 
 /**
- * Change le mode (simple/multi) et recharge la vue
- * @param {string} mode
- */
-function gererChangementMode(mode) {
-  if (mode === getModeActif()) return;
-
-  arreterTimer();
-  setModeActif(mode);
-  rendreZoneChronos();
-}
-
-/**
- * Démarre ou met en pause un chrono individuel
+ * Démarre ou met en pause un chrono
  * @param {number} id
  */
-function gererDemarrerPauser(id) {
-  const chrono = getChronoById(id);
-  if (!chrono) return;
+function gererToggle(id) {
+  toggleChrono(id);
+  mettreAJourBoutonToggle(id);
 
-  if (chrono.enCours) {
-    // Mise en pause
-    pauserChrono(id);
-    mettreAJourBoutonEtat(id, false);
-    verifierEtArreterSiInactif();
+  // Démarrer la boucle si un chrono vient de démarrer
+  const c = getChronoById(id);
+  if (c && c.enCours) {
+    demarrerBoucle();
   } else {
-    // Démarrage
-    demarrerChrono(id);
-    mettreAJourBoutonEtat(id, true);
-
-    // Lance le timer global si pas encore actif
-    if (!timerEstActif()) {
-      demarrerTimer(mettreAJourAffichages);
-    }
+    verifierEtArreterSiInactif();
   }
 }
 
 /**
- * Enregistre un lap pour un chrono
- * @param {number} id
- */
-function gererLap(id) {
-  const chrono = getChronoById(id);
-  if (!chrono || !chrono.enCours) return;
-
-  ajouterLap(id);
-  const numero = chrono.laps.length;
-  const temps = chrono.laps[numero - 1];
-  ajouterLapUI(id, temps, numero);
-}
-
-/**
- * Remet à zéro un chrono individuel
+ * Remet un chrono à zéro
  * @param {number} id
  */
 function gererReset(id) {
   resetChrono(id);
-  mettreAJourBoutonEtat(id, false);
-  viderLapsUI(id);
-
-  // Mise à jour immédiate de l'affichage
-  const el = document.getElementById(`chrono-temps-${id}`);
-  if (el) el.textContent = '00:00.00';
-
+  mettreAJourAffichageChrono(id);
+  mettreAJourBoutonToggle(id);
+  mettreAJourLaps(id);
   verifierEtArreterSiInactif();
 }
 
 /**
- * Supprime un chrono (mode multi)
+ * Enregistre un lap
+ * @param {number} id
+ */
+function gererLap(id) {
+  lapChrono(id);
+  mettreAJourLaps(id);
+}
+
+/**
+ * Supprime un chrono (mode multi — minimum 1 conservé)
  * @param {number} id
  */
 function gererSuppression(id) {
-  const chrono = getChronoById(id);
-  if (!chrono) return;
-
-  // Ne pas supprimer si c'est le dernier chrono
-  const { getChronos } = require('./chrono.js'); // import dynamique évité
+  if (getChronos().length <= 1) return;
   supprimerChrono(id);
   supprimerCarteChronoUI(id);
   verifierEtArreterSiInactif();
-}
-
-/**
- * Démarre tous les chronos (mode multi)
- */
-function gererDemarrerTous() {
-  demarrerTous();
-
-  // Met à jour l'état visuel de chaque bouton
-  document.querySelectorAll('.chrono-carte').forEach(carte => {
-    mettreAJourBoutonEtat(Number(carte.dataset.id), true);
-  });
-
-  if (!timerEstActif()) {
-    demarrerTimer(mettreAJourAffichages);
-  }
-}
-
-/**
- * Met en pause tous les chronos (mode multi)
- */
-function gererPauserTous() {
-  pauserTous();
-
-  document.querySelectorAll('.chrono-carte').forEach(carte => {
-    mettreAJourBoutonEtat(Number(carte.dataset.id), false);
-  });
-
-  arreterTimer();
-}
-
-/**
- * Remet à zéro tous les chronos (mode multi)
- */
-function gererResetTous() {
-  resetTous();
-  arreterTimer();
-
-  document.querySelectorAll('.chrono-carte').forEach(carte => {
-    const id = Number(carte.dataset.id);
-    mettreAJourBoutonEtat(id, false);
-    viderLapsUI(id);
-    const el = document.getElementById(`chrono-temps-${id}`);
-    if (el) el.textContent = '00:00.00';
-  });
-}
-
-/**
- * Ajoute un nouveau chrono dynamiquement (mode multi)
- */
-function gererAjoutChrono() {
-  const chrono = ajouterChrono();
-  ajouterCarteChronoUI(chrono);
 }

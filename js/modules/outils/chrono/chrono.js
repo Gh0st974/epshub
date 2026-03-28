@@ -1,38 +1,29 @@
 // 📄 Fichier : /js/modules/outils/chrono/chrono.js
-// 🎯 Rôle : Logique métier pure — état des chronos, lap times, calculs
+// 🎯 Rôle : Logique métier pure — état des chronos, laps, calculs
 
 // ============================================================
-// ÉTAT GLOBAL DU MODULE CHRONO
+// ÉTAT GLOBAL
 // ============================================================
 
-/** État du mode actif : 'simple' ou 'multi' */
+/** Mode actif : 'simple' ou 'multi' */
 let modeActif = 'simple';
 
-/**
- * Structure d'un chrono :
- * {
- *   id: number,
- *   label: string,
- *   tempsEcoule: number,   // en millisecondes
- *   enCours: boolean,
- *   laps: number[]         // tableau de temps en ms au moment du lap
- * }
- */
+/** Liste des chronos actifs */
 let chronos = [];
 
-/** Compteur d'ID unique pour les chronos */
+/** Compteur d'ID auto-incrémenté */
 let prochainId = 1;
 
 // ============================================================
-// FABRIQUE — Création d'un chrono
+// FABRIQUE
 // ============================================================
 
 /**
- * Crée un nouvel objet chrono avec des valeurs initiales
- * @param {string} label - Nom affiché du chrono
- * @returns {object} Objet chrono initialisé
+ * Crée un objet chrono initialisé
+ * @param {string} label - Nom affiché
+ * @returns {object}
  */
-export function creerChrono(label = '') {
+function creerChrono(label = '') {
   const id = prochainId++;
   return {
     id,
@@ -44,182 +35,137 @@ export function creerChrono(label = '') {
 }
 
 // ============================================================
-// GESTION DE L'ÉTAT — Mode
+// GETTERS
 // ============================================================
 
-/** Retourne le mode actif ('simple' ou 'multi') */
-export function getModeActif() {
+/** Retourne le mode actif */
+function getModeActif() {
   return modeActif;
 }
 
+/** Retourne la liste des chronos */
+function getChronos() {
+  return chronos;
+}
+
 /**
- * Définit le mode actif et réinitialise les chronos
+ * Retourne un chrono par son id
+ * @param {number} id
+ * @returns {object|undefined}
+ */
+function getChronoById(id) {
+  return chronos.find(c => c.id === id);
+}
+
+// ============================================================
+// ACTIONS SUR LE MODE
+// ============================================================
+
+/**
+ * Change le mode et réinitialise tous les chronos
  * @param {'simple'|'multi'} mode
  */
-export function setModeActif(mode) {
+function setModeActif(mode) {
   modeActif = mode;
   reinitialiserTout();
 }
 
 // ============================================================
-// GESTION DE L'ÉTAT — Chronos
+// ACTIONS SUR LES CHRONOS
 // ============================================================
-
-/** Retourne la liste complète des chronos */
-export function getChronos() {
-  return chronos;
-}
-
-/**
- * Retourne un chrono par son ID
- * @param {number} id
- * @returns {object|undefined}
- */
-export function getChronoById(id) {
-  return chronos.find(c => c.id === id);
-}
 
 /**
  * Ajoute un nouveau chrono à la liste
- * @param {string} label - Optionnel
- * @returns {object} Le chrono créé
+ * @param {string} label
+ * @returns {object} le chrono créé
  */
-export function ajouterChrono(label = '') {
-  const chrono = creerChrono(label);
-  chronos.push(chrono);
-  return chrono;
+function ajouterChrono(label = '') {
+  const c = creerChrono(label);
+  chronos.push(c);
+  return c;
 }
 
 /**
- * Supprime un chrono par son ID
+ * Supprime un chrono par son id
  * @param {number} id
  */
-export function supprimerChrono(id) {
+function supprimerChrono(id) {
   chronos = chronos.filter(c => c.id !== id);
 }
 
-// ============================================================
-// LOGIQUE MÉTIER — Actions sur un chrono
-// ============================================================
-
 /**
- * Démarre un chrono (passe enCours à true)
+ * Démarre ou met en pause un chrono
  * @param {number} id
  */
-export function demarrerChrono(id) {
-  const chrono = getChronoById(id);
-  if (chrono && !chrono.enCours) {
-    chrono.enCours = true;
-  }
+function toggleChrono(id) {
+  const c = getChronoById(id);
+  if (!c) return;
+  c.enCours = !c.enCours;
 }
 
 /**
- * Met en pause un chrono
+ * Remet un chrono à zéro
  * @param {number} id
  */
-export function pauserChrono(id) {
-  const chrono = getChronoById(id);
-  if (chrono && chrono.enCours) {
-    chrono.enCours = false;
-  }
+function resetChrono(id) {
+  const c = getChronoById(id);
+  if (!c) return;
+  c.enCours = false;
+  c.tempsEcoule = 0;
+  c.laps = [];
 }
 
 /**
- * Remet à zéro un chrono (temps + laps)
+ * Enregistre un lap sur un chrono
  * @param {number} id
  */
-export function resetChrono(id) {
-  const chrono = getChronoById(id);
-  if (chrono) {
-    chrono.tempsEcoule = 0;
-    chrono.enCours = false;
-    chrono.laps = [];
-  }
+function lapChrono(id) {
+  const c = getChronoById(id);
+  if (!c || !c.enCours) return;
+  c.laps.push(c.tempsEcoule);
 }
 
 /**
- * Enregistre un lap time pour un chrono
+ * Ajoute du temps écoulé à un chrono (appelé par le timer)
  * @param {number} id
+ * @param {number} delta - ms écoulées
  */
-export function ajouterLap(id) {
-  const chrono = getChronoById(id);
-  if (chrono && chrono.enCours) {
-    chrono.laps.push(chrono.tempsEcoule);
-  }
-}
-
-/**
- * Met à jour le temps écoulé d'un chrono (appelé par le timer)
- * @param {number} id
- * @param {number} delta - Millisecondes écoulées depuis le dernier tick
- */
-export function mettreAJourTemps(id, delta) {
-  const chrono = getChronoById(id);
-  if (chrono && chrono.enCours) {
-    chrono.tempsEcoule += delta;
-  }
+function incrementerTemps(id, delta) {
+  const c = getChronoById(id);
+  if (!c || !c.enCours) return;
+  c.tempsEcoule += delta;
 }
 
 // ============================================================
-// LOGIQUE MÉTIER — Actions globales (mode multi)
-// ============================================================
-
-/** Démarre tous les chronos */
-export function demarrerTous() {
-  chronos.forEach(c => { c.enCours = true; });
-}
-
-/** Met en pause tous les chronos */
-export function pauserTous() {
-  chronos.forEach(c => { c.enCours = false; });
-}
-
-/** Remet à zéro tous les chronos */
-export function resetTous() {
-  chronos.forEach(c => {
-    c.tempsEcoule = 0;
-    c.enCours = false;
-    c.laps = [];
-  });
-}
-
-// ============================================================
-// UTILITAIRES — Formatage du temps
+// RESET GLOBAL
 // ============================================================
 
 /**
- * Formate un temps en millisecondes → "MM:SS.ms"
- * @param {number} ms - Temps en millisecondes
- * @returns {string} Temps formaté
+ * Réinitialise tous les chronos et repart d'un chrono vide
  */
-export function formaterTemps(ms) {
-  const minutes = Math.floor(ms / 60000);
-  const secondes = Math.floor((ms % 60000) / 1000);
-  const centimes = Math.floor((ms % 1000) / 10);
+function reinitialiserTout() {
+  chronos = [];
+  prochainId = 1;
+  ajouterChrono();
+}
+
+// ============================================================
+// UTILITAIRES TEMPS
+// ============================================================
+
+/**
+ * Formate un temps en ms → "MM:SS.cc"
+ * @param {number} ms
+ * @returns {string}
+ */
+function formaterTemps(ms) {
+  const centisecondes = Math.floor((ms % 1000) / 10);
+  const secondes      = Math.floor((ms / 1000) % 60);
+  const minutes       = Math.floor(ms / 60000);
 
   const mm = String(minutes).padStart(2, '0');
   const ss = String(secondes).padStart(2, '0');
-  const cc = String(centimes).padStart(2, '0');
+  const cc = String(centisecondes).padStart(2, '0');
 
   return `${mm}:${ss}.${cc}`;
-}
-
-// ============================================================
-// INITIALISATION
-// ============================================================
-
-/**
- * Réinitialise complètement le module
- * (appelé au changement de mode ou à la destruction)
- */
-export function reinitialiserTout() {
-  chronos = [];
-  prochainId = 1;
-
-  if (modeActif === 'simple') {
-    ajouterChrono('Chrono');
-  } else {
-    ajouterChrono('Chrono 1');
-    ajouterChrono('Chrono 2');
-  }
 }

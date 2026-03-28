@@ -1,99 +1,79 @@
 // 📄 Fichier : /js/modules/outils/chrono/chrono-timer.js
-// 🎯 Rôle : Gestion de la boucle de temps via requestAnimationFrame
-
-import { getChronos, mettreAJourTemps } from './chrono.js';
+// 🎯 Rôle : Boucle de mise à jour du temps — requestAnimationFrame
 
 // ============================================================
-// ÉTAT DU TIMER
+// ÉTAT DE LA BOUCLE
 // ============================================================
 
-/** Référence au frame courant (pour pouvoir l'annuler) */
-let rafId = null;
-
-/** Timestamp du dernier appel de la boucle */
+/** Timestamp du dernier frame */
 let dernierTimestamp = null;
 
-/** Callback appelé à chaque tick (pour déclencher le rendu UI) */
-let callbackTick = null;
+/** ID de la boucle RAF (pour pouvoir l'arrêter) */
+let idAnimation = null;
+
+/** Indique si la boucle tourne */
+let boucleActive = false;
 
 // ============================================================
 // BOUCLE PRINCIPALE
 // ============================================================
 
 /**
- * Boucle requestAnimationFrame — appelée ~60x par seconde
- * Met à jour les temps de tous les chronos en cours
- * @param {DOMHighResTimeStamp} timestamp
+ * Fonction appelée à chaque frame par requestAnimationFrame
+ * Met à jour le temps de chaque chrono en cours
+ * @param {number} timestamp - fourni par RAF
  */
-function boucle(timestamp) {
+function boucleTimer(timestamp) {
+  if (!boucleActive) return;
+
   // Calcul du delta depuis le dernier frame
-  if (dernierTimestamp === null) {
-    dernierTimestamp = timestamp;
+  if (dernierTimestamp !== null) {
+    const delta = timestamp - dernierTimestamp;
+
+    // Incrémenter tous les chronos actifs
+    getChronos().forEach(c => {
+      if (c.enCours) {
+        incrementerTemps(c.id, delta);
+        mettreAJourAffichageChrono(c.id);
+      }
+    });
   }
 
-  const delta = timestamp - dernierTimestamp;
   dernierTimestamp = timestamp;
-
-  // Mise à jour de chaque chrono actif
-  const chronos = getChronos();
-  chronos.forEach(chrono => {
-    if (chrono.enCours) {
-      mettreAJourTemps(chrono.id, delta);
-    }
-  });
-
-  // Notification de l'UI
-  if (callbackTick) {
-    callbackTick();
-  }
-
-  // Continuation de la boucle
-  rafId = requestAnimationFrame(boucle);
+  idAnimation = requestAnimationFrame(boucleTimer);
 }
 
 // ============================================================
-// CONTRÔLES DU TIMER
+// CONTRÔLES DE LA BOUCLE
 // ============================================================
 
 /**
- * Démarre la boucle de mise à jour
- * @param {function} onTick - Callback UI appelé à chaque frame
+ * Démarre la boucle RAF si elle ne tourne pas déjà
  */
-export function demarrerTimer(onTick) {
-  if (rafId !== null) return; // Déjà en cours
-
-  callbackTick = onTick;
+function demarrerBoucle() {
+  if (boucleActive) return;
+  boucleActive = true;
   dernierTimestamp = null;
-  rafId = requestAnimationFrame(boucle);
+  idAnimation = requestAnimationFrame(boucleTimer);
 }
 
 /**
- * Arrête complètement la boucle de mise à jour
+ * Arrête la boucle RAF
  */
-export function arreterTimer() {
-  if (rafId !== null) {
-    cancelAnimationFrame(rafId);
-    rafId = null;
-    dernierTimestamp = null;
+function arreterBoucle() {
+  boucleActive = false;
+  dernierTimestamp = null;
+  if (idAnimation) {
+    cancelAnimationFrame(idAnimation);
+    idAnimation = null;
   }
 }
 
 /**
- * Vérifie si le timer global est actif
- * @returns {boolean}
+ * Vérifie si au moins un chrono est en cours
+ * Si aucun, arrête la boucle pour économiser les ressources
  */
-export function timerEstActif() {
-  return rafId !== null;
-}
-
-/**
- * Vérifie s'il reste au moins un chrono en cours
- * Si non, arrête la boucle automatiquement
- */
-export function verifierEtArreterSiInactif() {
-  const chronos = getChronos();
-  const auMoinsUnActif = chronos.some(c => c.enCours);
-  if (!auMoinsUnActif) {
-    arreterTimer();
-  }
+function verifierEtArreterSiInactif() {
+  const unActif = getChronos().some(c => c.enCours);
+  if (!unActif) arreterBoucle();
 }

@@ -1,64 +1,82 @@
 /* 📄 Fichier : /css/components/chrono.css */
-/* 🎯 Rôle : Styles dédiés au module chrono — mobile first, centré */
+/* 🎯 Rôle : Styles du module Chrono — mobile first, lisible terrain */
 
 /* ============================================================
-   WRAPPER PRINCIPAL
+   CONTENEUR PRINCIPAL
    ============================================================ */
 
-.chrono-wrapper {
+.chrono-container {
   display: flex;
   flex-direction: column;
-  align-items: center;        /* Centrage horizontal */
-  justify-content: flex-start;
-  width: 100%;
-  max-width: 700px;           /* Largeur max confortable */
-  margin: 0 auto;             /* Centrage dans la page */
-  padding: 1rem;
-  box-sizing: border-box;
-  gap: 1.5rem;
+  gap: 16px;
+  padding: 16px;
+  padding-bottom: 96px; /* espace navbar */
+  min-height: 100vh;
+  background: #f5f5f5;
 }
 
 /* ============================================================
-   SÉLECTEUR DE MODE
+   HEADER — Retour + Switcher de mode
    ============================================================ */
 
-.chrono-mode-selector {
+.chrono-header {
   display: flex;
-  gap: 0.75rem;
-  width: 100%;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.chrono-btn-retour {
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.chrono-btn-retour:active {
+  background: #eee;
+}
+
+/* Switcher Simple / Multi */
+.chrono-mode-switcher {
+  display: flex;
+  background: #e0e0e0;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
 }
 
 .chrono-mode-btn {
-  flex: 1;
-  max-width: 220px;
-  padding: 0.85rem 1rem;
-  font-size: 1rem;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
   font-weight: 600;
-  border: 2px solid #3b82f6;
-  border-radius: 12px;
-  background: transparent;
-  color: #3b82f6;
   cursor: pointer;
-  transition: all 0.2s ease;
+  background: transparent;
+  color: #666;
+  transition: background 0.2s, color 0.2s;
 }
 
-.chrono-mode-btn.active,
-.chrono-mode-btn:hover {
-  background: #3b82f6;
-  color: #fff;
+.chrono-mode-btn.active {
+  background: #fff;
+  color: #2ecc71;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
 }
 
 /* ============================================================
-   ZONE DES CHRONOS
+   LISTE DES CHRONOS
    ============================================================ */
 
-.chrono-zone {
+.chrono-liste {
   display: flex;
   flex-direction: column;
-  align-items: center;        /* Chronos centrés */
-  gap: 1.25rem;
-  width: 100%;
+  gap: 16px;
 }
 
 /* ============================================================
@@ -66,175 +84,178 @@
    ============================================================ */
 
 .chrono-carte {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+/* En-tête de la carte */
+.chrono-carte__header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  max-width: 420px;
-  background: #1e293b;
-  border-radius: 16px;
-  padding: 1.5rem 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  transition: box-shadow 0.2s ease;
 }
 
-.chrono-carte.chrono-actif {
-  box-shadow: 0 4px 24px rgba(59, 130, 246, 0.4);
-  border: 1px solid rgba(59, 130, 246, 0.5);
-}
-
-/* Label */
-.chrono-label {
+.chrono-carte__label {
   font-size: 1rem;
-  font-weight: 600;
-  color: #94a3b8;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: #333;
 }
 
-/* Affichage du temps — grand et lisible terrain */
-.chrono-affichage {
-  font-size: 3.5rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: #f1f5f9;
-  letter-spacing: 0.02em;
-  margin-bottom: 1.25rem;
+.chrono-carte__btn-sup {
+  background: none;
+  border: none;
+  color: #bbb;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.chrono-carte__btn-sup:active {
+  color: #e74c3c;
+  background: #fdecea;
+}
+
+/* Affichage du temps */
+.chrono-carte__affichage {
+  font-size: 3.2rem;
+  font-weight: 800;
   text-align: center;
+  letter-spacing: 2px;
+  color: #222;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* Laps */
+.chrono-carte__laps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 0;
+}
+
+.chrono-lap {
+  background: #f0faf3;
+  color: #27ae60;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 /* ============================================================
-   BOUTONS INDIVIDUELS
+   CONTRÔLES DES CARTES
    ============================================================ */
 
-.chrono-boutons {
+.chrono-carte__controles {
   display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: stretch;
 }
 
-.btn-chrono {
-  min-width: 64px;
-  min-height: 56px;
-  padding: 0.6rem 1rem;
-  font-size: 1.1rem;
-  font-weight: 700;
+/* Bouton générique */
+.chrono-btn {
+  flex: 1;
+  padding: 14px 8px;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: transform 0.1s ease, opacity 0.2s ease;
-  background: #334155;
-  color: #f1f5f9;
+  transition: transform 0.1s, opacity 0.2s;
+  min-height: 52px;
 }
 
-.btn-chrono:active {
-  transform: scale(0.95);
-}
-
-/* Démarrer */
-.btn-demarrer {
-  background: #22c55e;
-  color: #fff;
-  min-width: 72px;
-}
-
-.btn-demarrer.en-cours {
-  background: #f59e0b;
-}
-
-/* Lap */
-.btn-lap {
-  background: #3b82f6;
-  color: #fff;
+.chrono-btn:active {
+  transform: scale(0.96);
+  opacity: 0.85;
 }
 
 /* Reset */
-.btn-reset {
-  background: #64748b;
+.chrono-btn--reset {
+  background: #f0f0f0;
+  color: #555;
 }
 
-/* Supprimer */
-.btn-supprimer {
-  background: #ef4444;
+/* Lap */
+.chrono-btn--lap {
+  background: #fff3cd;
+  color: #b8860b;
+}
+
+/* Start / Pause */
+.chrono-btn--toggle {
+  background: #2ecc71;
   color: #fff;
+  flex: 1.5;
+}
+
+.chrono-btn--toggle:active {
+  background: #27ae60;
 }
 
 /* ============================================================
-   LISTE DES LAPS
+   ACTIONS GLOBALES — Bouton ajout
    ============================================================ */
 
-.chrono-laps {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
-  width: 100%;
-  max-height: 160px;
-  overflow-y: auto;
+.chrono-actions-globales {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.chrono-lap-item {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #94a3b8;
-  padding: 0.3rem 0.5rem;
-  background: #0f172a;
-  border-radius: 8px;
-  font-variant-numeric: tabular-nums;
-}
-
-/* ============================================================
-   CONTRÔLES GLOBAUX (mode multi)
-   ============================================================ */
-
-.chrono-globaux {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
   justify-content: center;
-  width: 100%;
-  max-width: 500px;
 }
 
-.btn-global {
-  flex: 1;
-  min-width: 130px;
-  min-height: 56px;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
+.chrono-btn-ajouter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: #fff;
+  border: 2px dashed #2ecc71;
+  border-radius: 16px;
+  color: #2ecc71;
+  font-size: 1rem;
   font-weight: 700;
-  border: none;
-  border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.1s ease;
-  color: #fff;
+  transition: background 0.2s;
+  width: 100%;
+  justify-content: center;
 }
 
-.btn-global:active {
-  transform: scale(0.95);
+.chrono-btn-ajouter:active {
+  background: #f0faf3;
 }
-
-.btn-demarrer-tous  { background: #22c55e; }
-.btn-pauser-tous    { background: #f59e0b; }
-.btn-reset-tous     { background: #64748b; }
-.btn-ajouter        { background: #8b5cf6; }
 
 /* ============================================================
-   RESPONSIVE — grands écrans (mode multi côte à côte)
+   RESPONSIVE — Tablette et desktop
    ============================================================ */
 
 @media (min-width: 600px) {
-  .chrono-zone {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+  .chrono-liste {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .chrono-carte {
-    width: calc(50% - 0.75rem);
+  .chrono-carte__affichage {
+    font-size: 2.8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chrono-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .chrono-liste {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

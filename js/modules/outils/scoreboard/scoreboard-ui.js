@@ -1,5 +1,5 @@
 // 📄 Fichier : js/modules/scoreboard/scoreboard-ui.js
-// 🎯 Rôle : Génération et mise à jour du DOM — affichage du scoreboard
+// 🎯 Rôle : Génération et mise à jour du DOM
 
 const ScoreboardUI = (function () {
 
@@ -7,7 +7,6 @@ const ScoreboardUI = (function () {
   // RENDU PRINCIPAL
   // ══════════════════════════════════════
 
-  /** Lance le rendu complet de la page de jeu */
   function rendrePage() {
     rendreBarrePeriode();
     rendreEquipes();
@@ -17,7 +16,6 @@ const ScoreboardUI = (function () {
   // BARRE DE PÉRIODE
   // ══════════════════════════════════════
 
-  /** Affiche ou masque la barre de période selon l'état */
   function rendreBarrePeriode() {
     const periodes = ScoreboardApp.getPeriodes();
     const barre    = document.getElementById('scoreboard-periode-bar');
@@ -31,36 +29,26 @@ const ScoreboardUI = (function () {
 
     barre.hidden = false;
     label.textContent = `${periodes.nom} ${periodes.courante} / ${periodes.total}`;
-
-    // Désactive le bouton à la dernière période
-    btnSuiv.disabled = periodes.courante >= periodes.total;
+    btnSuiv.disabled  = periodes.courante >= periodes.total;
   }
 
   // ══════════════════════════════════════
   // RENDU DES ÉQUIPES
   // ══════════════════════════════════════
 
-  /** Génère toutes les cartes d'équipes */
   function rendreEquipes() {
     const conteneur = document.getElementById('scoreboard-equipes');
     const equipes   = ScoreboardApp.getEquipes();
     const bonus     = ScoreboardApp.getBonus();
-
     conteneur.innerHTML = '';
-
-    equipes.forEach(equipe => {
-      const carte = creerCarteEquipe(equipe, bonus);
-      conteneur.appendChild(carte);
-    });
+    equipes.forEach(equipe => conteneur.appendChild(creerCarteEquipe(equipe, bonus)));
   }
 
-  /** Crée la carte DOM d'une équipe */
   function creerCarteEquipe(equipe, bonus) {
     const periodes = ScoreboardApp.getPeriodes();
 
     const carte = document.createElement('div');
     carte.className = 'scoreboard-equipe-carte';
-    // ✅ CORRIGÉ : dataset stocké en String pour querySelector cohérent
     carte.dataset.idEquipe = String(equipe.id);
     carte.style.borderTopColor = equipe.couleur;
 
@@ -77,38 +65,43 @@ const ScoreboardUI = (function () {
     scoreEl.className = 'scoreboard-equipe-score';
     scoreEl.textContent = equipe.scoreTotal;
 
-    // — Scores par période (si actives)
-    const scoresPeriodes = creerScoresPeriodes(equipe, periodes);
-
-    // — Boutons de points
-    const boutons = creerBoutonsPoints(equipe.id, bonus, equipe.couleur);
-
     carte.appendChild(inputNom);
     carte.appendChild(scoreEl);
-    if (scoresPeriodes) carte.appendChild(scoresPeriodes);
-    carte.appendChild(boutons);
+
+    // — Scores par période (si actives)
+    const scoresPer = creerScoresPeriodes(equipe, periodes);
+    if (scoresPer) carte.appendChild(scoresPer);
+
+    // — Boutons de points
+    carte.appendChild(creerBoutonsPoints(equipe.id, bonus, equipe.couleur));
 
     return carte;
   }
 
-  /** Crée les badges de scores par période */
+  // ══════════════════════════════════════
+  // SCORES PAR PÉRIODE
+  // ══════════════════════════════════════
+
   function creerScoresPeriodes(equipe, periodes) {
     if (!periodes.actives || equipe.scoresPeriodes.length === 0) return null;
 
     const conteneur = document.createElement('div');
     conteneur.className = 'scoreboard-equipe-scores-periodes';
 
-    equipe.scoresPeriodes.forEach((score, index) => {
-      const badge = document.createElement('span');
-      badge.className = 'scoreboard-periode-badge';
-      badge.textContent = `${periodes.nom} ${index + 1} : ${score}`;
-      conteneur.appendChild(badge);
+    equipe.scoresPeriodes.forEach((score, idx) => {
+      const span = document.createElement('span');
+      span.className = 'scoreboard-score-periode';
+      span.textContent = `${periodes.nom} ${idx + 1} : ${score}`;
+      conteneur.appendChild(span);
     });
 
     return conteneur;
   }
 
-  /** Crée le bloc de boutons de points pour une équipe */
+  // ══════════════════════════════════════
+  // BOUTONS DE POINTS
+  // ══════════════════════════════════════
+
   function creerBoutonsPoints(idEquipe, bonus, couleurEquipe) {
     const conteneur = document.createElement('div');
     conteneur.className = 'scoreboard-equipe-boutons';
@@ -118,65 +111,56 @@ const ScoreboardUI = (function () {
     btn1.className = 'scoreboard-btn-point';
     btn1.textContent = '+1 point';
     btn1.style.background = couleurEquipe;
-    // ✅ CORRIGÉ : dataset en String pour cohérence avec querySelector
     btn1.dataset.idEquipe = String(idEquipe);
-    btn1.dataset.points = '1';
+    btn1.dataset.points   = '1';
     conteneur.appendChild(btn1);
 
     // Boutons bonus configurés
     bonus.forEach(b => {
-      const btnBonus = document.createElement('button');
-      btnBonus.className = 'scoreboard-btn-point bonus';
-      btnBonus.textContent = `+${b.valeur} — ${b.libelle}`;
-      // ✅ CORRIGÉ : dataset en String
-      btnBonus.dataset.idEquipe = String(idEquipe);
-      btnBonus.dataset.points = String(b.valeur);
-      conteneur.appendChild(btnBonus);
+      const btnB = document.createElement('button');
+      btnB.className = 'scoreboard-btn-point bonus';
+      btnB.textContent = `+${b.valeur} — ${b.libelle}`;
+      btnB.dataset.idEquipe = String(idEquipe);
+      btnB.dataset.points   = String(b.valeur);
+      conteneur.appendChild(btnB);
     });
 
     return conteneur;
   }
 
   // ══════════════════════════════════════
-  // MISE À JOUR PARTIELLE — score seul
+  // MISE À JOUR PARTIELLE
   // ══════════════════════════════════════
 
-  /** Met à jour uniquement l'affichage du score d'une équipe */
   function mettreAJourScore(idEquipe) {
     const equipe   = ScoreboardApp.getEquipes().find(e => e.id === idEquipe);
     const periodes = ScoreboardApp.getPeriodes();
-
     if (!equipe) return;
 
-    // ✅ CORRIGÉ : String(idEquipe) pour matcher le dataset stocké en String
     const carte = document.querySelector(
       `.scoreboard-equipe-carte[data-id-equipe="${String(idEquipe)}"]`
     );
     if (!carte) return;
 
-    // Mise à jour du score total
+    // Mise à jour score total
     const scoreEl = carte.querySelector('.scoreboard-equipe-score');
     if (scoreEl) scoreEl.textContent = equipe.scoreTotal;
 
-    // Mise à jour des scores par période
-    const ancienScoresPer = carte.querySelector('.scoreboard-equipe-scores-periodes');
-    if (ancienScoresPer) ancienScoresPer.remove();
+    // Mise à jour scores par période
+    const ancien = carte.querySelector('.scoreboard-equipe-scores-periodes');
+    if (ancien) ancien.remove();
 
-    const nouveauxScoresPer = creerScoresPeriodes(equipe, periodes);
-    if (nouveauxScoresPer) {
+    const nouveaux = creerScoresPeriodes(equipe, periodes);
+    if (nouveaux) {
       const boutons = carte.querySelector('.scoreboard-equipe-boutons');
-      carte.insertBefore(nouveauxScoresPer, boutons);
+      carte.insertBefore(nouveaux, boutons);
     }
   }
 
   // ══════════════════════════════════════
   // EXPOSITION
   // ══════════════════════════════════════
-  return {
-    rendrePage,
-    rendreBarrePeriode,
-    rendreEquipes,
-    mettreAJourScore,
-  };
+
+  return { rendrePage, rendreBarrePeriode, rendreEquipes, mettreAJourScore };
 
 })();

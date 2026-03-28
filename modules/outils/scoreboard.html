@@ -1,103 +1,86 @@
 <!-- 📄 Fichier : modules/scoreboard.html -->
-<!-- 🎯 Rôle : Structure HTML du module Scoreboard -->
+<!-- 🎯 Rôle : Structure du scoreboard — jeu + modale config -->
 
-<div class="scoreboard-wrapper">
+<div id="scoreboard-root">
 
-  <!-- EN-TÊTE DU MODULE -->
-  <div class="scoreboard-header">
-    <h2 class="scoreboard-titre">🏆 Scoreboard</h2>
-    <button class="scoreboard-btn-config" id="scoreboard-btn-config" aria-label="Configuration">
-      ⚙️ Configurer
-    </button>
-  </div>
-
-  <!-- INDICATEUR DE PÉRIODE (masqué si pas de périodes) -->
-  <div class="scoreboard-periode-bar" id="scoreboard-periode-bar" hidden>
-    <span class="scoreboard-periode-label" id="scoreboard-periode-label">Période 1</span>
-    <!-- ✅ CORRIGÉ : classe alignée sur l'ID -->
-    <button class="scoreboard-btn-periode-suivante" id="scoreboard-btn-periode-suivante">
+  <!-- ── Barre de période ── -->
+  <div id="scoreboard-periode-bar" hidden>
+    <span id="scoreboard-periode-label"></span>
+    <button id="scoreboard-btn-periode-suivante" class="scoreboard-btn-action">
       Période suivante →
     </button>
   </div>
 
-  <!-- ZONE DES ÉQUIPES (générée dynamiquement) -->
-  <div class="scoreboard-equipes" id="scoreboard-equipes"></div>
-
-  <!-- BOUTON RESET -->
-  <div class="scoreboard-footer">
-    <button class="scoreboard-btn-reset" id="scoreboard-btn-reset">
-      🔄 Réinitialiser le score
+  <!-- ── Barre d'actions ── -->
+  <div id="scoreboard-actions-bar">
+    <button id="scoreboard-btn-config" class="scoreboard-btn-action">
+      ⚙️ Configurer
+    </button>
+    <button id="scoreboard-btn-reset" class="scoreboard-btn-action scoreboard-btn-danger">
+      🔄 Reset
     </button>
   </div>
 
-</div>
+  <!-- ── Zone des équipes ── -->
+  <div id="scoreboard-equipes"></div>
 
-<!-- ✅ CORRIGÉ : overlay hors du wrapper pour éviter les problèmes de overflow -->
-<div class="scoreboard-config-overlay" id="scoreboard-config-overlay" hidden>
-  <div class="scoreboard-config-panel">
+  <!-- ══════════════════════════════════════════ -->
+  <!-- MODALE CONFIGURATION                       -->
+  <!-- ══════════════════════════════════════════ -->
+  <div id="scoreboard-config-overlay" hidden>
+    <div id="scoreboard-config-modale">
 
-    <div class="scoreboard-config-header">
-      <h3>⚙️ Configuration</h3>
-      <button class="scoreboard-btn-fermer-config" id="scoreboard-btn-fermer-config">✕</button>
-    </div>
-
-    <!-- SECTION ÉQUIPES -->
-    <section class="scoreboard-config-section">
-      <h4>👥 Équipes</h4>
-      <div id="scoreboard-config-equipes-liste"></div>
-      <button class="scoreboard-btn-ajouter-equipe" id="scoreboard-btn-ajouter-equipe">
-        + Ajouter une équipe
-      </button>
-    </section>
-
-    <!-- SECTION BONUS -->
-    <section class="scoreboard-config-section">
-      <h4>⭐ Points bonus</h4>
-      <p class="scoreboard-config-aide">
-        Définissez des boutons de points spéciaux (ex: "Essai = 5 pts")
-      </p>
-      <div id="scoreboard-config-bonus-liste"></div>
-      <button class="scoreboard-btn-ajouter-bonus" id="scoreboard-btn-ajouter-bonus">
-        + Ajouter un bonus
-      </button>
-    </section>
-
-    <!-- SECTION PÉRIODES -->
-    <section class="scoreboard-config-section">
-      <h4>⏱️ Périodes / Manches</h4>
-      <label class="scoreboard-config-label">
-        <input type="checkbox" id="scoreboard-config-periodes-actives" />
-        Activer les périodes
-      </label>
-      <div id="scoreboard-config-periodes-detail" hidden>
-        <label class="scoreboard-config-label">
-          Nombre de périodes :
-          <input
-            type="number"
-            id="scoreboard-config-nb-periodes"
-            min="2"
-            max="10"
-            value="2"
-            class="scoreboard-input-number"
-          />
-        </label>
-        <label class="scoreboard-config-label">
-          Nom (ex: Mi-temps, Set, Manche) :
-          <input
-            type="text"
-            id="scoreboard-config-nom-periode"
-            placeholder="Période"
-            class="scoreboard-input-text"
-            maxlength="20"
-          />
-        </label>
+      <!-- En-tête -->
+      <div class="scoreboard-config-header">
+        <h2>⚙️ Configuration</h2>
+        <button id="scoreboard-btn-fermer-config" aria-label="Fermer">✕</button>
       </div>
-    </section>
 
-    <!-- BOUTON VALIDER -->
-    <button class="scoreboard-btn-valider-config" id="scoreboard-btn-valider-config">
-      ✅ Valider et lancer
-    </button>
+      <!-- Section équipes -->
+      <section class="scoreboard-config-section">
+        <h3>Équipes</h3>
+        <div id="scoreboard-config-equipes-liste"></div>
+        <button id="scoreboard-btn-ajouter-equipe" class="scoreboard-btn-ajouter">
+          + Ajouter une équipe
+        </button>
+      </section>
 
+      <!-- Section bonus -->
+      <section class="scoreboard-config-section">
+        <h3>Points bonus</h3>
+        <div id="scoreboard-config-bonus-liste"></div>
+        <button id="scoreboard-btn-ajouter-bonus" class="scoreboard-btn-ajouter">
+          + Ajouter un bonus
+        </button>
+      </section>
+
+      <!-- Section périodes -->
+      <section class="scoreboard-config-section">
+        <h3>Périodes</h3>
+        <label class="scoreboard-config-toggle">
+          <input type="checkbox" id="scoreboard-config-periodes-actives">
+          Activer les périodes
+        </label>
+        <div id="scoreboard-config-periodes-detail" hidden>
+          <label>
+            Nombre de périodes
+            <input type="number" id="scoreboard-config-nb-periodes"
+                   min="2" max="10" value="2">
+          </label>
+          <label>
+            Nom des périodes
+            <input type="text" id="scoreboard-config-nom-periode"
+                   placeholder="Ex : Mi-temps, Quart..." maxlength="20">
+          </label>
+        </div>
+      </section>
+
+      <!-- Bouton valider -->
+      <button id="scoreboard-btn-valider-config" class="scoreboard-btn-valider">
+        ✅ Valider
+      </button>
+
+    </div>
   </div>
+
 </div>

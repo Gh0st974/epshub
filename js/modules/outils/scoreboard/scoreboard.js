@@ -4,7 +4,7 @@
 (function () {
 
   // ══════════════════════════════════════
-  // ÉTAT GLOBAL DU MODULE
+  // ÉTAT GLOBAL
   // ══════════════════════════════════════
 
   const etat = {
@@ -23,13 +23,7 @@
   // ══════════════════════════════════════
 
   function creerEquipe(id, nom, couleur) {
-    return {
-      id,
-      nom,
-      couleur,
-      scoreTotal: 0,
-      scoresPeriodes: [],
-    };
+    return { id, nom, couleur, scoreTotal: 0, scoresPeriodes: [] };
   }
 
   function initialiserEquipesDefaut() {
@@ -40,39 +34,32 @@
   }
 
   // ══════════════════════════════════════
-  // ACTIONS SUR LES SCORES
+  // ACTIONS SCORES
   // ══════════════════════════════════════
 
   function ajouterPoints(idEquipe, points) {
     const equipe = etat.equipes.find(e => e.id === idEquipe);
     if (!equipe) return;
-
     equipe.scoreTotal += points;
-
     if (etat.periodes.actives) {
-      const indexPeriode = etat.periodes.courante - 1;
-      if (!equipe.scoresPeriodes[indexPeriode]) {
-        equipe.scoresPeriodes[indexPeriode] = 0;
-      }
-      equipe.scoresPeriodes[indexPeriode] += points;
+      const idx = etat.periodes.courante - 1;
+      if (!equipe.scoresPeriodes[idx]) equipe.scoresPeriodes[idx] = 0;
+      equipe.scoresPeriodes[idx] += points;
     }
   }
 
   function reinitialiserScores() {
-    etat.equipes.forEach(equipe => {
-      equipe.scoreTotal = 0;
-      equipe.scoresPeriodes = [];
+    etat.equipes.forEach(eq => {
+      eq.scoreTotal = 0;
+      eq.scoresPeriodes = [];
     });
-    if (etat.periodes.actives) {
-      etat.periodes.courante = 1;
-    }
+    if (etat.periodes.actives) etat.periodes.courante = 1;
   }
 
   // ══════════════════════════════════════
-  // GESTION DES PÉRIODES
+  // PÉRIODES
   // ══════════════════════════════════════
 
-  // ✅ CORRIGÉ : nom unifié en camelCase
   function periodeSuivante() {
     if (etat.periodes.courante < etat.periodes.total) {
       etat.periodes.courante++;
@@ -86,10 +73,8 @@
   // ══════════════════════════════════════
 
   function appliquerConfiguration(config) {
-    etat.equipes = config.equipes.map((e, index) =>
-      creerEquipe(index + 1, e.nom, e.couleur)
-    );
-    etat.bonus = config.bonus.filter(b => b.valeur > 0 && b.libelle.trim() !== '');
+    etat.equipes = config.equipes.map((e, i) => creerEquipe(i + 1, e.nom, e.couleur));
+    etat.bonus   = config.bonus.filter(b => b.valeur > 0 && b.libelle.trim() !== '');
     etat.periodes.actives  = config.periodes.actives;
     etat.periodes.total    = config.periodes.total;
     etat.periodes.courante = 1;
@@ -106,14 +91,18 @@
   function getPeriodes() { return etat.periodes; }
 
   // ══════════════════════════════════════
-  // CHARGEMENT DES SOUS-MODULES
+  // CHARGEMENT EN CASCADE
   // ══════════════════════════════════════
 
   function chargerScript(chemin, callback) {
+    // Supprime l'ancienne version pour forcer le rechargement
+    const ancien = document.querySelector(`script[src="${chemin}"]`);
+    if (ancien) ancien.remove();
+
     const script = document.createElement('script');
     script.src = chemin;
     script.onload = callback;
-    script.onerror = () => console.error(`Erreur chargement : ${chemin}`);
+    script.onerror = () => console.error(`❌ Erreur chargement : ${chemin}`);
     document.body.appendChild(script);
   }
 
@@ -122,29 +111,24 @@
   // ══════════════════════════════════════
 
   window.ScoreboardApp = {
-    getEtat,
-    getEquipes,
-    getBonus,
-    getPeriodes,
-    ajouterPoints,
-    reinitialiserScores,
-    periodeSuivante,       // ✅ CORRIGÉ : camelCase unifié
-    appliquerConfiguration,
-    creerEquipe,
+    getEtat, getEquipes, getBonus, getPeriodes,
+    ajouterPoints, reinitialiserScores, periodeSuivante,
+    appliquerConfiguration, creerEquipe,
   };
 
   // ══════════════════════════════════════
-  // INITIALISATION EN CASCADE
+  // INITIALISATION
   // ══════════════════════════════════════
 
   initialiserEquipesDefaut();
 
-  // ✅ CORRIGÉ : reset du flag events si le module est rechargé
-  if (window.ScoreboardEvents) ScoreboardEvents.reset();
+  // Reset du flag events si module rechargé par le router
+  if (window.ScoreboardEvents) window.ScoreboardEvents.reset();
 
-  chargerScript('js/modules/outils/scoreboard/scoreboard-config.js', () => {
-    chargerScript('js/modules/outils/scoreboard/scoreboard-ui.js', () => {
-      chargerScript('js/modules/outils/scoreboard/scoreboard-events.js', () => {
+  // ✅ CORRIGÉ : chemins relatifs corrects (même dossier)
+  chargerScript('js/modules/scoreboard/scoreboard-config.js', () => {
+    chargerScript('js/modules/scoreboard/scoreboard-ui.js', () => {
+      chargerScript('js/modules/scoreboard/scoreboard-events.js', () => {
         ScoreboardUI.rendrePage();
         ScoreboardEvents.init();
       });

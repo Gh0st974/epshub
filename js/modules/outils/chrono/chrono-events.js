@@ -1,80 +1,84 @@
-// 📄 Fichier : /js/modules/chrono/chrono-events.js
-// 🎯 Rôle : Gestion des interactions utilisateur
+// 📄 Fichier : js/modules/outils/chrono/chrono-events.js
+// 🎯 Rôle : Écoute et dispatch de toutes les interactions utilisateur
 
 /**
- * Initialise les écouteurs d'événements
+ * Branche les événements pour le mode simple
+ * @param {string} id
+ * @param {function} onStart
+ * @param {function} onPause
+ * @param {function} onReset
+ * @param {function} onLap
  */
-function initEvents() {
-  // Onglets de sélection du mode
-  document.querySelectorAll('.chrono-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      afficherMode(tab.dataset.mode);
-    });
-  });
+function eventsBinderSimple(id, onStart, onPause, onReset, onLap) {
+  const zone = document.getElementById('chrono-zone');
+  if (!zone) return;
 
-  // Boutons du mode Chrono Simple
-  document.querySelectorAll('#chrono-simple .chrono-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      gererActionChrono('simple', btn.dataset.action);
-    });
-  });
+  // Délégation d'événements sur la zone
+  zone.addEventListener('click', function handlerSimple(e) {
+    const btn = e.target.closest('[data-action]');
+    if (!btn || btn.dataset.id !== id) return;
 
-  // Boutons du mode Multi-Chrono (globaux)
-  document.querySelector('.chrono-start-all').addEventListener('click', () => {
-    demarrerTousLesChronos();
-  });
+    const action = btn.dataset.action;
 
-  document.querySelector('.chrono-pause-all').addEventListener('click', () => {
-    arreterTousLesChronos();
-  });
-
-  document.querySelector('.chrono-reset-all').addEventListener('click', () => {
-    reinitialiserTousLesChronos();
-  });
-
-  document.getElementById('chrono-add-btn').addEventListener('click', () => {
-    const chronoCount = document.querySelectorAll('.chrono-multi-item').length;
-    const newId = `multi-${chronoCount + 1}`;
-    ajouterChronoMulti(newId);
-    initChronoMulti(newId);
+    if (action === 'start') onStart(id);
+    else if (action === 'pause') onPause(id);
+    else if (action === 'reset') onReset(id);
+    else if (action === 'lap') onLap(id);
   });
 }
 
 /**
- * Initialise les écouteurs pour un chrono multi
- * @param {string} id - Identifiant du chrono
+ * Branche les événements pour le mode multi
+ * @param {object} callbacks - { onStart, onPause, onReset, onLap, onAjouter, onSupprimer, onGlobalStart, onGlobalPause, onGlobalReset }
  */
-function initChronoMulti(id) {
-  document.querySelectorAll(`.${id}-start, .${id}-pause, .${id}-reset, .${id}-lap`).forEach(btn => {
-    btn.addEventListener('click', () => {
-      gererActionChrono(id, btn.dataset.action);
-    });
-  });
+function eventsBinderMulti(callbacks) {
+  const zone = document.getElementById('chrono-zone');
+  if (!zone) return;
 
-  document.querySelector(`.${id}-remove`).addEventListener('click', () => {
-    supprimerChronoMulti(id);
-    arreterChrono(id);
+  zone.addEventListener('click', function handlerMulti(e) {
+    // Bouton ajouter
+    if (e.target.closest('#chrono-ajouter')) {
+      callbacks.onAjouter();
+      return;
+    }
+
+    // Contrôles globaux
+    if (e.target.closest('#global-start')) { callbacks.onGlobalStart(); return; }
+    if (e.target.closest('#global-pause')) { callbacks.onGlobalPause(); return; }
+    if (e.target.closest('#global-reset')) { callbacks.onGlobalReset(); return; }
+
+    // Contrôles individuels
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    if (action === 'start') callbacks.onStart(id);
+    else if (action === 'pause') callbacks.onPause(id);
+    else if (action === 'reset') callbacks.onReset(id);
+    else if (action === 'lap') callbacks.onLap(id);
+    else if (action === 'supprimer') callbacks.onSupprimer(id);
   });
 }
 
 /**
- * Gère une action sur un chrono (démarrer, pause, réinitialiser, laps)
- * @param {string} id - Identifiant du chrono
- * @param {string} action - 'start', 'pause', 'reset', 'lap'
+ * Branche le sélecteur de mode
+ * @param {function} onChange - appelé avec "simple" ou "multi"
  */
-function gererActionChrono(id, action) {
-  switch (action) {
-    case 'start':
-      demarrerChrono(id);
-      break;
-    case 'pause':
-      mettreEnPauseChrono(id);
-      break;
-    case 'reset':
-      reinitialiserChrono(id);
-      break;
-    case 'lap':
-      ajouterLap(id);
-      break;
-  }
+function eventsBinderModeSelector(onChange) {
+  const selector = document.querySelector('.chrono-mode-selector');
+  if (!selector) return;
+
+  selector.addEventListener('click', (e) => {
+    const btn = e.target.closest('.chrono-mode-btn');
+    if (!btn) return;
+
+    // Mise à jour visuelle de l'onglet actif
+    selector.querySelectorAll('.chrono-mode-btn').forEach(b => b.classList.remove('actif'));
+    btn.classList.add('actif');
+
+    onChange(btn.dataset.mode);
+  });
 }

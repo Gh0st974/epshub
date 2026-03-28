@@ -1,208 +1,317 @@
-/* 📄 Fichier : /css/modules/chrono.css */
-/* 🎯 Rôle : Styles du module Chrono (responsive, centré, lisible) */
+/* 📄 Fichier : css/modules/outils/chrono.css */
+/* 🎯 Rôle : Styles du module chronomètre */
 
-.chrono-container {
+/* ─── Conteneur principal ─────────────────────────────────── */
+.chrono-module {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - var(--hauteur-header) - var(--hauteur-nav));
-  padding: 1rem;
-  background-color: var(--couleur-fond);
-  overflow: hidden;
+  align-items: center;
+  padding: 16px;
+  gap: 20px;
+  min-height: calc(100vh - var(--hauteur-header) - var(--hauteur-nav));
+  box-sizing: border-box;
 }
 
-.chrono-tabs {
+/* ─── Sélecteur de mode ───────────────────────────────────── */
+.chrono-mode-selector {
   display: flex;
-  margin-bottom: 1rem;
-  gap: 0.5rem;
-}
-
-.chrono-tab {
-  flex: 1;
-  padding: 0.75rem;
-  background-color: var(--couleur-fond-carte);
-  border: none;
+  gap: 10px;
+  background: var(--couleur-fond-carte);
+  padding: 6px;
   border-radius: var(--rayon-carte);
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--couleur-texte-leger);
-  cursor: pointer;
   box-shadow: var(--ombre-carte);
-  transition: all 0.2s;
 }
 
-.chrono-tab.active {
-  background-color: var(--couleur-principale);
+.chrono-mode-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: var(--couleur-texte-leger);
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+
+.chrono-mode-btn.actif {
+  background: var(--couleur-principale);
   color: white;
 }
 
-.chrono-mode {
-  display: none;
-  flex: 1;
+/* ─── Zone d'affichage ────────────────────────────────────── */
+.chrono-zone {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 20px;
 }
 
-.chrono-mode.active {
+/* ─── Carte chrono (simple et multi) ─────────────────────── */
+.chrono-carte {
+  width: 100%;
+  background: var(--couleur-fond-carte);
+  border-radius: var(--rayon-carte);
+  box-shadow: var(--ombre-carte);
+  padding: 24px 20px;
+  box-sizing: border-box;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-.chrono-display {
+/* Titre du chrono (multi) */
+.chrono-titre {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--couleur-texte-leger);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  align-self: flex-start;
+}
+
+/* ─── Affichage du temps ──────────────────────────────────── */
+.chrono-affichage {
   font-size: 4rem;
-  font-weight: bold;
+  font-weight: 800;
   color: var(--couleur-texte);
-  margin-bottom: 1.5rem;
-  text-align: center;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+  line-height: 1;
 }
 
-.chrono-controls {
+.chrono-affichage.actif {
+  color: var(--couleur-principale);
+}
+
+.chrono-affichage .chrono-cs {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--couleur-texte-leger);
+}
+
+/* ─── Boutons de contrôle ─────────────────────────────────── */
+.chrono-controles {
   display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .chrono-btn {
-  padding: 0.75rem 1.5rem;
+  min-height: 52px;
+  min-width: 80px;
+  padding: 0 18px;
   border: none;
-  border-radius: var(--rayon-carte);
-  font-size: 1rem;
-  font-weight: bold;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: var(--ombre-carte);
-  transition: all 0.2s;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.chrono-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.chrono-btn:active {
+  transform: scale(0.95);
 }
 
-.chrono-start {
-  background-color: var(--couleur-principale);
+/* Variantes de boutons */
+.chrono-btn-start {
+  background: var(--couleur-principale);
   color: white;
 }
 
-.chrono-pause {
-  background-color: #f39c12;
+.chrono-btn-start:hover {
+  background: var(--couleur-principale-fonce);
+}
+
+.chrono-btn-pause {
+  background: #f39c12;
   color: white;
 }
 
-.chrono-reset, .chrono-reset-all {
-  background-color: #e74c3c;
-  color: white;
+.chrono-btn-pause:hover {
+  background: #d68910;
 }
 
-.chrono-lap, .chrono-start-all, .chrono-pause-all, .chrono-add {
-  background-color: var(--couleur-fond-carte);
+.chrono-btn-reset {
+  background: var(--couleur-fond);
   color: var(--couleur-texte);
 }
 
-/* Laps container */
-.chrono-laps-container {
+.chrono-btn-reset:hover {
+  background: #ddd;
+}
+
+.chrono-btn-lap {
+  background: #3498db;
+  color: white;
+}
+
+.chrono-btn-lap:hover {
+  background: #2980b9;
+}
+
+.chrono-btn-lap:disabled,
+.chrono-btn-reset:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Liste des laps ──────────────────────────────────────── */
+.chrono-laps {
   width: 100%;
-  max-height: 30vh;
+  max-height: 180px;
   overflow-y: auto;
-  background-color: var(--couleur-fond-carte);
-  border-radius: var(--rayon-carte);
-  padding: 0.5rem;
-  box-shadow: var(--ombre-carte);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .chrono-lap-item {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  padding: 7px 12px;
+  background: var(--couleur-fond);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: var(--couleur-texte);
 }
 
-.chrono-lap-item:nth-child(even) {
-  background-color: #f9f9f9;
+.chrono-lap-num {
+  font-weight: 700;
+  color: var(--couleur-texte-leger);
+  min-width: 55px;
 }
 
-.chrono-lap-item span {
-  flex: 1;
-  text-align: center;
+.chrono-lap-split {
+  font-weight: 600;
+  color: var(--couleur-texte);
 }
 
-/* Multi-Chrono */
-.chrono-multi-controls {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
+.chrono-lap-total {
+  font-size: 0.8rem;
+  color: var(--couleur-texte-leger);
 }
 
-.chrono-multi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
+/* ─── Barre de contrôle globale (multi) ──────────────────── */
+.chrono-global-bar {
   width: 100%;
-  overflow-y: auto;
-  padding: 0.5rem;
-}
-
-.chrono-multi-item {
-  background-color: var(--couleur-fond-carte);
+  background: var(--couleur-fond-carte);
   border-radius: var(--rayon-carte);
-  padding: 1rem;
   box-shadow: var(--ombre-carte);
+  padding: 14px 16px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
 
-.chrono-multi-display {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: var(--couleur-texte);
-  margin-bottom: 1rem;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
+.chrono-global-bar-titre {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--couleur-texte-leger);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.chrono-multi-controls-item {
+.chrono-global-controles {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.chrono-multi-laps-container {
+/* ─── Bouton ajouter chrono (multi) ──────────────────────── */
+.chrono-ajouter-btn {
+  min-height: 52px;
   width: 100%;
-  max-height: 20vh;
-  overflow-y: auto;
-  background-color: white;
+  max-width: 600px;
+  border: 2px dashed var(--couleur-principale);
+  background: transparent;
+  color: var(--couleur-principale);
   border-radius: var(--rayon-carte);
-  padding: 0.5rem;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .chrono-display {
-    font-size: 2.5rem;
+.chrono-ajouter-btn:hover {
+  background: rgba(46, 204, 113, 0.08);
+}
+
+/* ─── Bouton supprimer chrono (multi) ────────────────────── */
+.chrono-supprimer-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--couleur-texte-leger);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.chrono-supprimer-btn:hover {
+  color: #e74c3c;
+}
+
+.chrono-carte {
+  position: relative;
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .chrono-affichage {
+    font-size: 3rem;
   }
 
-  .chrono-multi-display {
-    font-size: 2rem;
-  }
-
-  .chrono-controls, .chrono-multi-controls {
-    flex-direction: column;
-    align-items: center;
+  .chrono-affichage .chrono-cs {
+    font-size: 1.8rem;
   }
 
   .chrono-btn {
-    width: 100%;
-    margin-bottom: 0.5rem;
+    min-width: 68px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .chrono-zone {
+    max-width: 680px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Multi-chrono : grille 2 colonnes */
+  .chrono-zone.multi-mode {
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
   }
 
-  .chrono-multi-grid {
-    grid-template-columns: 1fr;
+  /* La barre globale et le bouton ajouter occupent toute la largeur */
+  .chrono-global-bar,
+  .chrono-ajouter-btn {
+    grid-column: 1 / -1;
+    max-width: 100%;
   }
 }

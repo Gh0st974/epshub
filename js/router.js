@@ -13,27 +13,28 @@ async function chargerModule(nomModule) {
 
   try {
     // =============================================
-    // 🔹 CHEMINS DES MODULES (À MODIFIER ICI)
+    // 🔹 CHEMINS DES MODULES
     // =============================================
+
     // 1️⃣ Modules principaux (ex: hub, accueil)
     const cheminsModules = {
       html: `modules/${nomModule}.html`,
-      css: `css/modules/${nomModule}.css`,
-      js: `js/modules/${nomModule}.js`
+      css:  `css/modules/${nomModule}.css`,
+      js:   `js/modules/${nomModule}.js`
     };
 
-    // 2️⃣ Outils (ex: chrono, minuteur)
+    // 2️⃣ Outils — structure avec sous-dossier JS
     if (nomModule === 'chrono' || nomModule.startsWith('outil-')) {
       cheminsModules.html = `modules/outils/${nomModule}.html`;
-      cheminsModules.css = `css/modules/outils/${nomModule}.css`;
-      cheminsModules.js = `js/modules/outils/${nomModule}.js`;
+      cheminsModules.css  = `css/modules/outils/${nomModule}.css`;
+      // ✅ Point d'entrée dans le sous-dossier /chrono/chrono.js
+      cheminsModules.js   = `js/modules/outils/${nomModule}/${nomModule}.js`;
     }
     // =============================================
 
-    // Récupération du fichier HTML du module
+    // Récupération du HTML du module
     const reponse = await fetch(cheminsModules.html);
 
-    // Si le fichier n'existe pas
     if (!reponse.ok) {
       zoneContenu.innerHTML = `
         <div class="module-vide">
@@ -45,10 +46,10 @@ async function chargerModule(nomModule) {
     const contenuHTML = await reponse.text();
     zoneContenu.innerHTML = contenuHTML;
 
-    // Charge le CSS spécifique au module si disponible
+    // Charge le CSS (protégé contre les doublons — styles statiques)
     chargerCSSModule(nomModule, cheminsModules.css);
 
-    // Charge le JS spécifique au module si disponible
+    // Charge le JS (rechargé à chaque navigation — IIFE à réexécuter)
     chargerJSModule(nomModule, cheminsModules.js);
 
   } catch (erreur) {
@@ -64,12 +65,12 @@ async function chargerModule(nomModule) {
 
 /**
  * Charge dynamiquement le CSS d'un module (évite les doublons)
- * @param {string} nomModule - Nom du module
- * @param {string} cheminCSS - Chemin vers le fichier CSS
+ * @param {string} nomModule
+ * @param {string} cheminCSS
  */
 function chargerCSSModule(nomModule, cheminCSS) {
   const idCSS = `css-module-${nomModule}`;
-  if (document.getElementById(idCSS)) return; // Déjà chargé
+  if (document.getElementById(idCSS)) return; // CSS statique = pas besoin de recharger
 
   fetch(cheminCSS)
     .then(reponse => {
@@ -86,13 +87,17 @@ function chargerCSSModule(nomModule, cheminCSS) {
 }
 
 /**
- * Charge dynamiquement le JS d'un module (évite les doublons)
- * @param {string} nomModule - Nom du module
- * @param {string} cheminJS - Chemin vers le fichier JS
+ * Charge dynamiquement le JS d'un module
+ * ⚠️ Toujours rechargé pour réexécuter l'IIFE d'initialisation
+ * @param {string} nomModule
+ * @param {string} cheminJS
  */
 function chargerJSModule(nomModule, cheminJS) {
   const idJS = `js-module-${nomModule}`;
-  if (document.getElementById(idJS)) return; // Déjà chargé
+
+  // Supprime l'ancien script pour forcer la réexécution de l'IIFE
+  const ancienScript = document.getElementById(idJS);
+  if (ancienScript) ancienScript.remove();
 
   const script = document.createElement('script');
   script.id = idJS;

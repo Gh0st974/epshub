@@ -1,126 +1,128 @@
-// 📄 Fichier : /js/modules/chrono/chrono-timer.js
-// 🎯 Rôle : Logique des chronos (simple et multi)
+// 📄 Fichier : js/modules/outils/chrono/chrono-timer.js
+// 🎯 Rôle : Logique métier — gestion du tick, calcul du temps, état des chronos
 
-const chronos = {
-  simple: {
-    etat: 'arret', // 'arret', 'demarre', 'pause'
-    tempsDepart: 0,
-    tempsPause: 0,
-    tempsTotal: 0,
-    intervalId: null,
-    dernierTemps: 0
-  }
-};
+// ─── Registre de tous les chronos actifs ──────────────────────────────────────
+const chronoRegistre = {};
 
 /**
- * Initialise les timers
+ * Crée un chrono avec un identifiant unique
+ * @param {string} id - Identifiant du chrono
  */
-function initTimers() {
-  // Rien à faire ici pour l'instant
+function chronoCreer(id) {
+  chronoRegistre[id] = {
+    id,
+    enCours: false,
+    debut: 0,         // timestamp de démarrage
+    accumule: 0,      // ms accumulées avant la dernière pause
+    intervalId: null,
+    laps: [],
+    dernierLapMs: 0,  // temps total au dernier lap
+  };
 }
 
 /**
- * Démarre un chrono
- * @param {string} id - Identifiant du chrono
+ * Démarre ou reprend un chrono
+ * @param {string} id
+ * @param {function} onTick - callback appelé à chaque tick avec le temps en ms
  */
-function demarrerChrono(id) {
-  if (!chronos[id]) {
-    chronos[id] = {
-      etat: 'arret',
-      tempsDepart: 0,
-      tempsPause: 0,
-      tempsTotal: 0,
-      intervalId: null,
-      dernierTemps: 0
-    };
-  }
+function chronoDemarrer(id, onTick) {
+  const c = chronoRegistre[id];
+  if (!c || c.enCours) return;
 
-  if (chronos[id].etat === 'demarre') return;
+  c.enCours = true;
+  c.debut = performance.now();
 
-  if (chronos[id].etat === 'arret') {
-    chronos[id].tempsDepart = performance.now() - chronos[id].tempsTotal;
-  } else {
-    // Reprise après une pause
-    chronos[id].tempsDepart = performance.now() - (chronos[id].tempsPause - chronos[id].tempsDepart);
-  }
-
-  chronos[id].etat = 'demarre';
-  chronos[id].intervalId = setInterval(() => {
-    const maintenant = performance.now();
-    chronos[id].tempsTotal = maintenant - chronos[id].tempsDepart;
-    mettreAJourAffichage(id, chronos[id].tempsTotal);
-  }, 10);
-
-  mettreAJourBoutons(id, 'demarre');
+  // Tick toutes les 30ms (≈ centièmes fluides)
+  c.intervalId = setInterval(() => {
+    const elapsed = chronoGetMs(id);
+    onTick(elapsed);
+  }, 30);
 }
 
 /**
  * Met en pause un chrono
- * @param {string} id - Identifiant du chrono
+ * @param {string} id
  */
-function mettreEnPauseChrono(id) {
-  if (chronos[id].etat !== 'demarre') return;
+function chronoPauser(id) {
+  const c = chronoRegistre[id];
+  if (!c || !c.enCours) return;
 
-  clearInterval(chronos[id].intervalId);
-  chronos[id].tempsPause = performance.now();
-  chronos[id].etat = 'pause';
-  mettreAJourBoutons(id, 'pause');
+  clearInterval(c.intervalId);
+  c.accumule += performance.now() - c.debut;
+  c.enCours = false;
 }
 
 /**
- * Réinitialise un chrono
- * @param {string} id - Identifiant du chrono
+ * Remet à zéro un chrono
+ * @param {string} id
  */
-function reinitialiserChrono(id) {
-  clearInterval(chronos[id].intervalId);
-  chronos[id].etat = 'arret';
-  chronos[id].tempsDepart = 0;
-  chronos[id].tempsPause = 0;
-  chronos[id].tempsTotal = 0;
-  chronos[id].dernierTemps = 0;
-  mettreAJourAffichage(id, 0);
-  mettreAJourBoutons(id, 'arret');
-  effacerLaps(id);
+function chronoReset(id) {
+  const c = chronoRegistre[id];
+  if (!c) return;
+
+  clearInterval(c.intervalId);
+  c.enCours = false;
+  c.debut = 0;
+  c.accumule = 0;
+  c.intervalId = null;
+  c.laps = [];
+  c.dernierLapMs = 0;
 }
 
 /**
- * Démarre tous les chronos
+ * Supprime un chrono du registre
+ * @param {string} id
  */
-function demarrerTousLesChronos() {
-  Object.keys(chronos).forEach(id => {
-    if (id !== 'simple') {
-      demarrerChrono(id);
-    }
-  });
+function chronoSupprimer(id) {
+  chronoReset(id);
+  delete chronoRegistre[id];
 }
 
 /**
- * Arrête tous les chronos
+ * Retourne le temps écoulé en millisecondes
+ * @param {string} id
+ * @returns {number}
  */
-function arreterTousLesChronos() {
-  Object.keys(chronos).forEach(id => {
-    if (id !== 'simple' && chronos[id].etat === 'demarre') {
-      mettreEnPauseChrono(id);
-    }
-  });
+function chronoGetMs(id) {
+  const c = chronoRegistre[id];
+  if (!c) return 0;
+  if (!c.enCours) return c.accumule;
+  return c.accumule + (performance.now() - c.debut);
 }
 
 /**
- * Réinitialise tous les chronos
+ * Enregistre un lap pour un chrono
+ * @param {string} id
+ * @returns {object|null} le lap enregistré
  */
-function reinitialiserTousLesChronos() {
-  Object.keys(chronos).forEach(id => {
-    reinitialiserChrono(id);
-  });
+function chronoAjouterLap(id) {
+  const c = chronoRegistre[id];
+  if (!c) return null;
+
+  const totalMs = chronoGetMs(id);
+  const splitMs = totalMs - c.dernierLapMs;
+  const numero = c.laps.length + 1;
+
+  const lap = { numero, totalMs, splitMs };
+  c.laps.unshift(lap); // plus récent en premier
+  c.dernierLapMs = totalMs;
+
+  return lap;
 }
 
 /**
- * Arrête un chrono (utilisé lors de la suppression)
- * @param {string} id - Identifiant du chrono
+ * Retourne l'état complet d'un chrono
+ * @param {string} id
+ * @returns {object}
  */
-function arreterChrono(id) {
-  if (chronos[id]) {
-    clearInterval(chronos[id].intervalId);
-    delete chronos[id];
-  }
+function chronoGetEtat(id) {
+  return chronoRegistre[id] || null;
+}
+
+/**
+ * Retourne tous les IDs enregistrés
+ * @returns {string[]}
+ */
+function chronoGetTousIds() {
+  return Object.keys(chronoRegistre);
 }

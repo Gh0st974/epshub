@@ -1,41 +1,48 @@
-// 📄 Fichier : /js/modules/chrono/chrono-laps.js
-// 🎯 Rôle : Gestion des laps times
-
-const laps = {
-  simple: []
-};
+// 📄 Fichier : js/modules/outils/chrono/chrono-laps.js
+// 🎯 Rôle : Formatage et rendu de la liste des laps
 
 /**
- * Ajoute un lap à un chrono
- * @param {string} id - Identifiant du chrono
+ * Formate un temps en millisecondes → "MM:SS.cs"
+ * @param {number} ms
+ * @returns {string}
  */
-function ajouterLap(id) {
-  if (!chronos[id] || chronos[id].etat !== 'demarre') return;
+function lapsFormaterTemps(ms) {
+  const totalCs = Math.floor(ms / 10);
+  const cs = totalCs % 100;
+  const totalSec = Math.floor(ms / 1000);
+  const sec = totalSec % 60;
+  const min = Math.floor(totalSec / 60);
 
-  const maintenant = performance.now();
-  const tempsActuel = maintenant - chronos[id].tempsDepart;
-  const tempsTour = tempsActuel - chronos[id].dernierTemps;
-
-  if (!laps[id]) {
-    laps[id] = [];
-  }
-
-  laps[id].push({
-    tempsTour: tempsTour,
-    tempsCumule: tempsActuel
-  });
-
-  chronos[id].dernierTemps = tempsActuel;
-  afficherLaps(id, laps[id]);
+  return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}.${String(cs).padStart(2, '0')}`;
 }
 
 /**
- * Efface les laps d'un chrono
- * @param {string} id - Identifiant du chrono
+ * Génère le HTML d'un lap unique
+ * @param {object} lap - { numero, totalMs, splitMs }
+ * @returns {string} HTML
  */
-function effacerLaps(id) {
-  if (laps[id]) {
-    laps[id] = [];
-    afficherLaps(id, []);
+function lapsGenererItem(lap) {
+  return `
+    <div class="chrono-lap-item">
+      <span class="chrono-lap-num">Lap ${lap.numero}</span>
+      <span class="chrono-lap-split">${lapsFormaterTemps(lap.splitMs)}</span>
+      <span class="chrono-lap-total">${lapsFormaterTemps(lap.totalMs)}</span>
+    </div>
+  `;
+}
+
+/**
+ * Met à jour l'affichage de la liste des laps dans un conteneur
+ * @param {HTMLElement} conteneur
+ * @param {Array} laps - tableau de laps (plus récent en premier)
+ */
+function lapsAfficher(conteneur, laps) {
+  if (!conteneur) return;
+
+  if (laps.length === 0) {
+    conteneur.innerHTML = '';
+    return;
   }
+
+  conteneur.innerHTML = laps.map(lapsGenererItem).join('');
 }

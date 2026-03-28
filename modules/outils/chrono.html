@@ -1,35 +1,19 @@
-<!-- 📄 Fichier : /modules/chrono.html -->
-<!-- 🎯 Rôle : Structure HTML du module Chrono (onglets + conteneurs) -->
+<!-- 📄 Fichier : modules/outils/chrono.html -->
+<!-- 🎯 Rôle : Structure HTML du module chronomètre -->
 
-<div class="chrono-container">
-  <!-- Onglets de sélection du mode -->
-  <div class="chrono-tabs">
-    <button class="chrono-tab active" data-mode="simple">Chrono Simple</button>
-    <button class="chrono-tab" data-mode="multi">Multi-Chrono</button>
+<div class="chrono-module">
+
+  <!-- Sélecteur de mode -->
+  <div class="chrono-mode-selector">
+    <button class="chrono-mode-btn actif" data-mode="simple">
+      ⏱️ Chrono Simple
+    </button>
+    <button class="chrono-mode-btn" data-mode="multi">
+      ⏱️ Multi-Chrono
+    </button>
   </div>
 
-  <!-- Conteneur du mode Chrono Simple -->
-  <div id="chrono-simple" class="chrono-mode active">
-    <div class="chrono-display" id="chrono-simple-display">00:00:00.00</div>
-    <div class="chrono-controls">
-      <button class="chrono-btn chrono-start" data-action="start">▶ Démarrer</button>
-      <button class="chrono-btn chrono-pause" data-action="pause" disabled>⏸ Pause</button>
-      <button class="chrono-btn chrono-reset" data-action="reset">⏹ Réinitialiser</button>
-      <button class="chrono-btn chrono-lap" data-action="lap">🔄 Laps</button>
-    </div>
-    <div class="chrono-laps-container" id="chrono-simple-laps"></div>
-  </div>
+  <!-- Zone principale : contenu injecté dynamiquement -->
+  <div class="chrono-zone" id="chrono-zone"></div>
 
-  <!-- Conteneur du mode Multi-Chrono -->
-  <div id="chrono-multi" class="chrono-mode">
-    <div class="chrono-multi-controls">
-      <button class="chrono-btn chrono-start-all">▶ Tout démarrer</button>
-      <button class="chrono-btn chrono-pause-all">⏸ Tout arrêter</button>
-      <button class="chrono-btn chrono-reset-all">⏹ Réinitialiser tout</button>
-      <button class="chrono-btn chrono-add" id="chrono-add-btn">➕ Ajouter un chrono</button>
-    </div>
-    <div class="chrono-multi-grid" id="chrono-multi-grid">
-      <!-- Les chronos seront ajoutés dynamiquement ici -->
-    </div>
-  </div>
 </div>

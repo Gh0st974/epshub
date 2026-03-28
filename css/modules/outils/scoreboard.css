@@ -1,8 +1,8 @@
 /* 📄 Fichier : css/modules/outils/scoreboard.css */
-/* 🎯 Rôle : Styles du module scoreboard — refonte UI moderne */
+/* 🎯 Rôle : Styles du module scoreboard */
 
 /* ════════════════════════════════
-   BASE & CONTENEUR
+   BASE
 ════════════════════════════════ */
 .sb-container {
   display: flex;
@@ -13,8 +13,7 @@
   max-width: 960px;
   margin: 0 auto;
   box-sizing: border-box;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  min-height: 100%;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 /* ════════════════════════════════
@@ -28,13 +27,11 @@
   border-radius: 20px;
   padding: 10px 16px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-  flex-wrap: nowrap;       /* ← force une seule ligne */
-  overflow: hidden;
+  flex-wrap: nowrap;
   box-sizing: border-box;
-  width: 100%;
 }
 
-/* ── Pastilles sets ── */
+/* ── Pastilles ── */
 .sb-pastilles {
   display: flex;
   gap: 6px;
@@ -81,12 +78,12 @@
   pointer-events: none;
 }
 
-/* ── Timer bloc — poussé vers la droite ── */
+/* ── Timer bloc — poussé à droite ── */
 .sb-timer-bloc {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: auto;   /* ← pousse à droite */
+  gap: 8px;
+  margin-left: auto;
   flex-shrink: 0;
 }
 
@@ -96,73 +93,55 @@
   font-size: 1.4rem;
   font-weight: 800;
   font-family: 'SF Mono', 'Courier New', monospace;
-  padding: 7px 16px;
+  padding: 8px 16px;
   border-radius: 14px;
   cursor: pointer;
   min-width: 105px;
   text-align: center;
   letter-spacing: 3px;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  user-select: none;
   flex-shrink: 0;
 }
 
-.sb-timer-affichage:hover  { background: #243447; }
-
-.sb-timer-affichage.actif {
-  background: var(--couleur-principale);
-  box-shadow: 0 4px 18px rgba(46,204,113,0.5);
+/* ── Contrôles timer — icônes simples ── */
+.sb-timer-controles {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-.sb-timer-affichage.termine {
-  background: #e74c3c;
-  box-shadow: 0 4px 18px rgba(231,76,60,0.5);
-  animation: sb-pulse 0.8s infinite alternate;
-}
-
-@keyframes sb-pulse {
-  from { opacity: 1; transform: scale(1); }
-  to   { opacity: 0.75; transform: scale(0.98); }
-}
-
-/* Boutons timer ▶ ⏸ ↺ */
 .sb-timer-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 2px solid #e8e8e8;
-  background: #fff;
-  color: #555;
+  border: none;
+  background: transparent;
+  color: var(--couleur-texte-leger);
   font-size: 0.9rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
-  flex-shrink: 0;
 }
 
 .sb-timer-btn:hover {
-  border-color: var(--couleur-principale);
-  color: var(--couleur-principale);
-  transform: scale(1.1);
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
 }
 
-/* ── Bouton set suivant ── */
+/* ── Bouton suivante ── */
 .sb-btn-suivante {
   background: var(--couleur-principale);
   color: #fff;
   border: none;
   border-radius: 14px;
-  padding: 9px 16px;
-  font-size: 0.85rem;
+  padding: 10px 18px;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 40px;
   white-space: nowrap;
   flex-shrink: 0;
-  letter-spacing: 0.03em;
   box-shadow: 0 4px 14px rgba(46,204,113,0.35);
   transition: all 0.2s ease;
 }
@@ -182,195 +161,124 @@
 }
 
 /* ── Carte équipe ── */
-.sb-carte {
+.sb-carte-equipe {
   background: #fff;
-  border-radius: 24px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  border-radius: 20px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  position: relative;
 }
 
-/* Bande colorée en haut */
-.sb-carte-bandeau {
-  height: 5px;
+/* Bandeau couleur en haut */
+.sb-carte-barre {
+  height: 7px;
   width: 100%;
   flex-shrink: 0;
+  /* background-color appliqué inline via JS */
 }
 
+/* Corps centré */
 .sb-carte-corps {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 12px 18px;
-  gap: 6px;
-  flex: 1;
+  padding: 18px 12px 22px;
+  gap: 8px;
 }
 
 /* Nom équipe */
 .sb-equipe-nom {
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--couleur-texte-leger);
-}
-
-/* ── SCORE — grand, centré, impactant ── */
-.sb-equipe-score {
-  font-size: 5rem;
-  font-weight: 900;
   color: var(--couleur-texte);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-align: center;
-  padding: 8px 0;
 }
 
-.sb-equipe-score.bump {
-  transform: scale(1.18);
-}
-
-/* ── Ligne +/score/- sur une ligne ── */
-.sb-score-ligne {
+/* ── Ligne score : −  score  + ── */
+.sb-equipe-ligne-score {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 18px;
   width: 100%;
 }
 
-/* Boutons + et - circulaires flanquant le score */
-.sb-btn-plus,
-.sb-btn-moins-rond {
-  width: 44px;
-  height: 44px;
+/* Boutons − et + */
+.sb-equipe-btn-moins,
+.sb-equipe-btn-plus {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
-  font-size: 1.4rem;
-  font-weight: 700;
+  background: transparent;
+  font-size: 1.6rem;
+  font-weight: 300;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #ccc;
   transition: all 0.15s ease;
   flex-shrink: 0;
-  min-height: 44px;
+  line-height: 1;
 }
 
-.sb-btn-plus {
-  background: var(--couleur-principale);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(46,204,113,0.4);
+.sb-equipe-btn-moins:hover { color: #e74c3c; transform: scale(1.2); }
+.sb-equipe-btn-plus:hover  { color: var(--couleur-principale); transform: scale(1.2); }
+
+/* Score — grand, coloré via JS */
+.sb-equipe-score {
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 1;
+  min-width: 80px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* color appliqué inline via JS = couleur équipe */
 }
 
-.sb-btn-plus:hover {
-  background: var(--couleur-principale-fonce);
-  transform: scale(1.1);
-}
+.sb-equipe-score.bump { transform: scale(1.25); }
 
-.sb-btn-moins-rond {
-  background: #fff0f0;
-  color: #e74c3c;
-  border: 2px solid #fdd;
-}
-
-.sb-btn-moins-rond:hover {
-  background: #e74c3c;
-  border-color: #e74c3c;
-  color: #fff;
-  transform: scale(1.1);
-}
-
-/* ── Séparateur label bonus ── */
-.sb-bonus-label-section {
-  font-size: 0.62rem;
+/* Label SCORE BONUS */
+.sb-equipe-label-bonus {
+  font-size: 0.58rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   color: #ccc;
   margin-top: 4px;
 }
 
-/* ── Boutons bonus — rangée compacte ── */
-.sb-carte-boutons {
+/* ── Boutons bonus — cercles colorés ── */
+.sb-equipe-bonus-liste {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px;
-  width: 100%;
+  gap: 8px;
+  margin-top: 4px;
 }
 
-.sb-btn-point {
-  padding: 8px 14px;
-  border: 2px solid #e8f5ee;
-  border-radius: 10px;
-  background: #f0faf5;
-  color: var(--couleur-principale-fonce);
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 36px;
-  transition: all 0.15s ease;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.sb-btn-point:hover {
-  background: var(--couleur-principale);
-  border-color: var(--couleur-principale);
+.sb-btn-bonus {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 800;
   color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(46,204,113,0.3);
-}
-
-.sb-btn-point:active {
-  transform: scale(0.95);
-}
-
-/* ── Historique sets ── */
-.sb-equipe-histo {
+  cursor: pointer;
   display: flex;
-  gap: 5px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 8px;
-  padding-top: 10px;
-  border-top: 1px solid #f2f2f2;
-  width: 100%;
-}
-
-.sb-histo-set {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  background: #f7f7f7;
-  border-radius: 10px;
-  padding: 5px 10px;
-  min-width: 36px;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  /* background-color appliqué inline via JS = couleur équipe */
 }
 
-.sb-histo-set-label {
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: #bbb;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 2px;
-}
-
-.sb-histo-set-val {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--couleur-texte);
-}
-
-.sb-histo-set.gagne { background: #eafaf1; }
-.sb-histo-set.gagne .sb-histo-set-val { color: var(--couleur-principale-fonce); }
+.sb-btn-bonus:hover  { filter: brightness(1.12); transform: scale(1.08); }
+.sb-btn-bonus:active { transform: scale(0.9); }
 
 /* ════════════════════════════════
    ACTIONS GLOBALES
@@ -382,33 +290,26 @@
 
 .sb-btn-reset {
   background: transparent;
+  border: none;
   color: #e74c3c;
-  border: 2px solid #fdd;
-  border-radius: 14px;
-  padding: 10px 20px;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 44px;
-  transition: all 0.2s ease;
-  letter-spacing: 0.03em;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.15s;
 }
 
-.sb-btn-reset:hover {
-  background: #e74c3c;
-  border-color: #e74c3c;
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(231,76,60,0.3);
-}
+.sb-btn-reset:hover { background: #fdf0f0; }
 
 /* ════════════════════════════════
-   ACCORDÉON CONFIG
+   CONFIG ACCORDÉON
 ════════════════════════════════ */
 .sb-config-wrapper {
   background: #fff;
   border-radius: 20px;
-  overflow: hidden;
   box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  overflow: hidden;
 }
 
 .sb-config-header {
@@ -420,20 +321,15 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 800;
+  letter-spacing: 0.1em;
   color: var(--couleur-texte-leger);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  transition: background 0.15s;
-  box-sizing: border-box;
 }
-
-.sb-config-header:hover { background: #fafafa; }
 
 .sb-config-chevron {
   font-size: 0.7rem;
-  color: #ccc;
   transition: transform 0.25s ease;
 }
 
@@ -441,47 +337,46 @@
   transform: rotate(180deg);
 }
 
+/* Corps pliable */
 .sb-config-corps {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
 }
 
-.sb-config-corps.ouvert {
-  max-height: 1000px;
-}
+.sb-config-corps.ouvert { max-height: 1200px; }
 
 .sb-config-panel {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 8px 24px 28px;
-  align-items: center;   /* ← centre tout horizontalement */
+  align-items: center;
+  gap: 20px;
+  padding: 4px 24px 28px;
 }
 
+/* Groupe config */
 .sb-config-groupe {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  max-width: 360px;      /* ← largeur max cohérente */
+  max-width: 340px;
 }
 
 .sb-config-label {
   font-size: 0.7rem;
   font-weight: 800;
-  color: #bbb;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-align: center;
+  letter-spacing: 0.12em;
+  color: var(--couleur-texte-leger);
 }
 
 /* ── Stepper ── */
 .sb-stepper {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
 }
 
 .sb-stepper-btn {
@@ -490,38 +385,30 @@
   border-radius: 50%;
   border: 2px solid #e8e8e8;
   background: #fff;
-  color: #666;
-  font-size: 1.4rem;
-  font-weight: 300;
+  font-size: 1.2rem;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--couleur-texte);
   transition: all 0.15s ease;
 }
 
 .sb-stepper-btn:hover {
   border-color: var(--couleur-principale);
   color: var(--couleur-principale);
-  transform: scale(1.1);
 }
 
 .sb-stepper-val {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 900;
   color: var(--couleur-texte);
   min-width: 32px;
   text-align: center;
 }
 
-/* ── Inputs noms équipes — centrés ── */
-#sb-noms-equipes {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
+/* ── Ligne nom équipe ── */
 .sb-nom-ligne {
   display: flex;
   align-items: center;
@@ -529,100 +416,91 @@
   width: 100%;
 }
 
-.sb-nom-pastille {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.sb-nom-input,
-.sb-input-nom {
+.sb-nom-input {
   flex: 1;
-  padding: 11px 16px;
-  border: 2px solid #eee;
-  border-radius: 14px;
+  padding: 12px 16px;
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--couleur-texte);
-  background: #fafafa;
-  transition: border-color 0.2s, background 0.2s;
+  background: var(--couleur-fond);
   outline: none;
+  transition: border-color 0.2s;
   box-sizing: border-box;
 }
 
-.sb-nom-input:focus,
-.sb-input-nom:focus {
+.sb-nom-input:focus {
   border-color: var(--couleur-principale);
   background: #fff;
 }
 
-/* ── Bonus ── */
+/* Pastille couleur équipe */
+.sb-nom-pastille {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  /* background-color inline via JS */
+}
+
+/* ── Bonus config ── */
 .sb-bonus-liste {
   display: flex;
   flex-direction: column;
   gap: 8px;
   width: 100%;
-  margin-bottom: 10px;
 }
 
-.sb-bonus-item {
+.sb-bonus-ligne {
   display: grid;
-  grid-template-columns: 1fr 64px 40px;
+  grid-template-columns: 1fr 64px 36px;
   gap: 8px;
   align-items: center;
 }
 
-.sb-bonus-input-label,
-.sb-bonus-input-val,
 .sb-bonus-nom,
 .sb-bonus-val {
   padding: 10px 14px;
-  border: 2px solid #eee;
+  border: 2px solid #e8e8e8;
   border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--couleur-texte);
-  background: #fafafa;
+  background: var(--couleur-fond);
   outline: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.2s;
   box-sizing: border-box;
   width: 100%;
 }
 
-.sb-bonus-input-val,
-.sb-bonus-val { text-align: center; }
-
-.sb-bonus-input-label:focus,
-.sb-bonus-input-val:focus,
 .sb-bonus-nom:focus,
 .sb-bonus-val:focus {
   border-color: var(--couleur-principale);
   background: #fff;
 }
 
+.sb-bonus-val { text-align: center; }
+
 .sb-bonus-suppr {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: 2px solid #fde8e8;
-  background: #fff5f5;
+  background: #fff0f0;
   color: #e74c3c;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
-  flex-shrink: 0;
+  transition: background 0.15s;
 }
 
-.sb-bonus-suppr:hover {
-  background: #e74c3c;
-  border-color: #e74c3c;
-  color: #fff;
-}
+.sb-bonus-suppr:hover { background: #fbd5d5; }
 
+/* Bouton ajouter bonus */
 .sb-btn-ajouter-bonus {
   width: 44px;
   height: 44px;
@@ -630,25 +508,25 @@
   border: none;
   background: var(--couleur-principale);
   color: #fff;
-  font-size: 1.5rem;
-  font-weight: 300;
+  font-size: 1.4rem;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 4px auto 0;
   box-shadow: 0 4px 14px rgba(46,204,113,0.35);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.2s ease;
 }
 
 .sb-btn-ajouter-bonus:hover {
   background: var(--couleur-principale-fonce);
-  transform: scale(1.12) rotate(90deg);
+  transform: scale(1.08);
 }
 
-/* ── Bouton valider config ── */
+/* Bouton valider config */
 .sb-btn-valider-config {
   width: 100%;
+  max-width: 340px;
   padding: 16px;
   background: var(--couleur-principale);
   color: #fff;
@@ -657,17 +535,13 @@
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 54px;
-  letter-spacing: 0.04em;
-  box-shadow: 0 6px 20px rgba(46,204,113,0.35);
+  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
   transition: all 0.2s ease;
-  margin-top: 4px;
 }
 
 .sb-btn-valider-config:hover {
   background: var(--couleur-principale-fonce);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(39,174,96,0.4);
+  transform: translateY(-1px);
 }
 
 /* ════════════════════════════════
@@ -676,43 +550,35 @@
 .sb-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.45);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
   box-sizing: border-box;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 }
 
 .sb-modal-overlay[hidden] { display: none; }
 
 .sb-modal-boite {
   background: #fff;
-  border-radius: 28px;
-  padding: 32px 28px;
+  border-radius: 24px;
+  padding: 28px 24px;
   width: 100%;
-  max-width: 340px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+  max-width: 320px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  animation: sb-modal-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes sb-modal-in {
-  from { opacity: 0; transform: scale(0.88) translateY(16px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .sb-modal-titre {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--couleur-texte);
-  text-align: center;
   margin: 0;
+  text-align: center;
 }
 
 .sb-modal-texte {
@@ -720,7 +586,7 @@
   color: var(--couleur-texte-leger);
   text-align: center;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .sb-modal-champs {
@@ -737,23 +603,23 @@
   gap: 6px;
   font-size: 0.7rem;
   font-weight: 800;
-  color: #bbb;
+  color: var(--couleur-texte-leger);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .sb-modal-input {
-  width: 84px;
-  padding: 14px 10px;
+  width: 80px;
+  padding: 12px 8px;
   text-align: center;
-  font-size: 1.9rem;
+  font-size: 1.8rem;
   font-weight: 800;
   color: var(--couleur-texte);
-  border: 2px solid #eee;
-  border-radius: 16px;
-  background: #fafafa;
+  border: 2px solid #e8e8e8;
+  border-radius: 14px;
+  background: var(--couleur-fond);
   outline: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.2s;
   box-sizing: border-box;
 }
 
@@ -763,10 +629,10 @@
 }
 
 .sb-modal-separateur {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 900;
   color: #ddd;
-  padding-bottom: 20px;
+  padding-bottom: 18px;
 }
 
 .sb-modal-actions {
@@ -792,10 +658,7 @@
   color: #888;
 }
 
-.sb-modal-btn-annuler:hover {
-  background: #eaeaea;
-  color: #555;
-}
+.sb-modal-btn-annuler:hover { background: #eaeaea; }
 
 .sb-modal-btn-valider {
   background: var(--couleur-principale);
@@ -812,22 +675,21 @@
    RESPONSIVE
 ════════════════════════════════ */
 @media (max-width: 600px) {
-  .sb-container { padding: 10px; gap: 10px; }
-  .sb-grille { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sb-container  { padding: 10px; gap: 10px; }
+  .sb-grille     { grid-template-columns: 1fr 1fr; gap: 8px; }
   .sb-equipe-score { font-size: 3.5rem; }
 
   .sb-timer-affichage {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     min-width: 88px;
-    padding: 6px 10px;
+    padding: 7px 10px;
     letter-spacing: 2px;
   }
 
-  .sb-barre-top { gap: 6px; padding: 8px 10px; border-radius: 16px; }
-  .sb-btn-suivante { font-size: 0.78rem; padding: 8px 11px; }
-  .sb-carte-corps { padding: 10px 8px 14px; }
-  .sb-modal-boite { padding: 24px 20px; border-radius: 22px; }
-  .sb-equipe-score { font-size: 3.5rem; }
+  .sb-barre-top  { gap: 6px; padding: 8px 10px; border-radius: 16px; }
+  .sb-btn-suivante { font-size: 0.78rem; padding: 9px 12px; }
+  .sb-carte-corps { padding: 12px 8px 18px; }
+  .sb-modal-boite { padding: 24px 18px; border-radius: 20px; }
 }
 
 @media (min-width: 1024px) {

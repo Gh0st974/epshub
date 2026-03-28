@@ -15,7 +15,6 @@ function construireVueChrono() {
   vue.innerHTML = `
     <div class="chrono-container">
 
-      <!-- En-tête avec bouton retour et sélecteur de mode -->
       <div class="chrono-header">
         <button class="chrono-btn-retour" id="chrono-btn-retour">
           ← Retour
@@ -30,10 +29,8 @@ function construireVueChrono() {
         </div>
       </div>
 
-      <!-- Zone des chronos (générée dynamiquement) -->
       <div class="chrono-liste" id="chrono-liste"></div>
 
-      <!-- Bouton ajout (mode multi uniquement) -->
       <div class="chrono-actions-globales">
         <button class="chrono-btn-ajouter" id="chrono-btn-ajouter">
           + Ajouter un chrono
@@ -43,7 +40,7 @@ function construireVueChrono() {
     </div>
   `;
 
-  // Premier rendu
+  // Premier rendu — mettreAJourModeUI est définie plus bas
   rafraichirListeChronos();
   mettreAJourModeUI(getModeActif());
 }
@@ -61,8 +58,7 @@ function rafraichirListeChronos() {
 
   liste.innerHTML = '';
   getChronos().forEach(c => {
-    const carte = creerCarteChronoUI(c);
-    liste.appendChild(carte);
+    liste.appendChild(creerCarteChronoUI(c));
   });
 }
 
@@ -79,9 +75,8 @@ function creerCarteChronoUI(chrono) {
   carte.innerHTML = `
     <div class="chrono-carte__header">
       <span class="chrono-carte__label">${chrono.label}</span>
-      <button class="chrono-carte__btn-sup" data-action="supprimer" data-id="${chrono.id}">
-        ✕
-      </button>
+      <button class="chrono-carte__btn-sup"
+              data-action="supprimer" data-id="${chrono.id}">✕</button>
     </div>
 
     <div class="chrono-carte__affichage" id="chrono-temps-${chrono.id}">
@@ -94,13 +89,9 @@ function creerCarteChronoUI(chrono) {
 
     <div class="chrono-carte__controles">
       <button class="chrono-btn chrono-btn--reset"
-              data-action="reset" data-id="${chrono.id}">
-        ↺ Reset
-      </button>
+              data-action="reset" data-id="${chrono.id}">↺ Reset</button>
       <button class="chrono-btn chrono-btn--lap"
-              data-action="lap" data-id="${chrono.id}">
-        ⚑ Lap
-      </button>
+              data-action="lap" data-id="${chrono.id}">⚑ Lap</button>
       <button class="chrono-btn chrono-btn--toggle"
               data-action="toggle" data-id="${chrono.id}">
         ${chrono.enCours ? '⏸ Pause' : '▶ Start'}
@@ -112,11 +103,27 @@ function creerCarteChronoUI(chrono) {
 }
 
 // ============================================================
-// MISES À JOUR PARTIELLES (appelées par le timer)
+// RENDU DES LAPS
 // ============================================================
 
 /**
- * Met à jour uniquement l'affichage du temps d'un chrono
+ * Génère le HTML des laps d'un chrono
+ * @param {number[]} laps - tableau de temps en ms
+ * @returns {string} HTML
+ */
+function rendreLaps(laps) {
+  if (!laps || laps.length === 0) return '';
+  return laps.map((t, i) =>
+    `<div class="chrono-lap">Lap ${i + 1} — ${formaterTemps(t)}</div>`
+  ).join('');
+}
+
+// ============================================================
+// MISES À JOUR PARTIELLES
+// ============================================================
+
+/**
+ * Met à jour l'affichage du temps d'un chrono
  * @param {number} id
  */
 function mettreAJourAffichageChrono(id) {
@@ -128,7 +135,7 @@ function mettreAJourAffichageChrono(id) {
 }
 
 /**
- * Met à jour le bouton toggle (Start/Pause) d'un chrono
+ * Met à jour le bouton Start/Pause d'un chrono
  * @param {number} id
  */
 function mettreAJourBoutonToggle(id) {
@@ -142,7 +149,7 @@ function mettreAJourBoutonToggle(id) {
 }
 
 /**
- * Met à jour la liste des laps d'un chrono
+ * Met à jour la zone des laps d'un chrono
  * @param {number} id
  */
 function mettreAJourLaps(id) {
@@ -162,4 +169,31 @@ function supprimerCarteChronoUI(id) {
   if (carte) carte.remove();
 }
 
-// 
+// ============================================================
+// MISE À JOUR DU MODE (simple / multi)
+// ============================================================
+
+/**
+ * Met à jour l'UI selon le mode actif :
+ * - Active le bon bouton du switcher
+ * - Affiche/masque le bouton "Ajouter un chrono"
+ * - Affiche/masque les boutons "Supprimer" des cartes
+ * @param {'simple'|'multi'} mode
+ */
+function mettreAJourModeUI(mode) {
+  // Switcher — bouton actif
+  document.querySelectorAll('.chrono-mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+
+  // Bouton ajouter — visible seulement en multi
+  const btnAjouter = document.getElementById('chrono-btn-ajouter');
+  if (btnAjouter) {
+    btnAjouter.style.display = mode === 'multi' ? 'block' : 'none';
+  }
+
+  // Boutons supprimer — visibles seulement en multi
+  document.querySelectorAll('.chrono-carte__btn-sup').forEach(btn => {
+    btn.style.display = mode === 'multi' ? 'inline-block' : 'none';
+  });
+}

@@ -1,20 +1,22 @@
 // 📄 Fichier : /js/modules/outils/chrono/chrono-events.js
-// 🎯 Rôle : Écoute des interactions et orchestration des actions
+// 🎯 Rôle : Écoute des interactions utilisateur du module Chrono
 
 // ============================================================
 // INITIALISATION PRINCIPALE
 // ============================================================
 
 /**
- * Point d'entrée du module — appelé par app.js via initChrono()
+ * Point d'entrée — appelé par app.js
  * Construit la vue et branche tous les événements
  */
 function initChrono() {
-  construireVueChrono();
+  // Réinitialiser l'état métier
   reinitialiserTout();
-  rafraichirListeChronos();
-  mettreAJourModeUI(getModeActif());
 
+  // Construire le DOM (chrono-ui.js)
+  construireVueChrono();
+
+  // Brancher les listeners
   ecouterRetour();
   ecouterSwitcherMode();
   ecouterAjoutChrono();
@@ -81,14 +83,13 @@ function ecouterAjoutChrono() {
     const liste   = document.getElementById('chrono-liste');
     if (!liste) return;
 
-    const carte = creerCarteChronoUI(nouveau);
-    liste.appendChild(carte);
+    liste.appendChild(creerCarteChronoUI(nouveau));
     mettreAJourModeUI(getModeActif());
   });
 }
 
 // ============================================================
-// ACTIONS SUR LES CHRONOS (toggle / reset / lap / suppression)
+// ACTIONS SUR LES CHRONOS
 // ============================================================
 
 /**
@@ -103,18 +104,10 @@ function ecouterActionsChrono() {
     const id     = Number(btn.dataset.id);
 
     switch (action) {
-      case 'toggle':
-        gererToggle(id);
-        break;
-      case 'reset':
-        gererReset(id);
-        break;
-      case 'lap':
-        gererLap(id);
-        break;
-      case 'supprimer':
-        gererSuppression(id);
-        break;
+      case 'toggle':    gererToggle(id);     break;
+      case 'reset':     gererReset(id);      break;
+      case 'lap':       gererLap(id);        break;
+      case 'supprimer': gererSuppression(id); break;
     }
   });
 }
@@ -131,7 +124,6 @@ function gererToggle(id) {
   toggleChrono(id);
   mettreAJourBoutonToggle(id);
 
-  // Démarrer la boucle si un chrono vient de démarrer
   const c = getChronoById(id);
   if (c && c.enCours) {
     demarrerBoucle();
@@ -162,7 +154,7 @@ function gererLap(id) {
 }
 
 /**
- * Supprime un chrono (mode multi — minimum 1 conservé)
+ * Supprime un chrono (minimum 1 conservé)
  * @param {number} id
  */
 function gererSuppression(id) {

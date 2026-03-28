@@ -1,4 +1,4 @@
-// 📄 Fichier : js/modules/outils/scoreboard/scoreboard-events.js
+// 📄 Fichier : js/modules/scoreboard/scoreboard-events.js
 // 🎯 Rôle : Écoute de toutes les interactions utilisateur (délégation sur document)
 
 const ScoreboardEvents = (function () {
@@ -7,26 +7,25 @@ const ScoreboardEvents = (function () {
   let _initialise = false;
 
   // ══════════════════════════════════════
-  // INITIALISATION DE TOUS LES EVENTS
+  // INITIALISATION
   // ══════════════════════════════════════
 
   function init() {
-    // Sécurité : on n'attache les écouteurs qu'une seule fois
     if (_initialise) return;
     _initialise = true;
-
     ecouterClics();
     ecouterChangements();
+  }
+
+  // ✅ AJOUTÉ : reset du flag si le module est rechargé par le router
+  function reset() {
+    _initialise = false;
   }
 
   // ══════════════════════════════════════
   // DÉLÉGATION UNIQUE — CLICS
   // ══════════════════════════════════════
 
-  /**
-   * Un seul écouteur de clic sur le document.
-   * Il gère tous les boutons par leur id ou leur classe.
-   */
   function ecouterClics() {
     document.addEventListener('click', (e) => {
 
@@ -65,7 +64,7 @@ const ScoreboardEvents = (function () {
 
       // ── Ajouter une équipe en config ──
       if (e.target.closest('#scoreboard-btn-ajouter-equipe')) {
-        const liste   = document.getElementById('scoreboard-config-equipes-liste');
+        const liste    = document.getElementById('scoreboard-config-equipes-liste');
         const nbActuel = liste.querySelectorAll('.scoreboard-config-equipe-ligne').length;
         if (nbActuel >= 6) {
           alert('Maximum 6 équipes !');
@@ -79,13 +78,13 @@ const ScoreboardEvents = (function () {
       // ── Ajouter un bonus en config ──
       if (e.target.closest('#scoreboard-btn-ajouter-bonus')) {
         const liste = document.getElementById('scoreboard-config-bonus-liste');
-        const nouvelleLigne = ScoreboardConfig.genererLigneBonus('', '');
-        liste.appendChild(nouvelleLigne);
+        liste.appendChild(ScoreboardConfig.genererLigneBonus('', ''));
         return;
       }
 
       // ── Période suivante ──
       if (e.target.closest('#scoreboard-btn-periode-suivante')) {
+        // ✅ CORRIGÉ : appel periodeSuivante() — camelCase unifié
         const ok = ScoreboardApp.periodeSuivante();
         if (ok) ScoreboardUI.rendreBarrePeriode();
         return;
@@ -100,7 +99,7 @@ const ScoreboardEvents = (function () {
         return;
       }
 
-      // ── Boutons de points (délégation sur classe) ──
+      // ── Boutons de points ──
       const btnPoint = e.target.closest('.scoreboard-btn-point');
       if (btnPoint) {
         const idEquipe = parseInt(btnPoint.dataset.idEquipe, 10);
@@ -118,32 +117,24 @@ const ScoreboardEvents = (function () {
   // DÉLÉGATION UNIQUE — CHANGEMENTS
   // ══════════════════════════════════════
 
-  /**
-   * Un seul écouteur 'change' sur le document.
-   * Gère la checkbox périodes et les noms d'équipes.
-   */
   function ecouterChangements() {
     document.addEventListener('change', (e) => {
 
       // ── Toggle périodes ──
       if (e.target.closest('#scoreboard-config-periodes-actives')) {
-        const checkbox = e.target;
-        const detail   = document.getElementById('scoreboard-config-periodes-detail');
-        if (detail) detail.hidden = !checkbox.checked;
+        const detail = document.getElementById('scoreboard-config-periodes-detail');
+        if (detail) detail.hidden = !e.target.checked;
         return;
       }
 
       // ── Modification du nom d'équipe en jeu ──
       const inputNom = e.target.closest('.scoreboard-equipe-nom');
       if (inputNom) {
-        const carte    = inputNom.closest('.scoreboard-equipe-carte');
+        const carte = inputNom.closest('.scoreboard-equipe-carte');
         if (!carte) return;
         const idEquipe = parseInt(carte.dataset.idEquipe, 10);
-        const equipes  = ScoreboardApp.getEquipes();
-        const equipe   = equipes.find(eq => eq.id === idEquipe);
-        if (equipe) {
-          equipe.nom = inputNom.value.trim() || equipe.nom;
-        }
+        const equipe   = ScoreboardApp.getEquipes().find(eq => eq.id === idEquipe);
+        if (equipe) equipe.nom = inputNom.value.trim() || equipe.nom;
         return;
       }
 
@@ -153,6 +144,6 @@ const ScoreboardEvents = (function () {
   // ══════════════════════════════════════
   // EXPOSITION
   // ══════════════════════════════════════
-  return { init };
+  return { init, reset };
 
 })();

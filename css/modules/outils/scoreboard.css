@@ -179,10 +179,22 @@
 /* ════════════════════════════════
    GRILLE ÉQUIPES
 ════════════════════════════════ */
+/* Grille équipes — s'adapte au nombre d'équipes */
 .sb-grille {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* défaut : 2 ou 3 équipes */
   gap: 12px;
+  padding: 12px;
+}
+
+/* 2 équipes → 2 colonnes */
+.sb-grille[data-nb-equipes="2"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 4 équipes → 2×2 */
+.sb-grille[data-nb-equipes="4"] {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 /* ── Carte équipe ── */

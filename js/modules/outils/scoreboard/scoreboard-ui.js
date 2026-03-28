@@ -56,13 +56,15 @@ window.SBui = (function () {
   }
 
   // ═══ GRILLE ÉQUIPES ═══
-  // ═══ GRILLE ÉQUIPES ═══
-function rendreGrille() {
+ function rendreGrille() {
   const grille = document.getElementById('sb-grille');
   if (!grille) return;
   grille.innerHTML = '';
 
   const { nbEquipes, nomsEquipes, couleurs, boutonsBonus } = window.SB.config;
+
+  // ← AJOUT : attribut pour le CSS 2×2
+  grille.dataset.nbEquipes = nbEquipes;
 
   for (let e = 0; e < nbEquipes; e++) {
     const couleur = couleurs[e] || 'var(--couleur-principale)';
@@ -143,6 +145,40 @@ function rendreGrille() {
     carte.appendChild(corps);
 
     grille.appendChild(carte);
+  }
+}
+
+function rendreConfigNoms() {
+  const conteneur = document.getElementById('sb-noms-equipes');
+  if (!conteneur) return;
+  conteneur.innerHTML = '<label class="sb-config-label">Noms des équipes</label>';
+
+  const { nbEquipes, nomsEquipes, couleurs } = window.SB.config;
+
+  for (let e = 0; e < nbEquipes; e++) {
+    // ── Ligne : color picker + input nom ──
+    const ligne = document.createElement('div');
+    ligne.className = 'sb-nom-ligne';
+
+    // Color picker
+    const picker = document.createElement('input');
+    picker.type = 'color';
+    picker.className = 'sb-input-couleur';
+    picker.value = couleurs[e] || '#2ecc71';
+    picker.dataset.indexEquipe = e;
+    picker.id = `sb-couleur-equipe-${e}`;
+
+    // Input nom
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'sb-input-nom';
+    input.value = nomsEquipes[e] || `Équipe ${e + 1}`;
+    input.dataset.indexEquipe = e;
+    input.id = `sb-nom-equipe-${e}`;
+
+    ligne.appendChild(picker);
+    ligne.appendChild(input);
+    conteneur.appendChild(ligne);
   }
 }
 

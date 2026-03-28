@@ -146,12 +146,17 @@ window.SBevents = (function () {
     // ── Valider config → ferme l'accordéon ──
     document.getElementById('sb-btn-valider-config')
       .addEventListener('click', () => {
-        // Lire les noms depuis les inputs
         const { nbEquipes } = window.SB.config;
         for (let i = 0; i < nbEquipes; i++) {
-          const input = document.getElementById(`sb-nom-equipe-${i}`);
-          if (input) {
-            window.SB.config.nomsEquipes[i] = input.value || `Équipe ${i + 1}`;
+          // Lire le nom
+          const inputNom = document.getElementById(`sb-nom-equipe-${i}`);
+          if (inputNom) {
+            window.SB.config.nomsEquipes[i] = inputNom.value || `Équipe ${i + 1}`;
+          }
+          // ← AJOUT : lire la couleur
+          const inputCouleur = document.getElementById(`sb-couleur-equipe-${i}`);
+          if (inputCouleur) {
+            window.SB.config.couleurs[i] = inputCouleur.value;
           }
         }
         window.SB.appliquerConfig();
@@ -161,6 +166,7 @@ window.SBevents = (function () {
         document.getElementById('sb-config-header').classList.remove('ouvert');
         document.getElementById('sb-config-header').setAttribute('aria-expanded', 'false');
       });
+
   }
 
   // ═══ MODALS ═══

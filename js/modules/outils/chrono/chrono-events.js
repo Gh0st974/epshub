@@ -1,84 +1,59 @@
 // 📄 Fichier : js/modules/outils/chrono/chrono-events.js
-// 🎯 Rôle : Écoute et dispatch de toutes les interactions utilisateur
+// 🎯 Rôle : Écoute des interactions utilisateur (délégation d'événements)
 
 /**
- * Branche les événements pour le mode simple
- * @param {string} id
- * @param {function} onStart
- * @param {function} onPause
- * @param {function} onReset
- * @param {function} onLap
+ * Initialise tous les écouteurs d'événements du module chrono
+ * @param {object} handlers - fonctions de rappel fournies par chrono.js
+ *   handlers.onStart(id)
+ *   handlers.onPause(id)
+ *   handlers.onReset(id)
+ *   handlers.onLap(id)
+ *   handlers.onGlobalStart()
+ *   handlers.onGlobalPause()
+ *   handlers.onGlobalReset()
+ *   handlers.onAjouter()
+ *   handlers.onSupprimer(id)
+ *   handlers.onChangerMode(mode)
  */
-function eventsBinderSimple(id, onStart, onPause, onReset, onLap) {
+function chronoInitEvents(handlers) {
   const zone = document.getElementById('chrono-zone');
-  if (!zone) return;
+  const moduleEl = document.querySelector('.chrono-module');
 
-  // Délégation d'événements sur la zone
-  zone.addEventListener('click', function handlerSimple(e) {
-    const btn = e.target.closest('[data-action]');
-    if (!btn || btn.dataset.id !== id) return;
+  // ── Délégation sur la zone des chronos ─────────────────
+  if (zone) {
+    zone.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
 
-    const action = btn.dataset.action;
+      const action = btn.dataset.action;
+      const id     = btn.dataset.id || null;
 
-    if (action === 'start') onStart(id);
-    else if (action === 'pause') onPause(id);
-    else if (action === 'reset') onReset(id);
-    else if (action === 'lap') onLap(id);
-  });
-}
+      switch (action) {
+        case 'start':        handlers.onStart(id);       break;
+        case 'pause':        handlers.onPause(id);       break;
+        case 'reset':        handlers.onReset(id);       break;
+        case 'lap':          handlers.onLap(id);         break;
+        case 'global-start': handlers.onGlobalStart();   break;
+        case 'global-pause': handlers.onGlobalPause();   break;
+        case 'global-reset': handlers.onGlobalReset();   break;
+        case 'ajouter':      handlers.onAjouter();       break;
+      }
+    });
 
-/**
- * Branche les événements pour le mode multi
- * @param {object} callbacks - { onStart, onPause, onReset, onLap, onAjouter, onSupprimer, onGlobalStart, onGlobalPause, onGlobalReset }
- */
-function eventsBinderMulti(callbacks) {
-  const zone = document.getElementById('chrono-zone');
-  if (!zone) return;
+    // Bouton supprimer (croix) sur chaque carte multi
+    zone.addEventListener('click', (e) => {
+      const btn = e.target.closest('.chrono-btn-supprimer');
+      if (!btn) return;
+      handlers.onSupprimer(btn.dataset.id);
+    });
+  }
 
-  zone.addEventListener('click', function handlerMulti(e) {
-    // Bouton ajouter
-    if (e.target.closest('#chrono-ajouter')) {
-      callbacks.onAjouter();
-      return;
-    }
-
-    // Contrôles globaux
-    if (e.target.closest('#global-start')) { callbacks.onGlobalStart(); return; }
-    if (e.target.closest('#global-pause')) { callbacks.onGlobalPause(); return; }
-    if (e.target.closest('#global-reset')) { callbacks.onGlobalReset(); return; }
-
-    // Contrôles individuels
-    const btn = e.target.closest('[data-action]');
-    if (!btn) return;
-
-    const action = btn.dataset.action;
-    const id = btn.dataset.id;
-    if (!id) return;
-
-    if (action === 'start') callbacks.onStart(id);
-    else if (action === 'pause') callbacks.onPause(id);
-    else if (action === 'reset') callbacks.onReset(id);
-    else if (action === 'lap') callbacks.onLap(id);
-    else if (action === 'supprimer') callbacks.onSupprimer(id);
-  });
-}
-
-/**
- * Branche le sélecteur de mode
- * @param {function} onChange - appelé avec "simple" ou "multi"
- */
-function eventsBinderModeSelector(onChange) {
-  const selector = document.querySelector('.chrono-mode-selector');
-  if (!selector) return;
-
-  selector.addEventListener('click', (e) => {
-    const btn = e.target.closest('.chrono-mode-btn');
-    if (!btn) return;
-
-    // Mise à jour visuelle de l'onglet actif
-    selector.querySelectorAll('.chrono-mode-btn').forEach(b => b.classList.remove('actif'));
-    btn.classList.add('actif');
-
-    onChange(btn.dataset.mode);
-  });
+  // ── Sélecteur de mode (Simple / Multi) ─────────────────
+  if (moduleEl) {
+    moduleEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.chrono-mode-btn');
+      if (!btn) return;
+      handlers.onChangerMode(btn.dataset.mode);
+    });
+  }
 }

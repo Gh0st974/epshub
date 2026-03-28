@@ -1,157 +1,158 @@
 // 📄 Fichier : js/modules/outils/chrono/chrono.js
-// 🎯 Rôle : Point d'entrée du module — initialisation et orchestration
+// 🎯 Rôle : Point d'entrée du module — charge les sous-fichiers et orchestre
 
 (function () {
 
-  // ─── Chargement des dépendances dans l'ordre ────────────────────────────────
-  const scripts = [
-    '/js/modules/outils/chrono/chrono-timer.js',
-    '/js/modules/outils/chrono/chrono-laps.js',
-    '/js/modules/outils/chrono/chrono-ui.js',
-    '/js/modules/outils/chrono/chrono-events.js',
+  // ── Chargement des sous-fichiers dans l'ordre ──────────
+  const BASE = 'js/modules/outils/chrono/';
+  const fichiers = [
+    'chrono-timer.js',
+    'chrono-laps.js',
+    'chrono-ui.js',
+    'chrono-events.js'
   ];
 
-  let compteurChargement = 0;
+  let nbCharges = 0;
 
-  scripts.forEach(src => {
+  fichiers.forEach((fichier) => {
+    // Evite les doublons si le module est rechargé
+    const idScript = `js-sub-${fichier}`;
+    const existant = document.getElementById(idScript);
+    if (existant) existant.remove();
+
     const script = document.createElement('script');
-    script.src = src;
+    script.id  = idScript;
+    script.src = BASE + fichier;
     script.onload = () => {
-      compteurChargement++;
-      if (compteurChargement === scripts.length) {
-        initialiserModule();
-      }
+      nbCharges++;
+      // Une fois tous les sous-fichiers chargés, on initialise
+      if (nbCharges === fichiers.length) initialiserModule();
     };
-    document.head.appendChild(script);
+    script.onerror = () => console.error(`Impossible de charger ${fichier}`);
+    document.body.appendChild(script);
   });
 
-  // ─── État local du module ────────────────────────────────────────────────────
-  let modeActuel = 'simple';
-  let compteurChronos = 0;  // Pour numéroter les chronos multi
+  // ── État du module ──────────────────────────────────────
+  let modeActuel       = 'simple'; // 'simple' ou 'multi'
+  let compteurChronos  = 0;
 
-  /**
-   * Génère un ID unique pour un chrono
-   * @returns {string}
-   */
+  /** Génère un identifiant unique pour un chrono */
   function genererIdChrono() {
     compteurChronos++;
-    return `chrono-${Date.now()}-${compteurChronos}`;
+    return `chrono-${compteurChronos}`;
   }
 
-  // ─── INITIALISATION ──────────────────────────────────────────────────────────
+  // ── Initialisation ──────────────────────────────────────
   function initialiserModule() {
-    const zone = document.getElementById('chrono-zone');
-    if (!zone) return;
-
-    // Démarrage en mode simple
-    lancerModeSimple();
-
-    // Écoute du sélecteur de mode
-    eventsBinderModeSelector((mode) => {
-      if (mode === modeActuel) return;
-      modeActuel = mode;
-
-      // Nettoyer tous les chronos existants
-      chronoGetTousIds().forEach(id => chronoSupprimer(id));
-
-      if (mode === 'simple') lancerModeSimple();
-      else lancerModeMulti();
-    });
+    chargerModeSimple();
+    chronoInitEvents(handlers);
+    mettreAJourBoutonsModeSelector('simple');
   }
 
-  // ─── MODE SIMPLE ─────────────────────────────────────────────────────────────
-  function lancerModeSimple() {
-    const zone = document.getElementById('chrono-zone');
+  // ── Chargement des modes ────────────────────────────────
+
+  function chargerModeSimple() {
+    // Nettoie les chronos existants
+    chronoGetTousIds().forEach(id => chronoSupprimer(id));
+    compteurChronos = 0;
+    modeActuel = 'simple';
+
     const id = genererIdChrono();
-
     chronoCreer(id);
-    uiAfficherModeSimple(zone, id);
 
-    // Callback tick → met à jour l'affichage
-    const onTick = (ms) => {
-      uiMettreAJourAffichage(id, ms, true);
-    };
-
-    eventsBinderSimple(
-      id,
-      // Start
-      (id) => {
-        chronoDemarrer(id, onTick);
-        uiMettreAJourBoutons(id, true, chronoGetMs(id));
-      },
-      // Pause
-      (id) => {
-        chronoPauser(id);
-        const ms = chronoGetMs(id);
-        uiMettreAJourAffichage(id, ms, false);
-        uiMettreAJourBoutons(id, false, ms);
-      },
-      // Reset
-      (id) => {
-        chronoReset(id);
-        uiMettreAJourAffichage(id, 0, false);
-        uiMettreAJourBoutons(id, false, 0);
-        const conteneurLaps = document.getElementById(`laps-${id}`);
-        lapsAfficher(conteneurLaps, []);
-      },
-      // Lap
-      (id) => {
-        const lap = chronoAjouterLap(id);
-        const etat = chronoGetEtat(id);
-        const conteneurLaps = document.getElementById(`laps-${id}`);
-        if (etat) lapsAfficher(conteneurLaps, etat.laps);
-      }
-    );
-  }
-
-  // ─── MODE MULTI ──────────────────────────────────────────────────────────────
-  function lancerModeMulti() {
     const zone = document.getElementById('chrono-zone');
-
-    // Créer 2 chronos par défaut
-    const ids = [genererIdChrono(), genererIdChrono()];
-    ids.forEach(id => chronoCreer(id));
-
-    uiAfficherModeMulti(zone, ids, compteurChronos);
-
-    // Brancher les événements multi
-    eventsBinderMulti({
-      onStart: (id) => demarrerChrono(id),
-      onPause: (id) => pauserChrono(id),
-      onReset: (id) => resetterChrono(id),
-      onLap:   (id) => lapChrono(id),
-      onAjouter: () => ajouterChrono(),
-      onSupprimer: (id) => supprimerChrono(id),
-      onGlobalStart: () => chronoGetTousIds().forEach(id => demarrerChrono(id)),
-      onGlobalPause: () => chronoGetTousIds().forEach(id => pauserChrono(id)),
-      onGlobalReset: () => chronoGetTousIds().forEach(id => resetterChrono(id)),
-    });
+    if (zone) zone.innerHTML = uiGenererModeSimple(id);
   }
 
-  // ─── ACTIONS INDIVIDUELLES (multi) ──────────────────────────────────────────
+  function chargerModeMulti() {
+    // Nettoie les chronos existants
+    chronoGetTousIds().forEach(id => chronoSupprimer(id));
+    compteurChronos = 0;
+    modeActuel = 'multi';
 
-  function demarrerChrono(id) {
-    const etat = chronoGetEtat(id);
-    if (!etat || etat.enCours) return;
+    // 2 chronos par défaut
+    const id1 = genererIdChrono();
+    const id2 = genererIdChrono();
+    chronoCreer(id1);
+    chronoCreer(id2);
 
-    const onTick = (ms) => uiMettreAJourAffichage(id, ms, true);
-    chronoDemarrer(id, onTick);
-    uiMettreAJourBoutons(id, true, chronoGetMs(id));
+    const zone = document.getElementById('chrono-zone');
+    if (zone) zone.innerHTML = uiGenererModeMulti([id1, id2]);
   }
 
-  function pauserChrono(id) {
-    const etat = chronoGetEtat(id);
-    if (!etat || !etat.enCours) return;
+  // ── Handlers d'événements ───────────────────────────────
 
-    chronoPauser(id);
-    const ms = chronoGetMs(id);
-    uiMettreAJourAffichage(id, ms, false);
-    uiMettreAJourBoutons(id, false, ms);
-  }
+  const handlers = {
+
+    onChangerMode(mode) {
+      if (mode === modeActuel) return;
+      if (mode === 'simple') chargerModeSimple();
+      else chargerModeMulti();
+      mettreAJourBoutonsModeSelector(mode);
+    },
+
+    onStart(id) {
+      chronoDemarrer(id, (id, ms) => {
+        uiMettreAJourAffichage(id, ms);
+      });
+      uiMettreAJourBoutons(id, true, chronoGetMs(id));
+    },
+
+    onPause(id) {
+      chronoPauser(id);
+      const ms = chronoGetMs(id);
+      uiMettreAJourAffichage(id, ms);
+      uiMettreAJourBoutons(id, false, ms);
+    },
+
+    onReset(id) {
+      resetterChrono(id);
+    },
+
+    onLap(id) {
+      lapChrono(id);
+    },
+
+    onGlobalStart() {
+      chronoGetTousIds().forEach(id => {
+        const etat = chronoGetEtat(id);
+        if (etat && !etat.enCours) {
+          chronoDemarrer(id, (id, ms) => uiMettreAJourAffichage(id, ms));
+          uiMettreAJourBoutons(id, true, chronoGetMs(id));
+        }
+      });
+    },
+
+    onGlobalPause() {
+      chronoGetTousIds().forEach(id => {
+        const etat = chronoGetEtat(id);
+        if (etat && etat.enCours) {
+          chronoPauser(id);
+          const ms = chronoGetMs(id);
+          uiMettreAJourAffichage(id, ms);
+          uiMettreAJourBoutons(id, false, ms);
+        }
+      });
+    },
+
+    onGlobalReset() {
+      chronoGetTousIds().forEach(id => resetterChrono(id));
+    },
+
+    onAjouter() {
+      ajouterChrono();
+    },
+
+    onSupprimer(id) {
+      supprimerChrono(id);
+    }
+  };
+
+  // ── Fonctions utilitaires ───────────────────────────────
 
   function resetterChrono(id) {
     chronoReset(id);
-    uiMettreAJourAffichage(id, 0, false);
+    uiMettreAJourAffichage(id, 0);
     uiMettreAJourBoutons(id, false, 0);
     const conteneurLaps = document.getElementById(`laps-${id}`);
     lapsAfficher(conteneurLaps, []);
@@ -168,16 +169,19 @@
     const id = genererIdChrono();
     chronoCreer(id);
     uiInsererCarte(id, compteurChronos);
-
-    // Les événements sont déjà délégués sur la zone, pas besoin de rebinder
   }
 
   function supprimerChrono(id) {
-    // Garder au moins 1 chrono en mode multi
+    // Minimum 1 chrono en mode multi
     if (chronoGetTousIds().length <= 1) return;
-
     chronoSupprimer(id);
     uiSupprimerCarte(id);
+  }
+
+  function mettreAJourBoutonsModeSelector(modeActif) {
+    document.querySelectorAll('.chrono-mode-btn').forEach(btn => {
+      btn.classList.toggle('actif', btn.dataset.mode === modeActif);
+    });
   }
 
 })();

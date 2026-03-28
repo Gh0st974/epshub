@@ -1,42 +1,40 @@
 // 📄 Fichier : js/modules/outils/chrono/chrono-timer.js
-// 🎯 Rôle : Logique métier — gestion du tick, calcul du temps, état des chronos
+// 🎯 Rôle : Logique métier pure — gestion des chronos (start/pause/reset/laps)
 
-// ─── Registre de tous les chronos actifs ──────────────────────────────────────
+// Registre de tous les chronos actifs
+// Structure : { id: { debut, cumul, intervalle, laps, enCours } }
 const chronoRegistre = {};
 
 /**
- * Crée un chrono avec un identifiant unique
- * @param {string} id - Identifiant du chrono
+ * Crée un nouveau chrono avec un id donné
+ * @param {string} id
  */
 function chronoCreer(id) {
   chronoRegistre[id] = {
-    id,
-    enCours: false,
-    debut: 0,         // timestamp de démarrage
-    accumule: 0,      // ms accumulées avant la dernière pause
-    intervalId: null,
+    debut: 0,        // timestamp du dernier démarrage
+    cumul: 0,        // temps cumulé avant la dernière pause (ms)
+    intervalle: null,
     laps: [],
-    dernierLapMs: 0,  // temps total au dernier lap
+    enCours: false
   };
 }
 
 /**
  * Démarre ou reprend un chrono
  * @param {string} id
- * @param {function} onTick - callback appelé à chaque tick avec le temps en ms
+ * @param {function} callbackTick - appelé à chaque tick avec le temps en ms
  */
-function chronoDemarrer(id, onTick) {
+function chronoDemarrer(id, callbackTick) {
   const c = chronoRegistre[id];
   if (!c || c.enCours) return;
 
+  c.debut = Date.now();
   c.enCours = true;
-  c.debut = performance.now();
 
-  // Tick toutes les 30ms (≈ centièmes fluides)
-  c.intervalId = setInterval(() => {
-    const elapsed = chronoGetMs(id);
-    onTick(elapsed);
-  }, 30);
+  c.intervalle = setInterval(() => {
+    const ms = chronoGetMs(id);
+    callbackTick(id, ms);
+  }, 47); // ~21fps, fluide sans surcharger
 }
 
 /**
@@ -47,8 +45,8 @@ function chronoPauser(id) {
   const c = chronoRegistre[id];
   if (!c || !c.enCours) return;
 
-  clearInterval(c.intervalId);
-  c.accumule += performance.now() - c.debut;
+  clearInterval(c.intervalle);
+  c.cumul += Date.now() - c.debut;
   c.enCours = false;
 }
 
@@ -60,54 +58,42 @@ function chronoReset(id) {
   const c = chronoRegistre[id];
   if (!c) return;
 
-  clearInterval(c.intervalId);
-  c.enCours = false;
+  clearInterval(c.intervalle);
   c.debut = 0;
-  c.accumule = 0;
-  c.intervalId = null;
+  c.cumul = 0;
+  c.intervalle = null;
   c.laps = [];
-  c.dernierLapMs = 0;
+  c.enCours = false;
 }
 
 /**
- * Supprime un chrono du registre
+ * Ajoute un lap au chrono
  * @param {string} id
  */
-function chronoSupprimer(id) {
-  chronoReset(id);
-  delete chronoRegistre[id];
+function chronoAjouterLap(id) {
+  const c = chronoRegistre[id];
+  if (!c) return;
+
+  const ms = chronoGetMs(id);
+  const numero = c.laps.length + 1;
+
+  // Calcul du temps depuis le dernier lap
+  const dernierLapMs = c.laps.length > 0 ? c.laps[c.laps.length - 1].total : 0;
+  const delta = ms - dernierLapMs;
+
+  c.laps.push({ numero, total: ms, delta });
 }
 
 /**
- * Retourne le temps écoulé en millisecondes
+ * Retourne le temps écoulé en ms pour un chrono
  * @param {string} id
  * @returns {number}
  */
 function chronoGetMs(id) {
   const c = chronoRegistre[id];
   if (!c) return 0;
-  if (!c.enCours) return c.accumule;
-  return c.accumule + (performance.now() - c.debut);
-}
-
-/**
- * Enregistre un lap pour un chrono
- * @param {string} id
- * @returns {object|null} le lap enregistré
- */
-function chronoAjouterLap(id) {
-  const c = chronoRegistre[id];
-  if (!c) return null;
-
-  const totalMs = chronoGetMs(id);
-  const splitMs = totalMs - c.dernierLapMs;
-  const numero = c.laps.length + 1;
-
-  const lap = { numero, totalMs, splitMs };
-  c.laps.unshift(lap); // plus récent en premier
-  c.dernierLapMs = totalMs;
-
-  return lap;
+  if (c.enCours) return c.cumul + (Date.now() - c.debut);
+  return c.cumul;
 }
 
 /**
@@ -120,9 +106,20 @@ function chronoGetEtat(id) {
 }
 
 /**
- * Retourne tous les IDs enregistrés
+ * Retourne tous les ids enregistrés
  * @returns {string[]}
  */
 function chronoGetTousIds() {
   return Object.keys(chronoRegistre);
+}
+
+/**
+ * Supprime un chrono du registre
+ * @param {string} id
+ */
+function chronoSupprimer(id) {
+  const c = chronoRegistre[id];
+  if (!c) return;
+  clearInterval(c.intervalle);
+  delete chronoRegistre[id];
 }

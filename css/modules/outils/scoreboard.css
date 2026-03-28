@@ -18,11 +18,11 @@
 .sb-barre-top {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   background: #fff;
   border-radius: 20px;
   padding: 12px 18px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   flex-wrap: wrap;
   width: 100%;
   box-sizing: border-box;
@@ -52,7 +52,6 @@
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .sb-pastille.active {
@@ -79,7 +78,7 @@
 .sb-timer-bloc {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -87,31 +86,26 @@
 .sb-timer-affichage {
   background: #1e2d3d;
   color: #fff;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   font-weight: 800;
   font-family: 'Courier New', monospace;
-  padding: 8px 18px;
+  padding: 8px 20px;
   border-radius: 14px;
   cursor: pointer;
-  min-width: 100px;
+  min-width: 110px;
   text-align: center;
   letter-spacing: 2px;
   transition: background 0.2s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
-.sb-timer-affichage:hover {
-  background: #2c3e50;
-}
-
-.sb-timer-affichage.actif {
+.sb-timer-affichage:hover  { background: #2c3e50; }
+.sb-timer-affichage.actif  {
   background: var(--couleur-principale);
   box-shadow: 0 4px 14px rgba(46,204,113,0.4);
 }
-
 .sb-timer-affichage.termine {
   background: #e74c3c;
-  box-shadow: 0 4px 14px rgba(231,76,60,0.4);
   animation: sb-pulse 0.8s infinite alternate;
 }
 
@@ -120,32 +114,32 @@
   to   { opacity: 0.55; }
 }
 
+/* Boutons timer plats et séparés */
 .sb-timer-controles {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  gap: 6px;
 }
 
 .sb-timer-btn {
-  width: 34px;
-  height: 28px;
+  width: 42px;
+  height: 42px;
   border: none;
-  border-radius: 8px;
-  background: #f0f0f0;
+  border-radius: 50%;
+  background: #f0f2f5;
   color: #444;
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.1s;
 }
 
-.sb-timer-btn:hover {
-  background: #e0e0e0;
-}
+.sb-timer-btn:hover  { background: #e2e5ea; }
+.sb-timer-btn:active { transform: scale(0.92); }
 
-/* ═══ BOUTON SUIVANTE ═══ */
+/* ═══ BOUTON SUIVANTE — masqué, remplacé par les contrôles timer ═══ */
 .sb-btn-suivante {
   padding: 10px 20px;
   background: var(--couleur-principale);
@@ -155,22 +149,15 @@
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 48px;
+  min-height: 44px;
   white-space: nowrap;
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(46,204,113,0.3);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
-  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.1s;
 }
 
-.sb-btn-suivante:hover {
-  background: var(--couleur-principale-fonce);
-  box-shadow: 0 6px 16px rgba(39,174,96,0.4);
-}
-
-.sb-btn-suivante:active {
-  transform: scale(0.97);
-}
+.sb-btn-suivante:hover  { background: var(--couleur-principale-fonce); }
+.sb-btn-suivante:active { transform: scale(0.97); }
 
 /* ═══ GRILLE ÉQUIPES ═══ */
 .sb-grille {
@@ -182,29 +169,54 @@
 }
 
 /* ═══ CARTE ÉQUIPE ═══ */
+/* Couleurs assignées dynamiquement via data-couleur */
 .sb-carte-equipe {
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-  padding: 24px 16px 20px;
+  overflow: hidden;          /* pour que la barre top soit propre */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
+  padding-bottom: 20px;
   width: 100%;
-  min-width: 0;
   box-sizing: border-box;
-  transition: box-shadow 0.25s, transform 0.2s;
-  border: 2px solid transparent;
+  transition: box-shadow 0.25s;
 }
 
-.sb-carte-equipe.leader {
-  border-color: var(--couleur-principale);
-  box-shadow: 0 4px 20px rgba(46,204,113,0.18);
+/* Barre colorée en haut de la carte */
+.sb-carte-barre {
+  width: 100%;
+  height: 10px;
+  background: #e74c3c;       /* rouge par défaut, surchargé en JS */
+  flex-shrink: 0;
 }
+
+/* On gère les couleurs via classes utilitaires */
+.sb-carte-equipe[data-idx="0"] .sb-carte-barre { background: #e74c3c; }
+.sb-carte-equipe[data-idx="1"] .sb-carte-barre { background: #3498db; }
+.sb-carte-equipe[data-idx="2"] .sb-carte-barre { background: #9b59b6; }
+.sb-carte-equipe[data-idx="3"] .sb-carte-barre { background: #f39c12; }
+
+/* Couleur du score selon l'équipe */
+.sb-carte-equipe[data-idx="0"] .sb-equipe-score { color: #e74c3c; }
+.sb-carte-equipe[data-idx="1"] .sb-equipe-score { color: #3498db; }
+.sb-carte-equipe[data-idx="2"] .sb-equipe-score { color: #9b59b6; }
+.sb-carte-equipe[data-idx="3"] .sb-equipe-score { color: #f39c12; }
+
+/* Couleur des boutons +/- selon l'équipe */
+.sb-carte-equipe[data-idx="0"] .sb-btn-plus,
+.sb-carte-equipe[data-idx="0"] .sb-btn-moins { color: #e74c3c; }
+.sb-carte-equipe[data-idx="1"] .sb-btn-plus,
+.sb-carte-equipe[data-idx="1"] .sb-btn-moins { color: #3498db; }
+.sb-carte-equipe[data-idx="2"] .sb-btn-plus,
+.sb-carte-equipe[data-idx="2"] .sb-btn-moins { color: #9b59b6; }
+.sb-carte-equipe[data-idx="3"] .sb-btn-plus,
+.sb-carte-equipe[data-idx="3"] .sb-btn-moins { color: #f39c12; }
 
 .sb-equipe-nom {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--couleur-texte);
   text-align: center;
@@ -212,66 +224,62 @@
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
   letter-spacing: 0.01em;
 }
 
-.sb-equipe-score {
-  font-size: 4rem;
-  font-weight: 900;
-  color: var(--couleur-principale);
-  line-height: 1;
-  font-family: 'Courier New', monospace;
-  letter-spacing: -2px;
-  filter: drop-shadow(0 2px 6px rgba(46,204,113,0.25));
-}
-
-/* ═══ BOUTONS SCORE +/- ═══ */
+/* ═══ CONTRÔLES SCORE INLINE ═══ */
 .sb-equipe-controles {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   width: 100%;
   justify-content: center;
+  padding: 0 12px;
+  box-sizing: border-box;
 }
 
-.sb-btn-score {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+/* Boutons − et + plats, grands, colorés */
+.sb-btn-plus,
+.sb-btn-moins {
+  background: none;
   border: none;
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 2.4rem;
+  font-weight: 900;
   cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: opacity 0.15s, transform 0.1s;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s, box-shadow 0.2s;
-  flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
 }
 
-.sb-btn-score:active {
-  transform: scale(0.88);
+.sb-btn-plus:hover,
+.sb-btn-moins:hover  { opacity: 0.7; }
+.sb-btn-plus:active,
+.sb-btn-moins:active { transform: scale(0.88); }
+
+/* Score central très grand */
+.sb-equipe-score {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+  font-family: 'Courier New', monospace;
+  min-width: 80px;
+  text-align: center;
 }
 
-.sb-btn-plus {
-  background: var(--couleur-principale);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(46,204,113,0.35);
-}
-
-.sb-btn-plus:hover {
-  background: var(--couleur-principale-fonce);
-  box-shadow: 0 6px 16px rgba(39,174,96,0.4);
-}
-
-.sb-btn-moins {
-  background: #f0f0f0;
-  color: #555;
-}
-
-.sb-btn-moins:hover {
-  background: #e0e0e0;
+/* ═══ LABEL SCORE BONUS ═══ */
+.sb-equipe-bonus-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 /* ═══ BOUTONS BONUS RAPIDE ═══ */
@@ -280,34 +288,33 @@
   gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
+  padding: 0 12px;
 }
 
 .sb-btn-bonus {
-  padding: 8px 16px;
-  border-radius: 50px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
   border: none;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.15s;
-  min-height: 38px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
 }
 
-.sb-btn-bonus:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-}
+.sb-btn-bonus:hover  { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.18); }
+.sb-btn-bonus:active { transform: scale(0.9); }
 
-.sb-btn-bonus:active {
-  transform: scale(0.93);
-}
-
-/* Couleurs alternées pour les bonus */
-.sb-btn-bonus:nth-child(3n+1) { background: #e74c3c; }
-.sb-btn-bonus:nth-child(3n+2) { background: #3498db; }
-.sb-btn-bonus:nth-child(3n+3) { background: #9b59b6; }
+/* Couleurs bonus selon équipe */
+.sb-carte-equipe[data-idx="0"] .sb-btn-bonus { background: #e74c3c; }
+.sb-carte-equipe[data-idx="1"] .sb-btn-bonus { background: #3498db; }
+.sb-carte-equipe[data-idx="2"] .sb-btn-bonus { background: #9b59b6; }
+.sb-carte-equipe[data-idx="3"] .sb-btn-bonus { background: #f39c12; }
 
 /* ═══ HISTORIQUE SETS ═══ */
 .sb-equipe-historique {
@@ -315,6 +322,7 @@
   gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
+  padding: 0 12px;
 }
 
 .sb-set-badge {
@@ -324,7 +332,6 @@
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 50px;
-  letter-spacing: 0.02em;
 }
 
 .sb-set-badge.gagne {
@@ -337,21 +344,21 @@
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  flex-wrap: wrap;
 }
 
 .sb-btn-reset {
   background: #fff;
   color: #e74c3c;
   border: 2px solid #e74c3c;
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: 14px;
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   min-height: 44px;
   transition: all 0.2s;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .sb-btn-reset:hover {
@@ -386,26 +393,25 @@
   box-sizing: border-box;
 }
 
-.sb-config-header:hover {
-  background: #fafafa;
-}
+.sb-config-header:hover { background: #fafafa; }
 
 .sb-config-header.ouvert {
-  border-bottom-color: var(--couleur-principale);
+  border-bottom-color: #e0e0e0;
 }
 
 .sb-config-header-texte {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 800;
   color: var(--couleur-texte);
   display: flex;
   align-items: center;
   gap: 8px;
-  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .sb-config-chevron {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #aaa;
   transition: transform 0.3s ease;
   display: inline-block;
@@ -422,14 +428,14 @@
 }
 
 .sb-config-corps.ouvert {
-  max-height: 1000px;
+  max-height: 1200px;
 }
 
 .sb-config-panel {
-  padding: 22px;
+  padding: 28px 22px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   box-sizing: border-box;
 }
 
@@ -437,93 +443,134 @@
 .sb-config-groupe {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
 }
 
 .sb-config-label {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 800;
   color: #aaa;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
 }
 
 /* ═══ STEPPER ═══ */
 .sb-stepper {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 .sb-stepper-btn {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 2px solid var(--couleur-principale);
-  background: transparent;
-  color: var(--couleur-principale);
-  font-size: 1.4rem;
+  border: none;
+  background: #f0f2f5;
+  color: var(--couleur-texte);
+  font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: background 0.2s, transform 0.1s;
   line-height: 1;
 }
 
-.sb-stepper-btn:hover {
-  background: var(--couleur-principale);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(46,204,113,0.3);
-}
+.sb-stepper-btn:hover  { background: #e2e5ea; }
+.sb-stepper-btn:active { transform: scale(0.92); }
 
 .sb-stepper-val {
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 1.8rem;
+  font-weight: 900;
   color: var(--couleur-texte);
-  min-width: 36px;
+  min-width: 40px;
   text-align: center;
 }
 
-/* ═══ INPUTS NOMS ═══ */
-.sb-nom-input {
-  padding: 11px 16px;
-  border: 2px solid #e8e8e8;
-  border-radius: 12px;
-  font-size: 1rem;
-  color: var(--couleur-texte);
-  background: #fafafa;
+/* ═══ NOMS ÉQUIPES — ligne avec pastille couleur ═══ */
+#sb-noms-equipes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
   width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.2s, background 0.2s;
-  font-weight: 500;
 }
 
-.sb-nom-input:focus {
-  outline: none;
+.sb-nom-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f5f5;
+  border-radius: 50px;
+  padding: 6px 14px 6px 8px;
+  border: 2px solid #e8e8e8;
+  transition: border-color 0.2s;
+}
+
+.sb-nom-wrapper:focus-within {
   border-color: var(--couleur-principale);
   background: #fff;
 }
 
-/* ═══ BONUS LISTE ═══ */
+/* Pastille colorée dans le nom */
+.sb-nom-pastille {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sb-nom-wrapper[data-idx="0"] .sb-nom-pastille { background: #e74c3c; }
+.sb-nom-wrapper[data-idx="1"] .sb-nom-pastille { background: #3498db; }
+.sb-nom-wrapper[data-idx="2"] .sb-nom-pastille { background: #9b59b6; }
+.sb-nom-wrapper[data-idx="3"] .sb-nom-pastille { background: #f39c12; }
+
+.sb-nom-input {
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--couleur-texte);
+  width: 100px;
+  outline: none;
+}
+
+/* ═══ BONUS CONFIG ═══ */
 .sb-bonus-liste {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  justify-content: center;
 }
 
 .sb-bonus-tag {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: #f5f5f5;
   border: 2px solid #e8e8e8;
   border-radius: 50px;
-  padding: 6px 14px;
+  overflow: hidden;
+}
+
+.sb-bonus-tag input {
+  border: none;
+  background: transparent;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--couleur-texte);
+  padding: 8px 10px;
+  width: 90px;
+  outline: none;
+}
+
+.sb-bonus-tag input:last-of-type {
+  width: 50px;
+  border-left: 2px solid #e8e8e8;
 }
 
 .sb-bonus-tag-suppr {
@@ -531,40 +578,41 @@
   border: none;
   color: #e74c3c;
   cursor: pointer;
-  font-size: 1.1rem;
-  padding: 0;
-  line-height: 1;
-  opacity: 0.7;
+  font-size: 1rem;
+  padding: 0 10px;
+  opacity: 0.6;
   transition: opacity 0.15s;
 }
 
-.sb-bonus-tag-suppr:hover {
-  opacity: 1;
-}
+.sb-bonus-tag-suppr:hover { opacity: 1; }
 
 .sb-btn-ajouter-bonus {
-  padding: 8px 18px;
-  border-radius: 50px;
-  border: 2px dashed var(--couleur-principale);
-  background: transparent;
-  color: var(--couleur-principale);
-  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--couleur-principale);
+  color: #fff;
+  font-size: 1.4rem;
   font-weight: 700;
   cursor: pointer;
+  justify-content: center;
   transition: all 0.2s;
-  align-self: flex-start;
-  min-height: 38px;
+  box-shadow: 0 4px 12px rgba(46,204,113,0.3);
 }
 
 .sb-btn-ajouter-bonus:hover {
-  background: var(--couleur-principale);
-  color: #fff;
-  border-style: solid;
+  background: var(--couleur-principale-fonce);
+  box-shadow: 0 6px 16px rgba(39,174,96,0.4);
+  transform: scale(1.05);
 }
 
 /* ═══ BOUTON VALIDER CONFIG ═══ */
 .sb-btn-valider-config {
-  padding: 14px;
+  padding: 15px;
   background: var(--couleur-principale);
   color: #fff;
   border: none;
@@ -576,22 +624,17 @@
   transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
   box-shadow: 0 4px 14px rgba(46,204,113,0.35);
   letter-spacing: 0.03em;
+  width: 100%;
 }
 
-.sb-btn-valider-config:hover {
-  background: var(--couleur-principale-fonce);
-  box-shadow: 0 6px 18px rgba(39,174,96,0.45);
-}
-
-.sb-btn-valider-config:active {
-  transform: scale(0.98);
-}
+.sb-btn-valider-config:hover  { background: var(--couleur-principale-fonce); }
+.sb-btn-valider-config:active { transform: scale(0.98); }
 
 /* ═══ MODALS ═══ */
 .sb-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0,0,0,0.45);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -601,9 +644,7 @@
   box-sizing: border-box;
 }
 
-.sb-modal-overlay[hidden] {
-  display: none;
-}
+.sb-modal-overlay[hidden] { display: none; }
 
 .sb-modal-boite {
   background: #fff;
@@ -650,7 +691,7 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: #aaa;
   text-transform: uppercase;
@@ -680,9 +721,8 @@
 .sb-modal-separateur {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--couleur-texte);
+  color: #ccc;
   padding-bottom: 20px;
-  opacity: 0.4;
 }
 
 .sb-modal-actions {
@@ -701,85 +741,31 @@
   cursor: pointer;
   min-height: 48px;
   transition: all 0.2s;
-  letter-spacing: 0.02em;
 }
 
-.sb-modal-btn-annuler {
-  background: #f0f0f0;
-  color: #555;
-}
-
-.sb-modal-btn-annuler:hover {
-  background: #e4e4e4;
-}
+.sb-modal-btn-annuler { background: #f0f0f0; color: #555; }
+.sb-modal-btn-annuler:hover { background: #e4e4e4; }
 
 .sb-modal-btn-valider {
   background: var(--couleur-principale);
   color: #fff;
   box-shadow: 0 4px 12px rgba(46,204,113,0.3);
 }
-
-.sb-modal-btn-valider:hover {
-  background: var(--couleur-principale-fonce);
-  box-shadow: 0 6px 16px rgba(39,174,96,0.4);
-}
+.sb-modal-btn-valider:hover { background: var(--couleur-principale-fonce); }
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 600px) {
-
-  .sb-container {
-    padding: 10px;
-    gap: 10px;
-  }
-
-  .sb-grille {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .sb-equipe-score {
-    font-size: 3rem;
-  }
-
-  .sb-timer-affichage {
-    font-size: 1.35rem;
-    min-width: 80px;
-    padding: 7px 12px;
-  }
-
-  .sb-barre-top {
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 16px;
-  }
-
-  .sb-btn-suivante {
-    font-size: 0.85rem;
-    padding: 8px 14px;
-  }
-
-  .sb-carte-equipe {
-    padding: 16px 10px;
-    border-radius: 16px;
-  }
-
-  .sb-modal-boite {
-    padding: 20px;
-    border-radius: 20px;
-  }
+  .sb-container  { padding: 10px; gap: 10px; }
+  .sb-grille     { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .sb-equipe-score { font-size: 3.2rem; }
+  .sb-timer-affichage { font-size: 1.3rem; min-width: 85px; padding: 7px 12px; }
+  .sb-barre-top  { gap: 8px; padding: 10px 12px; border-radius: 16px; }
+  .sb-btn-suivante { font-size: 0.82rem; padding: 8px 12px; }
+  .sb-modal-boite { padding: 20px; border-radius: 20px; }
 }
 
 @media (min-width: 1024px) {
-
-  .sb-grille {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .sb-equipe-score {
-    font-size: 5rem;
-  }
-
-  .sb-carte-equipe {
-    padding: 28px 20px;
-  }
+  .sb-grille { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .sb-equipe-score { font-size: 5.5rem; }
+  .sb-carte-equipe { padding-bottom: 28px; }
 }

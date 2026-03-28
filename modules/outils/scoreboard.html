@@ -14,7 +14,8 @@
   <!-- INDICATEUR DE PÉRIODE (masqué si pas de périodes) -->
   <div class="scoreboard-periode-bar" id="scoreboard-periode-bar" hidden>
     <span class="scoreboard-periode-label" id="scoreboard-periode-label">Période 1</span>
-    <button class="scoreboard-btn-periode" id="scoreboard-btn-periode-suivante">
+    <!-- ✅ CORRIGÉ : classe alignée sur l'ID -->
+    <button class="scoreboard-btn-periode-suivante" id="scoreboard-btn-periode-suivante">
       Période suivante →
     </button>
   </div>
@@ -29,74 +30,74 @@
     </button>
   </div>
 
-  <!-- PANNEAU DE CONFIGURATION (masqué par défaut) -->
-  <div class="scoreboard-config-overlay" id="scoreboard-config-overlay" hidden>
-    <div class="scoreboard-config-panel">
+</div>
 
-      <div class="scoreboard-config-header">
-        <h3>⚙️ Configuration</h3>
-        <button class="scoreboard-btn-fermer-config" id="scoreboard-btn-fermer-config">✕</button>
-      </div>
+<!-- ✅ CORRIGÉ : overlay hors du wrapper pour éviter les problèmes de overflow -->
+<div class="scoreboard-config-overlay" id="scoreboard-config-overlay" hidden>
+  <div class="scoreboard-config-panel">
 
-      <!-- SECTION ÉQUIPES -->
-      <section class="scoreboard-config-section">
-        <h4>👥 Équipes</h4>
-        <div id="scoreboard-config-equipes-liste"></div>
-        <button class="scoreboard-btn-ajouter-equipe" id="scoreboard-btn-ajouter-equipe">
-          + Ajouter une équipe
-        </button>
-      </section>
-
-      <!-- SECTION BONUS -->
-      <section class="scoreboard-config-section">
-        <h4>⭐ Points bonus</h4>
-        <p class="scoreboard-config-aide">
-          Définissez des boutons de points spéciaux (ex: "Essai = 5 pts")
-        </p>
-        <div id="scoreboard-config-bonus-liste"></div>
-        <button class="scoreboard-btn-ajouter-bonus" id="scoreboard-btn-ajouter-bonus">
-          + Ajouter un bonus
-        </button>
-      </section>
-
-      <!-- SECTION PÉRIODES -->
-      <section class="scoreboard-config-section">
-        <h4>⏱️ Périodes / Manches</h4>
-        <label class="scoreboard-config-label">
-          <input type="checkbox" id="scoreboard-config-periodes-actives" />
-          Activer les périodes
-        </label>
-        <div id="scoreboard-config-periodes-detail" hidden>
-          <label class="scoreboard-config-label">
-            Nombre de périodes :
-            <input
-              type="number"
-              id="scoreboard-config-nb-periodes"
-              min="2"
-              max="10"
-              value="2"
-              class="scoreboard-input-number"
-            />
-          </label>
-          <label class="scoreboard-config-label">
-            Nom (ex: Mi-temps, Set, Manche) :
-            <input
-              type="text"
-              id="scoreboard-config-nom-periode"
-              placeholder="Période"
-              class="scoreboard-input-text"
-              maxlength="20"
-            />
-          </label>
-        </div>
-      </section>
-
-      <!-- BOUTON VALIDER -->
-      <button class="scoreboard-btn-valider-config" id="scoreboard-btn-valider-config">
-        ✅ Valider et lancer
-      </button>
-
+    <div class="scoreboard-config-header">
+      <h3>⚙️ Configuration</h3>
+      <button class="scoreboard-btn-fermer-config" id="scoreboard-btn-fermer-config">✕</button>
     </div>
-  </div>
 
+    <!-- SECTION ÉQUIPES -->
+    <section class="scoreboard-config-section">
+      <h4>👥 Équipes</h4>
+      <div id="scoreboard-config-equipes-liste"></div>
+      <button class="scoreboard-btn-ajouter-equipe" id="scoreboard-btn-ajouter-equipe">
+        + Ajouter une équipe
+      </button>
+    </section>
+
+    <!-- SECTION BONUS -->
+    <section class="scoreboard-config-section">
+      <h4>⭐ Points bonus</h4>
+      <p class="scoreboard-config-aide">
+        Définissez des boutons de points spéciaux (ex: "Essai = 5 pts")
+      </p>
+      <div id="scoreboard-config-bonus-liste"></div>
+      <button class="scoreboard-btn-ajouter-bonus" id="scoreboard-btn-ajouter-bonus">
+        + Ajouter un bonus
+      </button>
+    </section>
+
+    <!-- SECTION PÉRIODES -->
+    <section class="scoreboard-config-section">
+      <h4>⏱️ Périodes / Manches</h4>
+      <label class="scoreboard-config-label">
+        <input type="checkbox" id="scoreboard-config-periodes-actives" />
+        Activer les périodes
+      </label>
+      <div id="scoreboard-config-periodes-detail" hidden>
+        <label class="scoreboard-config-label">
+          Nombre de périodes :
+          <input
+            type="number"
+            id="scoreboard-config-nb-periodes"
+            min="2"
+            max="10"
+            value="2"
+            class="scoreboard-input-number"
+          />
+        </label>
+        <label class="scoreboard-config-label">
+          Nom (ex: Mi-temps, Set, Manche) :
+          <input
+            type="text"
+            id="scoreboard-config-nom-periode"
+            placeholder="Période"
+            class="scoreboard-input-text"
+            maxlength="20"
+          />
+        </label>
+      </div>
+    </section>
+
+    <!-- BOUTON VALIDER -->
+    <button class="scoreboard-btn-valider-config" id="scoreboard-btn-valider-config">
+      ✅ Valider et lancer
+    </button>
+
+  </div>
 </div>

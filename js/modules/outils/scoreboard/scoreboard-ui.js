@@ -19,10 +19,10 @@ const ScoreboardUI = (function () {
 
   /** Affiche ou masque la barre de période selon l'état */
   function rendreBarrePeriode() {
-    const periodes  = ScoreboardApp.getPeriodes();
-    const barre     = document.getElementById('scoreboard-periode-bar');
-    const label     = document.getElementById('scoreboard-periode-label');
-    const btnSuiv   = document.getElementById('scoreboard-btn-periode-suivante');
+    const periodes = ScoreboardApp.getPeriodes();
+    const barre    = document.getElementById('scoreboard-periode-bar');
+    const label    = document.getElementById('scoreboard-periode-label');
+    const btnSuiv  = document.getElementById('scoreboard-btn-periode-suivante');
 
     if (!periodes.actives) {
       barre.hidden = true;
@@ -60,7 +60,8 @@ const ScoreboardUI = (function () {
 
     const carte = document.createElement('div');
     carte.className = 'scoreboard-equipe-carte';
-    carte.dataset.idEquipe = equipe.id;
+    // ✅ CORRIGÉ : dataset stocké en String pour querySelector cohérent
+    carte.dataset.idEquipe = String(equipe.id);
     carte.style.borderTopColor = equipe.couleur;
 
     // — Nom éditable
@@ -117,7 +118,8 @@ const ScoreboardUI = (function () {
     btn1.className = 'scoreboard-btn-point';
     btn1.textContent = '+1 point';
     btn1.style.background = couleurEquipe;
-    btn1.dataset.idEquipe = idEquipe;
+    // ✅ CORRIGÉ : dataset en String pour cohérence avec querySelector
+    btn1.dataset.idEquipe = String(idEquipe);
     btn1.dataset.points = '1';
     conteneur.appendChild(btn1);
 
@@ -126,8 +128,9 @@ const ScoreboardUI = (function () {
       const btnBonus = document.createElement('button');
       btnBonus.className = 'scoreboard-btn-point bonus';
       btnBonus.textContent = `+${b.valeur} — ${b.libelle}`;
-      btnBonus.dataset.idEquipe = idEquipe;
-      btnBonus.dataset.points = b.valeur;
+      // ✅ CORRIGÉ : dataset en String
+      btnBonus.dataset.idEquipe = String(idEquipe);
+      btnBonus.dataset.points = String(b.valeur);
       conteneur.appendChild(btnBonus);
     });
 
@@ -145,8 +148,9 @@ const ScoreboardUI = (function () {
 
     if (!equipe) return;
 
+    // ✅ CORRIGÉ : String(idEquipe) pour matcher le dataset stocké en String
     const carte = document.querySelector(
-      `.scoreboard-equipe-carte[data-id-equipe="${idEquipe}"]`
+      `.scoreboard-equipe-carte[data-id-equipe="${String(idEquipe)}"]`
     );
     if (!carte) return;
 

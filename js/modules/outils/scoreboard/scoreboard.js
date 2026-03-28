@@ -7,10 +7,9 @@
   // ÉTAT GLOBAL DU MODULE
   // ══════════════════════════════════════
 
-  /** @type {Object} État complet du scoreboard */
   const etat = {
-    equipes: [],        // tableau d'objets équipe
-    bonus: [],          // tableau d'objets bonus { valeur, libelle }
+    equipes: [],
+    bonus: [],
     periodes: {
       actives: false,
       total: 2,
@@ -20,21 +19,19 @@
   };
 
   // ══════════════════════════════════════
-  // ÉQUIPES PAR DÉFAUT
+  // ÉQUIPES
   // ══════════════════════════════════════
 
-  /** Crée un objet équipe avec des valeurs par défaut */
   function creerEquipe(id, nom, couleur) {
     return {
       id,
       nom,
       couleur,
       scoreTotal: 0,
-      scoresPeriodes: [], // score par période
+      scoresPeriodes: [],
     };
   }
 
-  /** Initialise les équipes de départ */
   function initialiserEquipesDefaut() {
     etat.equipes = [
       creerEquipe(1, 'Équipe A', '#2ecc71'),
@@ -46,14 +43,12 @@
   // ACTIONS SUR LES SCORES
   // ══════════════════════════════════════
 
-  /** Ajoute des points à une équipe */
   function ajouterPoints(idEquipe, points) {
     const equipe = etat.equipes.find(e => e.id === idEquipe);
     if (!equipe) return;
 
     equipe.scoreTotal += points;
 
-    // Si les périodes sont actives, on note le score de la période courante
     if (etat.periodes.actives) {
       const indexPeriode = etat.periodes.courante - 1;
       if (!equipe.scoresPeriodes[indexPeriode]) {
@@ -63,7 +58,6 @@
     }
   }
 
-  /** Remet tous les scores à zéro */
   function reinitialiserScores() {
     etat.equipes.forEach(equipe => {
       equipe.scoreTotal = 0;
@@ -78,30 +72,24 @@
   // GESTION DES PÉRIODES
   // ══════════════════════════════════════
 
-  /** Passe à la période suivante si possible */
-  function periodesuivante() {
+  // ✅ CORRIGÉ : nom unifié en camelCase
+  function periodeSuivante() {
     if (etat.periodes.courante < etat.periodes.total) {
       etat.periodes.courante++;
       return true;
     }
-    return false; // dernière période atteinte
+    return false;
   }
 
   // ══════════════════════════════════════
-  // GESTION DE LA CONFIGURATION
+  // CONFIGURATION
   // ══════════════════════════════════════
 
-  /** Applique la configuration depuis le panneau de setup */
   function appliquerConfiguration(config) {
-    // Mise à jour des équipes
     etat.equipes = config.equipes.map((e, index) =>
       creerEquipe(index + 1, e.nom, e.couleur)
     );
-
-    // Mise à jour des bonus
     etat.bonus = config.bonus.filter(b => b.valeur > 0 && b.libelle.trim() !== '');
-
-    // Mise à jour des périodes
     etat.periodes.actives  = config.periodes.actives;
     etat.periodes.total    = config.periodes.total;
     etat.periodes.courante = 1;
@@ -109,19 +97,18 @@
   }
 
   // ══════════════════════════════════════
-  // GETTERS — accès à l'état pour les autres fichiers
+  // GETTERS
   // ══════════════════════════════════════
 
-  function getEtat()    { return etat; }
-  function getEquipes() { return etat.equipes; }
-  function getBonus()   { return etat.bonus; }
-  function getPeriodes(){ return etat.periodes; }
+  function getEtat()     { return etat; }
+  function getEquipes()  { return etat.equipes; }
+  function getBonus()    { return etat.bonus; }
+  function getPeriodes() { return etat.periodes; }
 
   // ══════════════════════════════════════
   // CHARGEMENT DES SOUS-MODULES
   // ══════════════════════════════════════
 
-  /** Charge un fichier JS dynamiquement */
   function chargerScript(chemin, callback) {
     const script = document.createElement('script');
     script.src = chemin;
@@ -132,8 +119,8 @@
 
   // ══════════════════════════════════════
   // EXPOSITION GLOBALE
-  // Nécessaire pour la communication entre fichiers
   // ══════════════════════════════════════
+
   window.ScoreboardApp = {
     getEtat,
     getEquipes,
@@ -141,20 +128,23 @@
     getPeriodes,
     ajouterPoints,
     reinitialiserScores,
-    periodesuivante,
+    periodeSuivante,       // ✅ CORRIGÉ : camelCase unifié
     appliquerConfiguration,
     creerEquipe,
   };
 
   // ══════════════════════════════════════
-  // INITIALISATION — chargement en cascade
+  // INITIALISATION EN CASCADE
   // ══════════════════════════════════════
+
   initialiserEquipesDefaut();
+
+  // ✅ CORRIGÉ : reset du flag events si le module est rechargé
+  if (window.ScoreboardEvents) ScoreboardEvents.reset();
 
   chargerScript('js/modules/scoreboard/scoreboard-config.js', () => {
     chargerScript('js/modules/scoreboard/scoreboard-ui.js', () => {
       chargerScript('js/modules/scoreboard/scoreboard-events.js', () => {
-        // Tout est chargé : on lance le rendu initial
         ScoreboardUI.rendrePage();
         ScoreboardEvents.init();
       });

@@ -1,8 +1,12 @@
 // 📄 Fichier : /js/ui.js
-// 🎯 Rôle : Génération et manipulation du DOM
+// 🎯 Rôle : Génération et manipulation du DOM global (hub, recherche)
+
+// ============================================================
+// FABRIQUE DE CARTES
+// ============================================================
 
 /**
- * Génère une carte icône (CA ou outil)
+ * Génère une carte cliquable (CA ou outil)
  * @param {Object} item - { id, label, icone, actif }
  * @returns {HTMLElement}
  */
@@ -21,11 +25,15 @@ function creerCarte(item) {
   return carte;
 }
 
+// ============================================================
+// GRILLES DU HUB
+// ============================================================
+
 /**
  * Remplit une grille avec une liste d'items
- * @param {string} idGrille - ID de l'élément DOM
- * @param {Array}  items    - tableau d'objets { id, label, icone, actif }
- * @param {string} classeExtra - classe CSS supplémentaire pour la grille
+ * @param {string} idGrille    - ID de l'élément DOM cible
+ * @param {Array}  items       - tableau d'objets { id, label, icone, actif }
+ * @param {string} classeExtra - classe CSS supplémentaire (optionnel)
  */
 function remplirGrille(idGrille, items, classeExtra = '') {
   const grille = document.getElementById(idGrille);
@@ -40,9 +48,13 @@ function remplirGrille(idGrille, items, classeExtra = '') {
   });
 }
 
+// ============================================================
+// RECHERCHE
+// ============================================================
+
 /**
- * Affiche les résultats de recherche
- * @param {Array} resultats - modules filtrés
+ * Affiche les résultats de recherche sous forme de cartes
+ * @param {Array} resultats - modules filtrés depuis MODULES_RECHERCHE
  */
 function afficherResultatsRecherche(resultats) {
   const conteneur = document.getElementById('resultats-recherche');
@@ -60,8 +72,12 @@ function afficherResultatsRecherche(resultats) {
   });
 }
 
+// ============================================================
+// INITIALISATION DU HUB
+// ============================================================
+
 /**
- * Initialise la vue Hub (remplit les grilles)
+ * Remplit les grilles CA et outils au démarrage
  */
 function initHub() {
   remplirGrille('grille-ca', CHAMPS_APPRENTISSAGE);

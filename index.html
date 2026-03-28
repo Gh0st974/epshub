@@ -9,21 +9,36 @@
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
 
-  <!-- CSS -->
+  <!-- ============================================================ -->
+  <!-- CSS GLOBAL                                                    -->
+  <!-- ============================================================ -->
   <link rel="stylesheet" href="css/reset.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components/hub.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+
+  <!-- ============================================================ -->
+  <!-- CSS MODULES — Ajouter ici le CSS de chaque nouveau module    -->
+  <!-- ============================================================ -->
+  <!-- 📌 FORMAT : <link rel="stylesheet" href="css/components/[module].css" /> -->
+
+  <!-- Outils -->
+  <link rel="stylesheet" href="css/components/chrono.css" />
+
+  <!-- Champs d'apprentissage (à compléter) -->
+  <!-- <link rel="stylesheet" href="css/components/ca1.css" /> -->
+
 </head>
 <body>
 
   <!-- ===== APPLICATION ===== -->
   <div id="app">
 
-    <!-- VUE HUB -->
+    <!-- ============================================================ -->
+    <!-- VUE HUB — Page d'accueil                                     -->
+    <!-- ============================================================ -->
     <div id="vue-hub" class="vue active">
 
-      <!-- HEADER -->
       <header class="hub-header">
         <div class="hub-header__badge">
           <span class="hub-header__titre">
@@ -33,7 +48,6 @@
         </div>
       </header>
 
-      <!-- SECTION CA -->
       <section class="hub-section">
         <h2 class="hub-section__titre">Champs d'apprentissage</h2>
         <div class="hub-grille" id="grille-ca">
@@ -41,7 +55,6 @@
         </div>
       </section>
 
-      <!-- SECTION OUTILS -->
       <section class="hub-section">
         <h2 class="hub-section__titre">Les outils indispensables</h2>
         <div class="hub-grille" id="grille-outils">
@@ -51,38 +64,65 @@
 
     </div><!-- fin vue-hub -->
 
-    <!-- VUE RECHERCHE -->
+    <!-- ============================================================ -->
+    <!-- VUE RECHERCHE                                                 -->
+    <!-- ============================================================ -->
     <div id="vue-recherche" class="vue">
       <div class="recherche-container">
-        <input 
-          type="search" 
-          id="input-recherche" 
-          class="recherche-input" 
-          placeholder="Rechercher un module..." 
+        <input
+          type="search"
+          id="input-recherche"
+          class="recherche-input"
+          placeholder="Rechercher un module..."
           autocomplete="off"
         />
         <div id="resultats-recherche" class="recherche-resultats"></div>
       </div>
     </div>
 
-    <!-- VUE GROUPES -->
+    <!-- ============================================================ -->
+    <!-- VUE GROUPES                                                   -->
+    <!-- ============================================================ -->
     <div id="vue-groupes" class="vue">
       <p class="vue-placeholder">👥 Groupes — bientôt disponible</p>
     </div>
 
-    <!-- VUE OUTILS -->
+    <!-- ============================================================ -->
+    <!-- VUE OUTILS (navbar)                                          -->
+    <!-- ============================================================ -->
     <div id="vue-outils" class="vue">
       <p class="vue-placeholder">🛠️ Outils — bientôt disponible</p>
     </div>
 
-    <!-- VUE PARAMETRES -->
+    <!-- ============================================================ -->
+    <!-- VUE PARAMÈTRES                                               -->
+    <!-- ============================================================ -->
     <div id="vue-parametres" class="vue">
       <p class="vue-placeholder">⚙️ Paramètres — bientôt disponible</p>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- VUES MODULES — Ajouter ici chaque nouvelle vue de module     -->
+    <!-- ============================================================ -->
+    <!-- 📌 FORMAT : <div id="vue-[module]" class="vue"> ... </div>   -->
+    <!-- 📌 L'id doit correspondre à la route dans router.js          -->
+
+    <!-- OUTIL : Chrono -->
+    <div id="vue-chrono" class="vue">
+      <!-- Généré dynamiquement par chrono-ui.js -->
+    </div>
+
+    <!-- OUTIL : Score (à venir) -->
+    <!-- <div id="vue-score" class="vue"></div> -->
+
+    <!-- CA1 (à venir) -->
+    <!-- <div id="vue-ca1" class="vue"></div> -->
+
   </div><!-- fin app -->
 
-  <!-- NAVBAR -->
+  <!-- ============================================================ -->
+  <!-- NAVBAR                                                        -->
+  <!-- ============================================================ -->
   <nav class="navbar" id="navbar">
     <button class="navbar__btn active" data-vue="vue-hub">
       <span class="navbar__icone">🏠</span>
@@ -108,10 +148,35 @@
     </button>
   </nav>
 
-  <!-- JS -->
+  <!-- ============================================================ -->
+  <!-- JS GLOBAL — Noyau de l'application                           -->
+  <!-- ============================================================ -->
   <script src="js/config.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/router.js"></script>
+
+  <!-- ============================================================ -->
+  <!-- JS MODULES — Ajouter ici les scripts de chaque nouveau module -->
+  <!-- ============================================================ -->
+  <!-- 📌 Toujours AVANT app.js                                     -->
+  <!-- 📌 Ordre : [module].js → [module]-timer.js →                 -->
+  <!--            [module]-ui.js → [module]-events.js               -->
+
+  <!-- Outil : Chrono -->
+  <script src="js/modules/outils/chrono/chrono.js"></script>
+  <script src="js/modules/outils/chrono/chrono-timer.js"></script>
+  <script src="js/modules/outils/chrono/chrono-ui.js"></script>
+  <script src="js/modules/outils/chrono/chrono-events.js"></script>
+
+  <!-- Outil : Score (à venir) -->
+  <!-- <script src="js/modules/outils/score/score.js"></script> -->
+
+  <!-- CA1 (à venir) -->
+  <!-- <script src="js/modules/ca1/ca1.js"></script> -->
+
+  <!-- ============================================================ -->
+  <!-- JS PRINCIPAL — Toujours en dernier                           -->
+  <!-- ============================================================ -->
   <script src="js/app.js"></script>
 
 </body>

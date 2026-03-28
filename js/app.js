@@ -1,5 +1,9 @@
 // 📄 Fichier : /js/app.js
-// 🎯 Rôle : Point d'entrée principal — initialise l'application
+// 🎯 Rôle : Point d'entrée principal — initialise tous les modules
+
+// ============================================================
+// RECHERCHE
+// ============================================================
 
 /**
  * Initialise la recherche de modules
@@ -24,8 +28,12 @@ function initRecherche() {
   });
 }
 
+// ============================================================
+// SERVICE WORKER — PWA
+// ============================================================
+
 /**
- * Enregistrement du Service Worker pour la PWA
+ * Enregistrement du Service Worker pour le mode hors-ligne
  */
 function initServiceWorker() {
   if ('serviceWorker' in navigator) {
@@ -36,17 +44,39 @@ function initServiceWorker() {
   }
 }
 
+// ============================================================
+// INITIALISATION DES MODULES — Ajouter ici chaque nouveau module
+// ============================================================
+// 📌 Appeler la fonction init du module ici
+// 📌 Le module doit être chargé dans index.html avant app.js
+// ============================================================
+
 /**
- * Démarrage de l'application
+ * Initialise tous les modules actifs
+ */
+function initModules() {
+  // --- Outils ---
+  if (typeof initChrono === 'function') initChrono();
+
+  // --- Champs d'apprentissage (à compléter) ---
+  // if (typeof initCA1 === 'function') initCA1();
+}
+
+// ============================================================
+// DÉMARRAGE
+// ============================================================
+
+/**
+ * Point d'entrée principal — lancé au chargement du DOM
  */
 function demarrerApp() {
-  initHub();        // Remplit les grilles CA et outils
-  initRouter();     // Active la navigation
-  initRecherche();  // Active la recherche
+  initHub();          // Remplit les grilles CA et outils
+  initRouter();       // Active la navigation
+  initRecherche();    // Active la recherche
+  initModules();      // Initialise les modules actifs
   initServiceWorker();
 
   console.log(`🚀 ${CONFIG.nom} v${CONFIG.version} démarré`);
 }
 
-// Lancement au chargement du DOM
 document.addEventListener('DOMContentLoaded', demarrerApp);

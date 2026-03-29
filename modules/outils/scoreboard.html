@@ -3,115 +3,66 @@
 
 <div class="sb-container">
 
-  <!-- ═══ BARRE SETS + TIMER ═══ -->
+  <!-- ═══ BARRE TOP ═══ -->
   <div class="sb-barre-top">
-
-    <div class="sb-pastilles" id="sb-pastilles">
-      <!-- Généré dynamiquement -->
+    <div class="sb-pastilles" id="sb-pastilles"></div>
+    <div class="sb-timer-affichage" id="sb-timer-affichage">
+      <span id="sb-timer-texte">05:00</span>
     </div>
-
-    <div class="sb-timer-bloc">
-      <div class="sb-timer-affichage" id="sb-timer-affichage" title="Configurer le timer">
-        <span id="sb-timer-texte">05:00</span>
-      </div>
-      <div class="sb-timer-controles">
-        <button class="sb-timer-btn" id="sb-timer-play">▶</button>
-        <button class="sb-timer-btn" id="sb-timer-pause">⏸</button>
-        <button class="sb-timer-btn" id="sb-timer-reset">↺</button>
-      </div>
+    <div class="sb-timer-controles">
+      <button class="sb-timer-btn" id="sb-timer-play">▶</button>
+      <button class="sb-timer-btn" id="sb-timer-pause">⏸</button>
+      <button class="sb-timer-btn" id="sb-timer-reset">↺</button>
     </div>
-
     <button class="sb-btn-suivante" id="sb-btn-suivante">Suivante ▶</button>
-
   </div>
 
   <!-- ═══ GRILLE ÉQUIPES ═══ -->
-  <div class="sb-grille" id="sb-grille">
-    <!-- Généré dynamiquement — structure d'une carte :
-    <div class="sb-carte-equipe" data-idx="0" data-couleur="#e74c3c">
-      <div class="sb-carte-barre"></div>
-      <div class="sb-carte-corps">
-        <div class="sb-equipe-nom">Équipe A</div>
-        <div class="sb-equipe-ligne-score">
-          <button class="sb-equipe-btn-moins">−</button>
-          <div class="sb-equipe-score">0</div>
-          <button class="sb-equipe-btn-plus">+</button>
-        </div>
-        <div class="sb-equipe-label-bonus">Score bonus</div>
-        <div class="sb-equipe-bonus-liste"></div>
-      </div>
-    </div>
-    -->
-  </div>
+  <div class="sb-grille" id="sb-grille"></div>
 
   <!-- ═══ ACTIONS GLOBALES ═══ -->
   <div class="sb-actions-globales">
-    <button class="sb-btn-reset" id="sb-btn-reset-global">↺ Tout reset</button>
+    <button class="sb-btn-reset-global" id="sb-btn-reset-global">↺ tout reset</button>
   </div>
 
   <!-- ═══ ACCORDÉON CONFIG ═══ -->
   <div class="sb-config-wrapper">
-
     <button class="sb-config-header" id="sb-config-header" aria-expanded="false">
-      <span class="sb-config-header-texte">⚙️ CONFIGURATION</span>
-      <span class="sb-config-chevron">▼</span>
+      <span>⚙️ CONFIGURATION</span>
+      <span class="sb-config-chevron" id="sb-config-chevron">▲</span>
     </button>
+    <div class="sb-config-corps" id="sb-config-corps" hidden>
 
-    <div class="sb-config-corps" id="sb-config-corps">
-      <div class="sb-config-panel" id="sb-config-panel">
-
-        <!-- Nb équipes -->
-        <div class="sb-config-groupe">
-          <label class="sb-config-label">Nombre d'équipes</label>
-          <div class="sb-stepper">
-            <button class="sb-stepper-btn" id="sb-equipes-moins">−</button>
-            <span class="sb-stepper-val" id="sb-equipes-val">2</span>
-            <button class="sb-stepper-btn" id="sb-equipes-plus">+</button>
-          </div>
+      <div class="sb-config-groupe">
+        <label class="sb-config-label">Nombre d'équipes</label>
+        <div class="sb-stepper">
+          <button class="sb-stepper-btn" id="sb-equipes-moins">−</button>
+          <span class="sb-stepper-val" id="sb-equipes-val">2</span>
+          <button class="sb-stepper-btn" id="sb-equipes-plus">+</button>
         </div>
-
-        <!-- Noms équipes -->
-        <div class="sb-config-groupe" id="sb-noms-equipes">
-          <label class="sb-config-label">Noms des équipes</label>
-          <!-- Généré dynamiquement — structure :
-          <div class="sb-nom-ligne">
-            <input class="sb-nom-input" type="text" value="Équipe A">
-            <span class="sb-nom-pastille" style="background:#e74c3c"></span>
-          </div>
-          -->
-        </div>
-
-        <!-- Nb sets -->
-        <div class="sb-config-groupe">
-          <label class="sb-config-label">Nombre de sets</label>
-          <div class="sb-stepper">
-            <button class="sb-stepper-btn" id="sb-sets-moins">−</button>
-            <span class="sb-stepper-val" id="sb-sets-val">3</span>
-            <button class="sb-stepper-btn" id="sb-sets-plus">+</button>
-          </div>
-        </div>
-
-        <!-- Boutons bonus -->
-        <div class="sb-config-groupe">
-          <label class="sb-config-label">Bouton de score rapide</label>
-          <div class="sb-bonus-liste" id="sb-bonus-liste">
-            <!-- Généré dynamiquement — structure :
-            <div class="sb-bonus-ligne">
-              <input class="sb-bonus-nom" type="text" placeholder="Nom du score">
-              <input class="sb-bonus-val" type="number" placeholder="Valeur">
-              <button class="sb-bonus-suppr">✕</button>
-            </div>
-            -->
-          </div>
-          <button class="sb-btn-ajouter-bonus" id="sb-btn-ajouter-bonus">
-            <span class="sb-btn-ajouter-icone">+</span>
-          </button>
-        </div>
-
-        <!-- Valider -->
-        <button class="sb-btn-valider-config" id="sb-btn-valider-config">✅ Appliquer</button>
-
       </div>
+
+      <div class="sb-config-groupe">
+        <label class="sb-config-label">Noms des équipes</label>
+        <div id="sb-noms-equipes"></div>
+      </div>
+
+      <div class="sb-config-groupe">
+        <label class="sb-config-label">Nombre de sets</label>
+        <div class="sb-stepper">
+          <button class="sb-stepper-btn" id="sb-sets-moins">−</button>
+          <span class="sb-stepper-val" id="sb-sets-val">3</span>
+          <button class="sb-stepper-btn" id="sb-sets-plus">+</button>
+        </div>
+      </div>
+
+      <div class="sb-config-groupe">
+        <label class="sb-config-label">Boutons de score rapide</label>
+        <div id="sb-bonus-liste"></div>
+        <button class="sb-btn-ajouter-bonus" id="sb-btn-ajouter-bonus">+</button>
+      </div>
+
+      <button class="sb-btn-valider-config" id="sb-btn-valider-config">✅ APPLIQUER</button>
     </div>
   </div>
 
@@ -120,13 +71,11 @@
     <div class="sb-modal-boite">
       <h3 class="sb-modal-titre">⏱ Configurer le timer</h3>
       <div class="sb-modal-champs">
-        <label class="sb-modal-label">
-          Minutes
+        <label class="sb-modal-label">Minutes
           <input type="number" id="sb-input-min" class="sb-modal-input" min="0" max="99" value="5">
         </label>
-        <span class="sb-modal-separateur">:</span>
-        <label class="sb-modal-label">
-          Secondes
+        <span class="sb-modal-sep">:</span>
+        <label class="sb-modal-label">Secondes
           <input type="number" id="sb-input-sec" class="sb-modal-input" min="0" max="59" value="0">
         </label>
       </div>
@@ -137,11 +86,11 @@
     </div>
   </div>
 
-  <!-- ═══ MODAL CONFIRMATION SET ═══ -->
+  <!-- ═══ MODAL CONFIRM SET ═══ -->
   <div class="sb-modal-overlay" id="sb-modal-confirm" hidden>
     <div class="sb-modal-boite">
       <h3 class="sb-modal-titre">⚠️ Changer de set ?</h3>
-      <p class="sb-modal-texte" id="sb-confirm-texte">Revenir au set 1 ?</p>
+      <p class="sb-modal-texte" id="sb-confirm-texte"></p>
       <div class="sb-modal-actions">
         <button class="sb-modal-btn-annuler" id="sb-confirm-non">Annuler</button>
         <button class="sb-modal-btn-valider" id="sb-confirm-oui">Confirmer</button>

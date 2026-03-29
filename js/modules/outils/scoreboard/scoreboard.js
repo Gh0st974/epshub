@@ -1,112 +1,176 @@
 // 📄 Fichier : js/modules/outils/scoreboard/scoreboard.js
-// 🎯 Rôle : Point d'entrée + état global du module scoreboard
+// 🎯 Rôle : Point d'entrée et logique métier du scoreboard
 
 (function () {
 
-  // ═══ ÉTAT GLOBAL ═══
-  window.SB = {
-
-    config: {
-      nbEquipes: 2,
-      nbSets: 3,
-      nomsEquipes: ['Équipe A', 'Équipe B', 'Équipe C', 'Équipe D'],
-      boutonsBonus: [
-        { label: '+2', valeur: 2 },
-        { label: '+3', valeur: 3 }
-      ],
-      couleurs: ['#e74c3c', '#3498db', '#f39c12', '#9b59b6'],
-      timerDuree: 5 * 60
-    },
-
-    etat: {
-      setActif: 0,
-      scores: [],
-      timerSecondes: 5 * 60,
-      timerEnCours: false,
-      timerInterval: null
-    },
-
-    setEnAttente: null
+  /* ══════════════════════════════
+     ÉTAT GLOBAL DU MODULE
+  ══════════════════════════════ */
+  const etat = {
+    equipes: [
+      { nom: 'Équipe A', couleur: '#e74c3c' },
+      { nom: 'Équipe B', couleur: '#3498db' }
+    ],
+    nbSets: 3,
+    setActif: 0,
+    // scores[setIdx][equipeIdx] = score
+    scores: [],
+    bonus: [
+      { nom: '+2', valeur: 2 },
+      { nom: '+3', valeur: 3 }
+    ],
+    timer: {
+      totalSecondes: 300,
+      restantes: 300,
+      intervalle: null,
+      enCours: false
+    }
   };
 
-  // ═══ INITIALISATION DES SCORES ═══
+  /* ══════════════════════════════
+     INITIALISATION DES SCORES
+  ══════════════════════════════ */
   function initialiserScores() {
-    const { nbEquipes, nbSets } = window.SB.config;
-    window.SB.etat.scores = [];
-    for (let s = 0; s < nbSets; s++) {
-      const ligne = [];
-      for (let e = 0; e < nbEquipes; e++) ligne.push(0);
-      window.SB.etat.scores.push(ligne);
+    etat.scores = [];
+    for (let s = 0; s < etat.nbSets; s++) {
+      etat.scores[s] = etat.equipes.map(() => 0);
     }
   }
 
-  // ═══ APPLIQUER LA CONFIGURATION ═══
-  window.SB.appliquerConfig = function () {
+  /* ══════════════════════════════
+     ACCESSEURS MÉTIER
+  ══════════════════════════════ */
+  function getScore(setIdx, equipeIdx) {
+    return etat.scores[setIdx]?.[equipeIdx] ?? 0;
+  }
+
+  function modifierScore(equipeIdx, delta) {
+    const s = etat.setActif;
+    etat.scores[s][equipeIdx] = Math.max(0, etat.scores[s][equipeIdx] + delta);
+    sbUI.mettreAJourScore(equipeIdx, etat.scores[s][equipeIdx]);
+    sbUI.mettreAJourSetScore(equipeIdx, etat.scores, etat.nbSets);
+  }
+
+  function changerSet(idx) {
+    etat.setActif = idx;
+    sbUI.mettreAJourPastilles(etat.nbSets, etat.setActif);
+    sbUI.mettreAJourTousScores(etat.scores, etat.setActif, etat.equipes);
+  }
+
+  function resetGlobal() {
     initialiserScores();
-    window.SB.etat.setActif = 0;
-    window.SB.etat.timerSecondes = window.SB.config.timerDuree;
-    window.SB.etat.timerEnCours = false;
-    clearInterval(window.SB.etat.timerInterval);
-    SBui.rendreTout();
-  };
+    etat.setActif = 0;
+    stopperTimer();
+    etat.timer.restantes = etat.timer.totalSecondes;
+    sbUI.mettreAJourTousScores(etat.scores, etat.setActif, etat.equipes);
+    sbUI.mettreAJourPastilles(etat.nbSets, etat.setActif);
+    sbUI.mettreAJourTimerAffichage(etat.timer.restantes);
+  }
 
-  // ═══ MODIFIER UN SCORE ═══
-  window.SB.modifierScore = function (indexEquipe, delta) {
-    const set = window.SB.etat.setActif;
-    let nouveau = window.SB.etat.scores[set][indexEquipe] + delta;
-    if (nouveau < 0) nouveau = 0;
-    window.SB.etat.scores[set][indexEquipe] = nouveau;
-    SBui.mettreAJourScore(indexEquipe);
-  };
-
-  // ═══ CHANGER DE SET ═══
-  window.SB.allerAuSet = function (indexSet) {
-    if (indexSet < 0 || indexSet >= window.SB.config.nbSets) return;
-    window.SB.etat.setActif = indexSet;
-    SBui.rendrePastilles();
-    SBui.rendreScores();
-  };
-
-  // ═══ SET SUIVANT ═══
-  window.SB.setSuivant = function () {
-    const suivant = window.SB.etat.setActif + 1;
-    if (suivant < window.SB.config.nbSets) {
-      window.SB.allerAuSet(suivant);
-    }
-  };
-
-  // ═══ RESET GLOBAL ═══
-  window.SB.resetGlobal = function () {
-    clearInterval(window.SB.etat.timerInterval);
-    window.SB.etat.timerEnCours = false;
-    window.SB.etat.timerSecondes = window.SB.config.timerDuree;
-    initialiserScores();
-    window.SB.etat.setActif = 0;
-    SBui.rendreTout();
-  };
-
-  // ═══ LANCEMENT ═══
-  initialiserScores();
-
-  const base = 'js/modules/outils/scoreboard/';
-  const fichiers = [
-    base + 'scoreboard-ui.js',
-    base + 'scoreboard-timer.js',
-    base + 'scoreboard-events.js'
-  ];
-
-  let charges = 0;
-  fichiers.forEach((src) => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.onload = function () {
-      charges++;
-      if (charges === fichiers.length) {
-        SBui.rendreTout();
-        SBevents.init();
+  /* ══════════════════════════════
+     TIMER
+  ══════════════════════════════ */
+  function lancerTimer() {
+    if (etat.timer.enCours) return;
+    etat.timer.enCours = true;
+    etat.timer.intervalle = setInterval(() => {
+      if (etat.timer.restantes <= 0) {
+        stopperTimer();
+        sbUI.signalerFinTimer();
+        return;
       }
-    };
-    document.body.appendChild(script);
-  });
+      etat.timer.restantes--;
+      sbUI.mettreAJourTimerAffichage(etat.timer.restantes);
+    }, 1000);
+  }
+
+  function pauserTimer() {
+    if (!etat.timer.enCours) return;
+    clearInterval(etat.timer.intervalle);
+    etat.timer.enCours = false;
+  }
+
+  function stopperTimer() {
+    clearInterval(etat.timer.intervalle);
+    etat.timer.enCours = false;
+  }
+
+  function resetTimer() {
+    stopperTimer();
+    etat.timer.restantes = etat.timer.totalSecondes;
+    sbUI.mettreAJourTimerAffichage(etat.timer.restantes);
+  }
+
+  function configurerTimer(minutes, secondes) {
+    const total = minutes * 60 + secondes;
+    etat.timer.totalSecondes = total;
+    etat.timer.restantes = total;
+    stopperTimer();
+    sbUI.mettreAJourTimerAffichage(total);
+  }
+
+  /* ══════════════════════════════
+     APPLICATION CONFIG
+  ══════════════════════════════ */
+  function appliquerConfig(config) {
+    // Reconstruire équipes
+    etat.equipes = config.equipes.map(e => ({ nom: e.nom, couleur: e.couleur }));
+    etat.nbSets = config.nbSets;
+    etat.bonus = config.bonus;
+    etat.setActif = 0;
+    initialiserScores();
+
+    // Regénérer toute la UI
+    sbUI.genererGrille(etat.equipes, etat.bonus);
+    sbUI.mettreAJourPastilles(etat.nbSets, etat.setActif);
+    sbUI.mettreAJourTousScores(etat.scores, etat.setActif, etat.equipes);
+    sbUI.mettreAJourTimerAffichage(etat.timer.restantes);
+    sbEvents.rebrancher(etat, actions);
+  }
+
+  /* ══════════════════════════════
+     OBJET ACTIONS (partagé avec events)
+  ══════════════════════════════ */
+  const actions = {
+    modifierScore,
+    changerSet,
+    resetGlobal,
+    lancerTimer,
+    pauserTimer,
+    resetTimer,
+    configurerTimer,
+    appliquerConfig,
+    getEtat: () => etat
+  };
+
+  /* ══════════════════════════════
+     BOOT
+  ══════════════════════════════ */
+  function init() {
+    initialiserScores();
+    sbUI.genererGrille(etat.equipes, etat.bonus);
+    sbUI.mettreAJourPastilles(etat.nbSets, etat.setActif);
+    sbUI.mettreAJourTousScores(etat.scores, etat.setActif, etat.equipes);
+    sbUI.mettreAJourTimerAffichage(etat.timer.restantes);
+    sbUI.genererConfigNoms(etat.equipes);
+    sbUI.genererConfigBonus(etat.bonus);
+    sbEvents.init(etat, actions);
+  }
+
+  // Charger les fichiers dépendants puis démarrer
+  Promise.all([
+    chargerScript('js/modules/outils/scoreboard/scoreboard-ui.js'),
+    chargerScript('js/modules/outils/scoreboard/scoreboard-events.js')
+  ]).then(init);
+
+  function chargerScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
 
 })();

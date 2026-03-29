@@ -1,124 +1,103 @@
 /* 📄 Fichier : css/modules/outils/scoreboard.css */
 /* 🎯 Rôle : Styles du module scoreboard */
 
-/* ════════════════════════════════
-   BASE
-════════════════════════════════ */
+/* ── BASE ── */
 .sb-container {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 16px;
-  width: 100%;
-  max-width: 960px;
+  gap: 12px;
+  padding: 14px;
+  max-width: 700px;
   margin: 0 auto;
   box-sizing: border-box;
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 /* ════════════════════════════════
-   BARRE TOP — UNE SEULE LIGNE
+   BARRE TOP
 ════════════════════════════════ */
 .sb-barre-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: #fff;
-  border-radius: 20px;
-  padding: 10px 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  border-radius: 50px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   flex-wrap: nowrap;
-  box-sizing: border-box;
 }
 
-/* ── Pastilles ── */
+/* Pastilles sets */
 .sb-pastilles {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   align-items: center;
   flex-shrink: 0;
 }
 
 .sb-pastille {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid #e8e8e8;
+  border: 2px solid #e0e0e0;
   background: #fff;
   color: #ccc;
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.2s ease;
   flex-shrink: 0;
-  user-select: none;
 }
 
 .sb-pastille.active {
   background: var(--couleur-principale);
   border-color: var(--couleur-principale);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(46,204,113,0.45);
-  transform: scale(1.15);
+  box-shadow: 0 3px 10px rgba(46,204,113,0.4);
 }
 
 .sb-pastille.passee {
-  border-color: #e0e0e0;
+  border-color: #ddd;
   color: #bbb;
   background: #fafafa;
 }
 
-.sb-pastille.future {
-  border-color: #f0f0f0;
-  color: #e0e0e0;
-  cursor: default;
-  pointer-events: none;
-}
-
-/* ── Timer bloc — poussé à droite ── */
-.sb-timer-bloc {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Timer */
+.sb-timer-affichage {
+  background: #1a2332;
+  color: #fff;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 7px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  min-width: 95px;
+  text-align: center;
   margin-left: auto;
   flex-shrink: 0;
 }
 
-.sb-timer-affichage {
-  background: #1a2332;
-  color: #fff;
-  font-size: 1.4rem;
-  font-weight: 800;
-  font-family: 'SF Mono', 'Courier New', monospace;
-  padding: 8px 16px;
-  border-radius: 14px;
-  cursor: pointer;
-  min-width: 105px;
-  text-align: center;
-  letter-spacing: 3px;
-  flex-shrink: 0;
-}
-
-/* ── Contrôles timer — icônes simples ── */
+/* Boutons timer */
 .sb-timer-controles {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  gap: 2px;
   flex-shrink: 0;
 }
 
 .sb-timer-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
-  color: var(--couleur-texte-leger);
+  color: #666;
   font-size: 0.9rem;
   cursor: pointer;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,24 +105,24 @@
 }
 
 .sb-timer-btn:hover {
-  background: var(--couleur-fond);
-  color: var(--couleur-texte);
+  background: #f0f0f0;
+  color: #333;
 }
 
-/* ── Bouton suivante ── */
+/* Bouton suivante */
 .sb-btn-suivante {
   background: var(--couleur-principale);
   color: #fff;
   border: none;
-  border-radius: 14px;
-  padding: 10px 18px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  border-radius: 50px;
+  padding: 9px 16px;
+  font-size: 0.88rem;
+  font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  box-shadow: 0 3px 10px rgba(46,204,113,0.35);
 }
 
 .sb-btn-suivante:hover {
@@ -157,46 +136,45 @@
 .sb-grille {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
-/* ── Carte équipe ── */
-.sb-carte-equipe {
+/* ── CARTE ÉQUIPE ── */
+.sb-carte {
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 14px rgba(0,0,0,0.07);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* Bandeau couleur en haut */
-.sb-carte-barre {
+/* Bandeau coloré en haut */
+.sb-carte-bandeau {
   height: 7px;
   width: 100%;
   flex-shrink: 0;
-  /* background-color appliqué inline via JS */
 }
 
-/* Corps centré */
+/* Corps de la carte */
 .sb-carte-corps {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 18px 12px 22px;
+  padding: 14px 10px 16px;
   gap: 8px;
 }
 
 /* Nom équipe */
-.sb-equipe-nom {
-  font-size: 1rem;
+.sb-carte-nom {
+  font-size: 0.95rem;
   font-weight: 800;
   color: var(--couleur-texte);
   text-align: center;
 }
 
-/* ── Ligne score : −  score  + ── */
-.sb-equipe-ligne-score {
+/* Ligne score : − [score] + */
+.sb-carte-score-ligne {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -205,80 +183,98 @@
 }
 
 /* Boutons − et + */
-.sb-equipe-btn-moins,
-.sb-equipe-btn-plus {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+.sb-carte-btn-moins,
+.sb-carte-btn-plus {
+  width: 34px;
+  height: 34px;
   border: none;
   background: transparent;
-  font-size: 1.6rem;
-  font-weight: 300;
+  font-size: 1.4rem;
+  font-weight: 700;
   cursor: pointer;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ccc;
   transition: all 0.15s ease;
-  flex-shrink: 0;
-  line-height: 1;
+  /* couleur définie inline via JS */
 }
 
-.sb-equipe-btn-moins:hover { color: #e74c3c; transform: scale(1.2); }
-.sb-equipe-btn-plus:hover  { color: var(--couleur-principale); transform: scale(1.2); }
+.sb-carte-btn-moins:hover,
+.sb-carte-btn-plus:hover {
+  filter: brightness(0.85);
+  transform: scale(1.15);
+}
 
-/* Score — grand, coloré via JS */
-.sb-equipe-score {
+/* Score central — GRAND, coloré */
+.sb-carte-score {
   font-size: 5rem;
   font-weight: 900;
   line-height: 1;
-  min-width: 80px;
+  min-width: 70px;
   text-align: center;
-  font-variant-numeric: tabular-nums;
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-  /* color appliqué inline via JS = couleur équipe */
+  /* couleur définie inline via JS */
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.sb-equipe-score.bump { transform: scale(1.25); }
+.sb-carte-score.bump {
+  transform: scale(1.25);
+}
 
 /* Label SCORE BONUS */
-.sb-equipe-label-bonus {
-  font-size: 0.58rem;
+.sb-carte-bonus-label {
+  font-size: 0.55rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: #ccc;
-  margin-top: 4px;
 }
 
-/* ── Boutons bonus — cercles colorés ── */
-.sb-equipe-bonus-liste {
+/* Ligne boutons bonus */
+.sb-carte-bonus-liste {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 7px;
 }
 
-.sb-btn-bonus {
-  width: 48px;
-  height: 48px;
+/* Bouton bonus — cercle coloré */
+.sb-carte-btn-bonus {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: none;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* background défini inline via JS */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
   transition: all 0.15s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-  /* background-color appliqué inline via JS = couleur équipe */
 }
 
-.sb-btn-bonus:hover  { filter: brightness(1.12); transform: scale(1.08); }
-.sb-btn-bonus:active { transform: scale(0.9); }
+.sb-carte-btn-bonus:hover {
+  filter: brightness(1.1);
+  transform: scale(1.1);
+}
+
+.sb-carte-btn-bonus:active {
+  transform: scale(0.92);
+}
+
+/* Badge score set en bas de carte */
+.sb-carte-set-score {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #aaa;
+  background: #f0f0f0;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
 
 /* ════════════════════════════════
    ACTIONS GLOBALES
@@ -288,27 +284,29 @@
   justify-content: flex-end;
 }
 
-.sb-btn-reset {
+.sb-btn-reset-global {
   background: transparent;
-  border: none;
+  border: 1.5px solid #e74c3c;
   color: #e74c3c;
-  font-size: 0.88rem;
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 10px;
-  transition: background 0.15s;
+  transition: all 0.15s ease;
 }
 
-.sb-btn-reset:hover { background: #fdf0f0; }
+.sb-btn-reset-global:hover {
+  background: #ffeaea;
+}
 
 /* ════════════════════════════════
-   CONFIG ACCORDÉON
+   ACCORDÉON CONFIG
 ════════════════════════════════ */
 .sb-config-wrapper {
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   overflow: hidden;
 }
 
@@ -318,40 +316,26 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: transparent;
   border: none;
+  background: transparent;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
-  color: var(--couleur-texte-leger);
-  text-transform: uppercase;
+  color: var(--couleur-texte);
+  letter-spacing: 0.05em;
 }
 
 .sb-config-chevron {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  color: #aaa;
   transition: transform 0.25s ease;
 }
 
-.sb-config-header[aria-expanded="true"] .sb-config-chevron {
-  transform: rotate(180deg);
-}
-
-/* Corps pliable */
 .sb-config-corps {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s ease;
-}
-
-.sb-config-corps.ouvert { max-height: 1200px; }
-
-.sb-config-panel {
+  padding: 0 20px 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
-  padding: 4px 24px 28px;
 }
 
 /* Groupe config */
@@ -360,19 +344,17 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  width: 100%;
-  max-width: 340px;
 }
 
 .sb-config-label {
   font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--couleur-texte-leger);
 }
 
-/* ── Stepper ── */
+/* Stepper */
 .sb-stepper {
   display: flex;
   align-items: center;
@@ -380,10 +362,10 @@
 }
 
 .sb-stepper-btn {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  border: 2px solid #e8e8e8;
+  border: 2px solid #e0e0e0;
   background: #fff;
   font-size: 1.2rem;
   font-weight: 700;
@@ -401,109 +383,108 @@
 }
 
 .sb-stepper-val {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 900;
   color: var(--couleur-texte);
-  min-width: 32px;
+  min-width: 30px;
   text-align: center;
 }
 
-/* ── Ligne nom équipe ── */
-.sb-nom-ligne {
+/* Lignes noms équipes */
+.sb-nom-equipe-ligne {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
+  max-width: 320px;
 }
 
-.sb-nom-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 2px solid #e8e8e8;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--couleur-texte);
-  background: var(--couleur-fond);
-  outline: none;
-  transition: border-color 0.2s;
-  box-sizing: border-box;
-}
-
-.sb-nom-input:focus {
-  border-color: var(--couleur-principale);
-  background: #fff;
-}
-
-/* Pastille couleur équipe */
-.sb-nom-pastille {
-  width: 28px;
-  height: 28px;
+.sb-nom-equipe-couleur {
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
+  border: none;
   flex-shrink: 0;
-  /* background-color inline via JS */
+  cursor: pointer;
 }
 
-/* ── Bonus config ── */
-.sb-bonus-liste {
+.sb-nom-equipe-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 12px;
+  background: #f4f4f4;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--couleur-texte);
+  text-transform: uppercase;
+  outline: none;
+}
+
+.sb-nom-equipe-input:focus {
+  background: #eafaf2;
+}
+
+/* Lignes bonus config */
+.sb-bonus-ligne {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
   width: 100%;
+  max-width: 320px;
 }
 
-.sb-bonus-ligne {
-  display: grid;
-  grid-template-columns: 1fr 64px 36px;
-  gap: 8px;
-  align-items: center;
-}
-
-.sb-bonus-nom,
-.sb-bonus-val {
-  padding: 10px 14px;
-  border: 2px solid #e8e8e8;
+.sb-bonus-input-nom {
+  flex: 2;
+  padding: 10px 12px;
+  border: none;
   border-radius: 12px;
-  font-size: 0.9rem;
+  background: #f4f4f4;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--couleur-texte);
-  background: var(--couleur-fond);
   outline: none;
-  transition: border-color 0.2s;
-  box-sizing: border-box;
-  width: 100%;
 }
 
-.sb-bonus-nom:focus,
-.sb-bonus-val:focus {
-  border-color: var(--couleur-principale);
-  background: #fff;
+.sb-bonus-input-val {
+  width: 60px;
+  padding: 10px 8px;
+  border: none;
+  border-radius: 12px;
+  background: #f4f4f4;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--couleur-texte);
+  outline: none;
 }
 
-.sb-bonus-val { text-align: center; }
-
-.sb-bonus-suppr {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  border: 2px solid #fde8e8;
-  background: #fff0f0;
+.sb-bonus-btn-suppr {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #ffe5e5;
   color: #e74c3c;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
 }
 
-.sb-bonus-suppr:hover { background: #fbd5d5; }
+.sb-bonus-btn-suppr:hover {
+  background: #e74c3c;
+  color: #fff;
+}
 
 /* Bouton ajouter bonus */
 .sb-btn-ajouter-bonus {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: none;
   background: var(--couleur-principale);
@@ -514,8 +495,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(46,204,113,0.35);
+  transition: all 0.15s ease;
 }
 
 .sb-btn-ajouter-bonus:hover {
@@ -523,17 +504,19 @@
   transform: scale(1.08);
 }
 
-/* Bouton valider config */
+/* Bouton appliquer */
 .sb-btn-valider-config {
   width: 100%;
-  max-width: 340px;
+  max-width: 320px;
+  margin: 0 auto;
   padding: 16px;
   background: var(--couleur-principale);
   color: #fff;
   border: none;
   border-radius: 16px;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(46,204,113,0.35);
   transition: all 0.2s ease;
@@ -555,38 +538,37 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
-  box-sizing: border-box;
 }
 
-.sb-modal-overlay[hidden] { display: none; }
+.sb-modal-overlay[hidden] {
+  display: none;
+}
 
 .sb-modal-boite {
   background: #fff;
   border-radius: 24px;
   padding: 28px 24px;
-  width: 100%;
+  width: 90%;
   max-width: 320px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
 }
 
 .sb-modal-titre {
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--couleur-texte);
-  margin: 0;
   text-align: center;
+  margin: 0;
 }
 
 .sb-modal-texte {
-  font-size: 0.95rem;
-  color: var(--couleur-texte-leger);
   text-align: center;
+  color: var(--couleur-texte-leger);
+  font-size: 0.9rem;
   margin: 0;
-  line-height: 1.5;
 }
 
 .sb-modal-champs {
@@ -601,25 +583,24 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  color: var(--couleur-texte-leger);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  color: var(--couleur-texte-leger);
 }
 
 .sb-modal-input {
-  width: 80px;
-  padding: 12px 8px;
+  width: 75px;
+  padding: 10px 6px;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: var(--couleur-texte);
   border: 2px solid #e8e8e8;
-  border-radius: 14px;
-  background: var(--couleur-fond);
+  border-radius: 12px;
+  background: #f9f9f9;
   outline: none;
-  transition: border-color 0.2s;
   box-sizing: border-box;
 }
 
@@ -628,11 +609,11 @@
   background: #fff;
 }
 
-.sb-modal-separateur {
+.sb-modal-sep {
   font-size: 2rem;
   font-weight: 900;
   color: #ddd;
-  padding-bottom: 18px;
+  padding-bottom: 16px;
 }
 
 .sb-modal-actions {
@@ -643,18 +624,18 @@
 
 .sb-modal-btn-annuler,
 .sb-modal-btn-valider {
-  padding: 14px;
+  padding: 13px;
   border-radius: 14px;
   border: none;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 50px;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  min-height: 48px;
 }
 
 .sb-modal-btn-annuler {
-  background: #f4f4f4;
+  background: #f2f2f2;
   color: #888;
 }
 
@@ -663,36 +644,19 @@
 .sb-modal-btn-valider {
   background: var(--couleur-principale);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(46,204,113,0.35);
+  box-shadow: 0 4px 12px rgba(46,204,113,0.3);
 }
 
 .sb-modal-btn-valider:hover {
   background: var(--couleur-principale-fonce);
-  transform: translateY(-1px);
 }
 
 /* ════════════════════════════════
    RESPONSIVE
 ════════════════════════════════ */
-@media (max-width: 600px) {
-  .sb-container  { padding: 10px; gap: 10px; }
-  .sb-grille     { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .sb-equipe-score { font-size: 3.5rem; }
-
-  .sb-timer-affichage {
-    font-size: 1.1rem;
-    min-width: 88px;
-    padding: 7px 10px;
-    letter-spacing: 2px;
-  }
-
-  .sb-barre-top  { gap: 6px; padding: 8px 10px; border-radius: 16px; }
-  .sb-btn-suivante { font-size: 0.78rem; padding: 9px 12px; }
-  .sb-carte-corps { padding: 12px 8px 18px; }
-  .sb-modal-boite { padding: 24px 18px; border-radius: 20px; }
-}
-
-@media (min-width: 1024px) {
-  .sb-grille { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-  .sb-equipe-score { font-size: 6rem; }
+@media (max-width: 480px) {
+  .sb-grille { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sb-carte-score { font-size: 3.8rem; }
+  .sb-timer-affichage { font-size: 1.1rem; min-width: 80px; }
+  .sb-btn-suivante { font-size: 0.78rem; padding: 8px 12px; }
 }

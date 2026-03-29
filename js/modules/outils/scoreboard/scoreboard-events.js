@@ -1,211 +1,285 @@
 // 📄 Fichier : js/modules/outils/scoreboard/scoreboard-events.js
-// 🎯 Rôle : Écouteurs d'événements du module scoreboard
+// 🎯 Rôle : Écoute des interactions utilisateur du scoreboard
 
-window.SBevents = (function () {
+const sbEvents = (() => {
 
-  function init() {
-    ecouterTimer();
-    ecouterSets();
-    ecouterScores();
-    ecouterConfig();
-    ecouterModals();
+  /* ── Références locales ── */
+  let _etat = null;
+  let _actions = null;
+
+  /* ════════════════════════════════
+     INIT PRINCIPAL
+  ════════════════════════════════ */
+  function init(etat, actions) {
+    _etat = etat;
+    _actions = actions;
+    _brancher();
   }
 
-  // ═══ TIMER ═══
-  function ecouterTimer() {
-    document.getElementById('sb-timer-affichage')
-      .addEventListener('click', () => {
-        const duree = window.SB.config.timerDuree;
-        document.getElementById('sb-input-min').value = Math.floor(duree / 60);
-        document.getElementById('sb-input-sec').value = duree % 60;
-        document.getElementById('sb-modal-timer').removeAttribute('hidden');
-      });
-
-    document.getElementById('sb-timer-play')
-      .addEventListener('click', () => SBtimer.togglePlay());
-
-    document.getElementById('sb-timer-reset')
-      .addEventListener('click', () => SBtimer.reset());
+  /* ════════════════════════════════
+     REBRANCHEMENT (après config)
+  ════════════════════════════════ */
+  function rebrancher(etat, actions) {
+    _etat = etat;
+    _actions = actions;
+    _brancher();
   }
 
-  // ═══ SETS / PASTILLES ═══
-  function ecouterSets() {
-    document.getElementById('sb-btn-suivante')
-      .addEventListener('click', () => window.SB.setSuivant());
+  /* ════════════════════════════════
+     BRANCHEMENT GLOBAL (délégation)
+  ════════════════════════════════ */
+  function _brancher() {
+    const conteneur = document.querySelector('.sb-container');
+    if (!conteneur) return;
+
+    // Supprimer les anciens listeners via cloneNode
+    const clone = conteneur.cloneNode(true);
+    conteneur.parentNode.replaceChild(clone, conteneur);
+    const root = document.querySelector('.sb-container');
+
+    // Délégation unique sur le conteneur
+    root.addEventListener('click', _gererClic);
+
+    // Accordéon config
+    _brancherAccordeon(root);
+
+    // Timer affichage → modal
+    const timerAff = root.querySelector('#sb-timer-affichage');
+    if (timerAff) timerAff.addEventListener('click', () => _ouvrirModalTimer(root));
+
+    // Modal timer
+    _brancherModalTimer(root);
+
+    // Modal confirm
+    _brancherModalConfirm(root);
   }
 
-  // ═══ SCORES (délégation sur la grille) ═══
-  function ecouterScores() {
-    const grille = document.getElementById('sb-grille');
-    grille.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-delta]');
-      if (!btn) return;
-      const indexEquipe = parseInt(btn.dataset.indexEquipe);
-      const delta = parseInt(btn.dataset.delta);
-      window.SB.modifierScore(indexEquipe, delta);
-    });
-  }
+  /* ════════════════════════════════
+     GESTIONNAIRE CLIC DÉLÉGUÉ
+  ════════════════════════════════ */
+  function _gererClic(e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
 
-  // ═══ CONFIGURATION ═══
-  function ecouterConfig() {
+    // ── Pastille set ──
+    if (btn.classList.contains('sb-pastille')) {
+      _cliquerPastille(btn);
+      return;
+    }
 
-    // ── Accordéon ──
-    document.getElementById('sb-config-header')
-      .addEventListener('click', () => {
-        const header = document.getElementById('sb-config-header');
-        const corps  = document.getElementById('sb-config-corps');
-        const estOuvert = corps.classList.contains('ouvert');
-        corps.classList.toggle('ouvert', !estOuvert);
-        header.classList.toggle('ouvert', !estOuvert);
-        header.setAttribute('aria-expanded', String(!estOuvert));
-      });
+    // ── Timer ──
+    if (btn.id === 'sb-timer-play')  { _actions.lancerTimer(); return; }
+    if (btn.id === 'sb-timer-pause') { _actions.pauserTimer(); return; }
+    if (btn.id === 'sb-timer-reset') { _actions.resetTimer(); return; }
+
+    // ── Suivante ──
+    if (btn.id === 'sb-btn-suivante') { _cliquerSuivante(); return; }
 
     // ── Reset global ──
-    document.getElementById('sb-btn-reset-global')
-      .addEventListener('click', () => {
-        if (confirm('Réinitialiser tous les scores ?')) {
-          window.SB.resetGlobal();
-        }
-      });
+    if (btn.id === 'sb-btn-reset-global') { _actions.resetGlobal(); return; }
 
-    // ── Stepper équipes ──
-    document.getElementById('sb-equipes-moins')
-      .addEventListener('click', () => {
-        if (window.SB.config.nbEquipes > 2) {
-          window.SB.config.nbEquipes--;
-          document.getElementById('sb-equipes-val').textContent = window.SB.config.nbEquipes;
-          SBui.rendreConfigNoms();
-        }
-      });
+    // ── Score − ──
+    if (btn.classList.contains('sb-carte-btn-moins')) {
+      _actions.modifierScore(+btn.dataset.equipe, -1);
+      return;
+    }
 
-    document.getElementById('sb-equipes-plus')
-      .addEventListener('click', () => {
-        if (window.SB.config.nbEquipes < 4) {
-          window.SB.config.nbEquipes++;
-          document.getElementById('sb-equipes-val').textContent = window.SB.config.nbEquipes;
-          SBui.rendreConfigNoms();
-        }
-      });
+    // ── Score + ──
+    if (btn.classList.contains('sb-carte-btn-plus')) {
+      _actions.modifierScore(+btn.dataset.equipe, +1);
+      return;
+    }
 
-    // ── Stepper sets ──
-    document.getElementById('sb-sets-moins')
-      .addEventListener('click', () => {
-        if (window.SB.config.nbSets > 1) {
-          window.SB.config.nbSets--;
-          document.getElementById('sb-sets-val').textContent = window.SB.config.nbSets;
-        }
-      });
+    // ── Bonus ──
+    if (btn.classList.contains('sb-carte-btn-bonus')) {
+      const eIdx = +btn.dataset.equipe;
+      const bIdx = +btn.dataset.bonus;
+      const valeur = _etat.bonus[bIdx]?.valeur ?? 0;
+      _actions.modifierScore(eIdx, valeur);
+      return;
+    }
 
-    document.getElementById('sb-sets-plus')
-      .addEventListener('click', () => {
-        if (window.SB.config.nbSets < 5) {
-          window.SB.config.nbSets++;
-          document.getElementById('sb-sets-val').textContent = window.SB.config.nbSets;
-        }
-      });
+    // ── Config : équipes − ──
+    if (btn.id === 'sb-equipes-moins') { _changerNbEquipes(-1); return; }
+    if (btn.id === 'sb-equipes-plus')  { _changerNbEquipes(+1); return; }
 
-    // ── Bouton bonus : ajouter ──
-    document.getElementById('sb-btn-ajouter-bonus')
-      .addEventListener('click', () => {
-        if (window.SB.config.boutonsBonus.length >= 4) return;
-        window.SB.config.boutonsBonus.push({ label: '+1', valeur: 1 });
-        SBui.rendreConfigBonus();
-      });
+    // ── Config : sets − + ──
+    if (btn.id === 'sb-sets-moins') { _changerNbSets(-1); return; }
+    if (btn.id === 'sb-sets-plus')  { _changerNbSets(+1); return; }
 
-    // ── Boutons bonus : modifier label / valeur ──
-    document.getElementById('sb-bonus-liste')
-      .addEventListener('input', (e) => {
-        const input = e.target.closest('[data-index-bonus]');
-        if (!input) return;
-        const i = parseInt(input.dataset.indexBonus);
-        const champ = input.dataset.champ;
-        if (champ === 'label') {
-          window.SB.config.boutonsBonus[i].label = input.value;
-        } else if (champ === 'valeur') {
-          window.SB.config.boutonsBonus[i].valeur = parseInt(input.value) || 1;
-        }
-      });
+    // ── Ajouter bonus ──
+    if (btn.id === 'sb-btn-ajouter-bonus') { _ajouterBonus(); return; }
 
-    // ── Boutons bonus : supprimer ──
-    document.getElementById('sb-bonus-liste')
-      .addEventListener('click', (e) => {
-        const btn = e.target.closest('.sb-bonus-suppr');
-        if (!btn) return;
-        const i = parseInt(btn.dataset.indexBonus);
-        window.SB.config.boutonsBonus.splice(i, 1);
-        SBui.rendreConfigBonus();
-      });
+    // ── Supprimer bonus ──
+    if (btn.classList.contains('sb-bonus-btn-suppr')) {
+      _supprimerBonus(+btn.dataset.idx);
+      return;
+    }
 
-    // ── Valider config ──
-    document.getElementById('sb-btn-valider-config')
-      .addEventListener('click', () => {
-        const { nbEquipes } = window.SB.config;
-
-        for (let i = 0; i < nbEquipes; i++) {
-          // Lire le nom
-          const inputNom = document.getElementById(`sb-nom-equipe-${i}`);
-          if (inputNom) {
-            window.SB.config.nomsEquipes[i] = inputNom.value || `Équipe ${i + 1}`;
-          }
-          // Lire la couleur
-          const inputCouleur = document.getElementById(`sb-couleur-equipe-${i}`);
-          if (inputCouleur) {
-            window.SB.config.couleurs[i] = inputCouleur.value;
-          }
-        }
-
-        window.SB.appliquerConfig();
-
-        // Fermer l'accordéon
-        document.getElementById('sb-config-corps').classList.remove('ouvert');
-        document.getElementById('sb-config-header').classList.remove('ouvert');
-        document.getElementById('sb-config-header').setAttribute('aria-expanded', 'false');
-      });
+    // ── Appliquer config ──
+    if (btn.id === 'sb-btn-valider-config') { _appliquerConfig(); return; }
   }
 
-  // ═══ MODALS ═══
-  function ecouterModals() {
+  /* ════════════════════════════════
+     PASTILLES / SETS
+  ════════════════════════════════ */
+  function _cliquerPastille(btn) {
+    const idx = +btn.dataset.idx;
+    if (idx === _etat.setActif) return;
+    _actions.changerSet(idx);
+  }
 
-    document.getElementById('sb-timer-annuler')
-      .addEventListener('click', () => {
-        document.getElementById('sb-modal-timer').setAttribute('hidden', '');
-      });
+  function _cliquerSuivante() {
+    const suivant = _etat.setActif + 1;
+    if (suivant >= _etat.nbSets) {
+      // Revenir au début
+      _ouvrirModalConfirm('Revenir au set 1 ?', () => _actions.changerSet(0));
+    } else {
+      _actions.changerSet(suivant);
+    }
+  }
 
-    document.getElementById('sb-timer-valider')
-      .addEventListener('click', () => {
-        const min = document.getElementById('sb-input-min').value;
-        const sec = document.getElementById('sb-input-sec').value;
-        SBtimer.appliquerDuree(min, sec);
-        document.getElementById('sb-modal-timer').setAttribute('hidden', '');
-      });
+  /* ════════════════════════════════
+     CONFIG
+  ════════════════════════════════ */
+  function _changerNbEquipes(delta) {
+    const val = Math.max(2, Math.min(6, _etat.equipes.length + delta));
+    const el = document.getElementById('sb-equipes-val');
+    if (el) el.textContent = val;
 
-    document.getElementById('sb-confirm-non')
-      .addEventListener('click', () => {
-        window.SB.setEnAttente = null;
-        document.getElementById('sb-modal-confirm').setAttribute('hidden', '');
-      });
+    // Ajuster le tableau d'équipes temporaire
+    const couleurs = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c'];
+    while (_etat.equipes.length < val) {
+      const idx = _etat.equipes.length;
+      _etat.equipes.push({ nom: `Équipe ${String.fromCharCode(65 + idx)}`, couleur: couleurs[idx] });
+    }
+    while (_etat.equipes.length > val) _etat.equipes.pop();
 
-    document.getElementById('sb-confirm-oui')
-      .addEventListener('click', () => {
-        if (window.SB.setEnAttente !== null) {
-          window.SB.allerAuSet(window.SB.setEnAttente);
-          window.SB.setEnAttente = null;
-        }
-        document.getElementById('sb-modal-confirm').setAttribute('hidden', '');
-      });
+    sbUI.genererConfigNoms(_etat.equipes);
+  }
 
-    // Fermer en cliquant sur l'overlay
-    document.querySelectorAll('.sb-modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          overlay.setAttribute('hidden', '');
-          window.SB.setEnAttente = null;
-        }
-      });
+  function _changerNbSets(delta) {
+    const val = Math.max(1, Math.min(5, _etat.nbSets + delta));
+    _etat.nbSets = val;
+    const el = document.getElementById('sb-sets-val');
+    if (el) el.textContent = val;
+  }
+
+  function _ajouterBonus() {
+    _etat.bonus.push({ nom: '+1', valeur: 1 });
+    sbUI.ajouterLigneBonus(_etat.bonus);
+  }
+
+  function _supprimerBonus(idx) {
+    _etat.bonus.splice(idx, 1);
+    sbUI.genererConfigBonus(_etat.bonus);
+  }
+
+  function _appliquerConfig() {
+    // Lire les noms et couleurs depuis les inputs
+    const equipes = _etat.equipes.map((_, idx) => {
+      const nomInput = document.getElementById(`sb-nom-${idx}`);
+      const couleurInput = document.getElementById(`sb-couleur-${idx}`);
+      return {
+        nom: nomInput?.value || `Équipe ${idx + 1}`,
+        couleur: couleurInput?.value || '#e74c3c'
+      };
+    });
+
+    // Lire les bonus
+    const bonus = [];
+    document.querySelectorAll('.sb-bonus-ligne').forEach((ligne) => {
+      const nom = ligne.querySelector('.sb-bonus-input-nom')?.value || '';
+      const val = parseInt(ligne.querySelector('.sb-bonus-input-val')?.value) || 0;
+      bonus.push({ nom, valeur: val });
+    });
+
+    const nbSets = parseInt(document.getElementById('sb-sets-val')?.textContent) || 3;
+
+    _actions.appliquerConfig({ equipes, nbSets, bonus });
+
+    // Fermer l'accordéon
+    const corps = document.getElementById('sb-config-corps');
+    if (corps) corps.hidden = true;
+  }
+
+  /* ════════════════════════════════
+     ACCORDÉON
+  ════════════════════════════════ */
+  function _brancherAccordeon(root) {
+    const header = root.querySelector('#sb-config-header');
+    const corps = root.querySelector('#sb-config-corps');
+    const chevron = root.querySelector('#sb-config-chevron');
+    if (!header || !corps) return;
+
+    header.addEventListener('click', () => {
+      const ouvert = !corps.hidden;
+      corps.hidden = ouvert;
+      if (chevron) chevron.style.transform = ouvert ? '' : 'rotate(180deg)';
     });
   }
 
-  // ═══ API PUBLIQUE ═══
-  return { init };
+  /* ════════════════════════════════
+     MODAL TIMER
+  ════════════════════════════════ */
+  function _ouvrirModalTimer(root) {
+    const modal = root.querySelector('#sb-modal-timer');
+    if (modal) modal.hidden = false;
+  }
+
+  function _brancherModalTimer(root) {
+    const btnAnnuler = root.querySelector('#sb-timer-annuler');
+    const btnValider = root.querySelector('#sb-timer-valider');
+    const modal = root.querySelector('#sb-modal-timer');
+    if (!modal) return;
+
+    if (btnAnnuler) btnAnnuler.addEventListener('click', () => { modal.hidden = true; });
+    if (btnValider) btnValider.addEventListener('click', () => {
+      const min = parseInt(root.querySelector('#sb-input-min')?.value) || 0;
+      const sec = parseInt(root.querySelector('#sb-input-sec')?.value) || 0;
+      _actions.configurerTimer(min, sec);
+      modal.hidden = true;
+    });
+
+    // Clic overlay
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.hidden = true;
+    });
+  }
+
+  /* ════════════════════════════════
+     MODAL CONFIRM SET
+  ════════════════════════════════ */
+  let _callbackConfirm = null;
+
+  function _ouvrirModalConfirm(texte, callback) {
+    const modal = document.querySelector('#sb-modal-confirm');
+    const texteEl = document.querySelector('#sb-confirm-texte');
+    if (!modal) return;
+    if (texteEl) texteEl.textContent = texte;
+    _callbackConfirm = callback;
+    modal.hidden = false;
+  }
+
+  function _brancherModalConfirm(root) {
+    const modal = root.querySelector('#sb-modal-confirm');
+    const btnOui = root.querySelector('#sb-confirm-oui');
+    const btnNon = root.querySelector('#sb-confirm-non');
+    if (!modal) return;
+
+    if (btnNon) btnNon.addEventListener('click', () => { modal.hidden = true; });
+    if (btnOui) btnOui.addEventListener('click', () => {
+      modal.hidden = true;
+      if (_callbackConfirm) _callbackConfirm();
+      _callbackConfirm = null;
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.hidden = true;
+    });
+  }
+
+  /* ── Export ── */
+  return { init, rebrancher };
 
 })();

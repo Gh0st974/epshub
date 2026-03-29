@@ -338,6 +338,10 @@
   gap: 20px;
 }
 
+.sb-config-corps[hidden] {
+  display: none;
+}
+
 /* Groupe config */
 .sb-config-groupe {
   display: flex;

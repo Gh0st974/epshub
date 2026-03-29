@@ -60,8 +60,10 @@ body {
   margin-top: var(--hauteur-header);
   margin-bottom: var(--hauteur-nav);
   min-height: calc(100vh - var(--hauteur-header) - var(--hauteur-nav));
-  padding: 24px 16px;
+  padding: 16px;
   overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ===== BARRE DE NAVIGATION BAS ===== */
